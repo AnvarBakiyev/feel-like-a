@@ -1,5 +1,0 @@
-__pycache__/
-*.pyc
-.DS_Store
-episodes/train/web/preview.html
-episodes/train/web/parity_trace.json
