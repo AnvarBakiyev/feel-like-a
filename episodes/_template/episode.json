@@ -1,0 +1,43 @@
+{
+ "id": "_template",
+ "title": {
+  "en": "Feel like a water tower operator (template)",
+  "ru": "Почувствуй себя оператором водонапорной башни (заготовка)"
+ },
+ "summary": "A tiny example to copy: keep the tank between empty and full for 48 hours, pump cheaply at night.",
+ "authors": [
+  "Extella"
+ ],
+ "license": {
+  "code": "MIT",
+  "data": "CC-BY-4.0"
+ },
+ "settings": {
+  "town": [
+   "small",
+   "big"
+  ]
+ },
+ "open_seeds": [
+  1,
+  2,
+  3
+ ],
+ "tests": [
+  "python3 test_sim.py"
+ ],
+ "verify": [],
+ "contract": {
+  "settings": {
+   "town": "small"
+  },
+  "seeds": [
+   1,
+   2
+  ],
+  "driver": "drivers:simple",
+  "hidden_keys": [
+   "demand"
+  ]
+ }
+}

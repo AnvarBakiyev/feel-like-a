@@ -1,0 +1,28 @@
+{
+ "id": "ice3",
+ "name": "ICE 3 (BR 403)",
+ "mass_t": 470,
+ "_mass": "435 т порожний (bahn.de, И) + пассажиры О",
+ "length_m": 200,
+ "power_kW": 8000,
+ "start_tractive_kN": 300,
+ "powered_share": 0.5,
+ "davis": [
+  3.48,
+  0.0471,
+  0.000582
+ ],
+ "_davis": "О: формула Peters для ICE 1 (Wende 2003, по диссертации TU Wien 2023) при 6 промежуточных вагонах",
+ "brake": {
+  "service_ms2": 0.6,
+  "emergency_ms2": 1.0,
+  "_tag": "О: не нашли"
+ },
+ "regen_eff": 0.75,
+ "_regen": "0,70–0,85 Fischer 2026 (И)",
+ "adhesion": {
+  "dry": 0.25,
+  "_tag": "Curtius-Kniffler около 0,18–0,33 (И, учебный); среднее О"
+ },
+ "vmax_kmh": 300
+}

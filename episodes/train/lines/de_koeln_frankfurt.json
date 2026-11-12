@@ -1,0 +1,206 @@
+{
+ "id": "de_krm",
+ "name": {
+  "ru": "Германия: Кёльн – аэропорт Франкфурта",
+  "en": "Germany: Cologne – Frankfurt Airport"
+ },
+ "_sources": "станции, км, 300 км/ч, 40 ‰, ограничения 200 и 160: de.wikipedia Schnellfahrstrecke Köln–Rhein/Main (П); расстановка уклонов по км: О",
+ "protection": "LZB",
+ "segments": [
+  {
+   "from_km": 0,
+   "to_km": 24.3,
+   "grade_permille": 0,
+   "limit_kmh": 200,
+   "_tag": "скорость П (Porz–Siegburg 200), уклон О"
+  },
+  {
+   "from_km": 24.3,
+   "to_km": 28,
+   "grade_permille": 0,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 28,
+   "to_km": 33,
+   "grade_permille": 40,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 33,
+   "to_km": 36,
+   "grade_permille": 10,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 36,
+   "to_km": 40,
+   "grade_permille": -30,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 40,
+   "to_km": 46,
+   "grade_permille": 35,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 46,
+   "to_km": 52,
+   "grade_permille": 0,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 52,
+   "to_km": 60,
+   "grade_permille": -25,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 60,
+   "to_km": 70,
+   "grade_permille": 20,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 70,
+   "to_km": 80,
+   "grade_permille": -10,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 80,
+   "to_km": 89.1,
+   "grade_permille": 15,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 89.1,
+   "to_km": 98,
+   "grade_permille": -35,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 98,
+   "to_km": 110.5,
+   "grade_permille": -10,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 110.5,
+   "to_km": 122,
+   "grade_permille": 20,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 122,
+   "to_km": 130,
+   "grade_permille": 40,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 130,
+   "to_km": 140,
+   "grade_permille": -20,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 140,
+   "to_km": 152.5,
+   "grade_permille": -30,
+   "limit_kmh": 300,
+   "_tag": "О"
+  },
+  {
+   "from_km": 152.5,
+   "to_km": 158,
+   "grade_permille": -5,
+   "limit_kmh": 160,
+   "_tag": "скорость П (Breckenheim до 160), уклон О"
+  },
+  {
+   "from_km": 158,
+   "to_km": 163,
+   "grade_permille": 0,
+   "limit_kmh": 160,
+   "_tag": "скорость П (кривая у км 160), уклон О",
+   "radius_m": 3348
+  },
+  {
+   "from_km": 163,
+   "to_km": 170.5,
+   "grade_permille": 0,
+   "limit_kmh": 200,
+   "_tag": "О"
+  }
+ ],
+ "stations": [
+  {
+   "name": "Köln Messe/Deutz",
+   "km": 0
+  },
+  {
+   "name": "Siegburg/Bonn",
+   "km": 24.3,
+   "dwell_s": 60
+  },
+  {
+   "name": "Montabaur",
+   "km": 89.1,
+   "dwell_s": 60
+  },
+  {
+   "name": "Frankfurt Flughafen",
+   "km": 169.3
+  }
+ ],
+ "check": {
+  "ru": "Кёльн Hbf → аэропорт по расписанию 49 мин (П), с Кёльн Hbf на ~2 км дальше",
+  "what": "nonstop"
+ },
+ "timetable": [
+  {
+   "name": "Köln Messe/Deutz",
+   "arr_s": null,
+   "dep_s": 0
+  },
+  {
+   "name": "Siegburg/Bonn",
+   "arr_s": 600.0,
+   "dep_s": 660.0,
+   "tech_run_s": 553.5
+  },
+  {
+   "name": "Montabaur",
+   "arr_s": 1800.0,
+   "dep_s": 1860.0,
+   "tech_run_s": 1072.0
+  },
+  {
+   "name": "Frankfurt Flughafen",
+   "arr_s": 3330.0,
+   "dep_s": null,
+   "tech_run_s": 1370.0
+  }
+ ],
+ "_timetable": "техническое время машиниста full на сухом рельсе × 1.06, вверх до 30 с (О)",
+ "signal_sight_km": 10.0,
+ "_signal": "видимость цели в кабине: LZB и ATC показывают цель за 10 км и больше (О); на горной линии сигнал за 2,5 км (О)",
+ "ref_kwh": 3293.8,
+ "_ref_kwh": "эталон энергии: тот же прогон машиниста full; в счёте ±4 очка за каждый процент к нему (О)"
+}

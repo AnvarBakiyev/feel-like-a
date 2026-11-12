@@ -1,0 +1,456 @@
+{
+ "de_krm": [
+  {
+   "seed": 1,
+   "w": "dry",
+   "x": 297.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": false,
+   "sched": true,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 2,
+   "w": "leaves",
+   "x": -283.2,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 3,
+   "w": "wet",
+   "x": 256.0,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 4,
+   "w": "dry",
+   "x": 954.7,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 5,
+   "w": "dry",
+   "x": 1001.0,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 6,
+   "w": "dry",
+   "x": 769.6,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 7,
+   "w": "dry",
+   "x": 1027.9,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 8,
+   "w": "wet",
+   "x": 134.5,
+   "first_ok": false,
+   "fallback": true,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [
+    "толкача на этом участке нет.",
+    "строка 1: 280 км/ч с км 0,0 до км 169,3: по прогнозу Frankfurt Flughafen в 10:56:30, опоздание 60 с (без ограничений плана было бы 12 с).",
+    "строка 1: 240 км/ч с км 0,0 до км 169,3: по прогнозу Montabaur в 10:32:40, опоздание 159 с (без ограничений плана было бы 46 с)."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 9,
+   "w": "wet",
+   "x": 636.3,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 10,
+   "w": "wet",
+   "x": 990.2,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  }
+ ],
+ "ch_gotthard": [
+  {
+   "seed": 1,
+   "w": "dry",
+   "x": 849.9,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 2,
+   "w": "wet",
+   "x": 846.0,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [
+    "строка 2: поезд встанет на км 51,2 (подъём 24,7 ‰, мокрый рельс): нужен песок или толкач."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 3,
+   "w": "wet",
+   "x": 873.0,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": true,
+   "sand": true,
+   "sched": true,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 4,
+   "w": "dry",
+   "x": 846.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 5,
+   "w": "dry",
+   "x": 846.6,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 6,
+   "w": "wet",
+   "x": 847.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 7,
+   "w": "wet",
+   "x": 872.8,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": true,
+   "sand": true,
+   "sched": true,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 8,
+   "w": "leaves",
+   "x": 812.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 9,
+   "w": "dry",
+   "x": 850.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": true,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 10,
+   "w": "wet",
+   "x": 874.5,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": true,
+   "sand": true,
+   "sched": true,
+   "errs": [],
+   "atp": 0
+  }
+ ],
+ "jp_tokaido": [
+  {
+   "seed": 1,
+   "w": "wet",
+   "x": 560.9,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 2,
+   "w": "wet",
+   "x": 578.1,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": false,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 3,
+   "w": "wet",
+   "x": 1004.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 4,
+   "w": "dry",
+   "x": 378.7,
+   "first_ok": false,
+   "fallback": true,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [
+    "толкача на этом участке нет.",
+    "строка 5: 200 км/ч с км 76,0 до км 95,0: по прогнозу Nagoya в 11:35:36, опоздание 95 с (без ограничений плана было бы 0 с).",
+    "строка 5: 200 км/ч с км 76,0 до км 95,0: по прогнозу Nagoya в 11:35:36, опоздание 95 с (без ограничений плана было бы 0 с)."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 5,
+   "w": "wet",
+   "x": 835.8,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 6,
+   "w": "dry",
+   "x": 1003.2,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": false,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 7,
+   "w": "leaves",
+   "x": 417.3,
+   "first_ok": true,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [],
+   "atp": 0
+  },
+  {
+   "seed": 8,
+   "w": "dry",
+   "x": 908.1,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": false,
+   "sched": false,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 9,
+   "w": "leaves",
+   "x": 574.5,
+   "first_ok": false,
+   "fallback": false,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": false,
+   "errs": [
+    "толкача на этом участке нет."
+   ],
+   "atp": 0
+  },
+  {
+   "seed": 10,
+   "w": "dry",
+   "x": 929.9,
+   "first_ok": false,
+   "fallback": true,
+   "hold_first": false,
+   "slower": true,
+   "pusher": false,
+   "sand": true,
+   "sched": true,
+   "errs": [
+    "толкача на этом участке нет.",
+    "строка 1: 280 км/ч с км 0,0 до км 342,0: по прогнозу Nagoya в 11:35:28, опоздание 88 с (без ограничений плана было бы 0 с).",
+    "строка 1: 260 км/ч с км 0,0 до км 342,0: по прогнозу Nagoya в 11:35:36, опоздание 96 с (без ограничений плана было бы 0 с)."
+   ],
+   "atp": 0
+  }
+ ]
+}
