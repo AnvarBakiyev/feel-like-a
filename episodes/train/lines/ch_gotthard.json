@@ -1,0 +1,153 @@
+{
+ "id": "ch_gotthard",
+ "name": {
+  "ru": "Швейцария: горная Готардская линия, Эрстфельд – Биаска",
+  "en": "Switzerland: Gotthard mountain line, Erstfeld – Biasca"
+ },
+ "_sources": "км и высоты станций, тоннель 15 003 м, уклоны до 26–28 ‰, мин. радиус 300 м: de.wikipedia Gotthardbahn (П); скорости О (не нашли)",
+ "km_offset": 41.58,
+ "protection": "О (не нашли)",
+ "segments": [
+  {
+   "from_km": 41.58,
+   "to_km": 46.55,
+   "grade_permille": 14.5,
+   "limit_kmh": 100,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 46.55,
+   "to_km": 54.4,
+   "grade_permille": 24.7,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 54.4,
+   "to_km": 58.42,
+   "grade_permille": 23.9,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 58.42,
+   "to_km": 62.76,
+   "grade_permille": 21.7,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 62.76,
+   "to_km": 70.45,
+   "grade_permille": 23.1,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 70.45,
+   "to_km": 78.72,
+   "grade_permille": 5.4,
+   "limit_kmh": 125,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 78.72,
+   "to_km": 86.2,
+   "grade_permille": -1.2,
+   "limit_kmh": 125,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 86.2,
+   "to_km": 93.04,
+   "grade_permille": -22.4,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 93.04,
+   "to_km": 97.84,
+   "grade_permille": -9.8,
+   "limit_kmh": 100,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 97.84,
+   "to_km": 106.0,
+   "grade_permille": -22.9,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 106.0,
+   "to_km": 112.6,
+   "grade_permille": -21.2,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 112.6,
+   "to_km": 121.12,
+   "grade_permille": -22.9,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 121.12,
+   "to_km": 125.5,
+   "grade_permille": -20.3,
+   "limit_kmh": 80,
+   "radius_m": 300,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  },
+  {
+   "from_km": 125.5,
+   "to_km": 131.8,
+   "grade_permille": -6.0,
+   "limit_kmh": 100,
+   "_tag": "уклон: из высот станций (П), скорость О"
+  }
+ ],
+ "stations": [
+  {
+   "name": "Erstfeld",
+   "km": 41.58
+  },
+  {
+   "name": "Göschenen",
+   "km": 70.45,
+   "dwell_s": 0,
+   "pass": true
+  },
+  {
+   "name": "Biasca",
+   "km": 131.8
+  }
+ ],
+ "timetable": [
+  {
+   "name": "Erstfeld",
+   "arr_s": null,
+   "dep_s": 0
+  },
+  {
+   "name": "Biasca",
+   "arr_s": 5490.0,
+   "dep_s": null,
+   "tech_run_s": 5175.5
+  }
+ ],
+ "_timetable": "техническое время машиниста full на сухом рельсе × 1.06, вверх до 30 с (О)",
+ "signal_sight_km": 2.5,
+ "_signal": "видимость цели в кабине: LZB и ATC показывают цель за 10 км и больше (О); на горной линии сигнал за 2,5 км (О)",
+ "ref_kwh": 2018.9,
+ "_ref_kwh": "эталон энергии: тот же прогон машиниста full; в счёте ±4 очка за каждый процент к нему (О)"
+}

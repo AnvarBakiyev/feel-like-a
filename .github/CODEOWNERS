@@ -1,0 +1,6 @@
+# Who must approve changes. With branch protection "Require review from Code Owners" on, nobody can change
+# a folder without its owner's approval. A new episode's author adds their own line for their folder.
+*                       @AnvarBakiyev
+/episodes/train/        @AnvarBakiyev
+/tools/                 @AnvarBakiyev
+/.github/               @AnvarBakiyev

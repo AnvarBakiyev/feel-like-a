@@ -1,0 +1,55 @@
+{
+ "id": "train",
+ "title": {
+  "en": "Feel like a train driver",
+  "ru": "Почувствуй себя машинистом"
+ },
+ "summary": "Drive real line profiles in Germany, Switzerland and Japan: arrive on time, stop at the mark, use little energy. Race Extella and other AI drivers on the same runs.",
+ "authors": [
+  "Extella"
+ ],
+ "license": {
+  "code": "MIT",
+  "data": "CC-BY-4.0"
+ },
+ "settings": {
+  "line_id": [
+   "de_krm",
+   "ch_gotthard",
+   "jp_tokaido"
+  ]
+ },
+ "open_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "tests": [
+  "python3 test_sim.py",
+  "python3 test_replay.py",
+  "python3 web/make_parity.py && node web/parity.mjs"
+ ],
+ "verify": [
+  "python3 verify.py"
+ ],
+ "contract": {
+  "settings": {
+   "line_id": "ch_gotthard"
+  },
+  "seeds": [
+   1,
+   2
+  ],
+  "driver": "drivers:full",
+  "hidden_keys": [
+   "adhesion_factor"
+  ]
+ }
+}

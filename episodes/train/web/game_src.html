@@ -1,0 +1,818 @@
+<title>Кабина машиниста</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: route-book column for lessons; the cab is one instrument panel: window on top, gauges in a row, one lever */
+:root{
+  --bg:#eef0f3; --panel:#ffffff; --fg:#151a21; --muted:#5a6472; --line:#d6dbe2;
+  --signal:#a86f00; --signal-soft:#faf0d8; --limit:#b8322f; --limit-soft:#f8e2e1; --track:#2f5d8a; --track-soft:#e1eaf4;
+  --ok:#1f7a4d; --ok-soft:#e1f2e8; --ghost:#7a4fb0; --ghost-soft:#efe7f8;
+  --sky:#dfe8f1; --ground:#c9d3c1; --rail:#3a4250;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1318; --panel:#181e26; --fg:#e4e8ee; --muted:#97a2b0; --line:#29323d;
+  --signal:#f2b33d; --signal-soft:#382b10; --limit:#f08783; --limit-soft:#3a1d1c; --track:#8ab4e0; --track-soft:#1c2a39;
+  --ok:#6fd09c; --ok-soft:#163224; --ghost:#b99ae6; --ghost-soft:#2a2238;
+  --sky:#16212d; --ground:#26302a; --rail:#aab4c2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1318; --panel:#181e26; --fg:#e4e8ee; --muted:#97a2b0; --line:#29323d;
+  --signal:#f2b33d; --signal-soft:#382b10; --limit:#f08783; --limit-soft:#3a1d1c; --track:#8ab4e0; --track-soft:#1c2a39;
+  --ok:#6fd09c; --ok-soft:#163224; --ghost:#b99ae6; --ghost-soft:#2a2238;
+  --sky:#16212d; --ground:#26302a; --rail:#aab4c2; color-scheme:dark}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;justify-content:space-between}
+h1{font-family:var(--display);font-weight:700;font-size:38px;line-height:1;margin:0;letter-spacing:.01em}
+h2{font-family:var(--display);font-weight:600;font-size:25px;line-height:1.1;margin:0;letter-spacing:.01em;text-wrap:balance}
+h3{font-size:15px;margin:0;font-weight:600}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)} .note{font-size:13px;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+button,.btn{font:inherit;font-size:14px;padding:7px 12px;border-radius:5px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+button[aria-pressed="true"],button.on{border-color:var(--signal);background:var(--signal-soft)}
+button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.card{display:flex;flex-direction:column;gap:6px;text-align:left;padding:12px 14px}
+.card .flag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.lesson-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.lesson-tabs button{font-family:var(--display);font-size:17px;font-weight:600;padding:5px 12px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:640px){.two{grid-template-columns:1fr}}
+label.sl{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+label.sl b{font-family:var(--mono);font-weight:600}
+input[type=range]{width:100%;accent-color:var(--signal)}
+.big{font-family:var(--display);font-size:46px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:19px;color:var(--muted);font-weight:500}
+.code{font-family:var(--mono);font-size:13px;background:var(--track-soft);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.rej{border-left:3px solid var(--limit);background:var(--limit-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:14px}
+.ok{border-left:3px solid var(--ok);background:var(--ok-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:14px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:13px}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+/* кабина */
+.cab{display:flex;flex-direction:column;gap:10px}
+.window{width:100%;aspect-ratio:12/5;min-height:170px;max-height:300px;border-radius:6px 6px 0 0;border:1px solid var(--line);border-bottom:0;background:var(--sky);display:block}
+.front{width:100%;aspect-ratio:16/7;min-height:190px;max-height:340px;display:block;border-radius:10px 10px 0 0;border:6px solid #2a323c;border-bottom:0;background:var(--sky)}
+.desk{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 118px 150px;gap:12px;background:#232a33;color:#e6ebf1;border-radius:0 0 10px 10px;padding:12px;border:6px solid #2a323c;border-top:0}
+@media (max-width:760px){.desk{grid-template-columns:minmax(0,1fr) 110px}.desk .dmi{grid-column:1/-1}.desk .btns{grid-column:1/-1;flex-direction:row;flex-wrap:wrap}}
+.dmi{width:100%;height:200px;display:block;border-radius:8px;border:2px solid #3a4552}
+.info{display:flex;flex-direction:column;gap:8px;min-width:0;font-size:13px}
+.info>div{display:flex;flex-direction:column;background:#1b2129;border-radius:6px;padding:6px 8px;min-width:0}
+.info .k{color:#93a0b0;font-size:11px}
+.info b{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.info span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--mono);font-size:12px;color:#c3ccd7}
+.desk .flags .flag-chip{background:#1b2129;color:#c3ccd7}
+.desk .flags .flag-chip.gh{background:#2c2440;color:#c9b2ee}
+.handle{display:flex;flex-direction:column;align-items:center;gap:6px}
+.hlabel{font-size:11px;color:#93a0b0}
+.hwrap{display:flex;gap:6px;align-items:stretch;height:190px}
+.notches{display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);font-size:11px;color:#93a0b0;text-align:right}
+.vlever{writing-mode:vertical-lr;direction:rtl;width:42px;height:100%;accent-color:#f2b33d;cursor:grab}
+.handle .now{font-family:var(--display);font-size:17px;font-weight:600;text-align:center;min-height:22px}
+.btns{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.btns .hw{background:#1b2129;color:#e6ebf1;border:2px solid #4a5563;border-radius:8px;display:flex;gap:8px;align-items:center;justify-content:center;font-weight:600}
+.btns .mush{background:#b8322f;color:#fff;border:4px solid #7a1f1d;border-radius:50%;width:92px;height:92px;align-self:center;font-weight:700;font-size:12px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25)}
+.btns .mush:active{transform:translateY(2px)}
+.lamps{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#c3ccd7}
+.lampbox{display:flex;gap:6px;align-items:center}
+.lamp{display:inline-block;width:12px;height:12px;border-radius:50%;background:#3a4552;border:1px solid #11161c;flex:none}
+.lamp.on{background:#f2b33d;box-shadow:0 0 8px #f2b33d}
+.lamp.red{background:#f08783;box-shadow:0 0 8px #f08783}
+.sep{flex:1}
+.stars{font-family:var(--display);font-size:34px;letter-spacing:.08em;color:var(--signal)}
+.cab .strip{border:0;border-left:6px solid #2a323c;border-right:6px solid #2a323c;border-radius:0;background:#1b2129}
+.drill-card{display:flex;flex-direction:column;gap:10px}
+.strip{width:100%;height:34px;display:block;border:1px solid var(--line);border-radius:0 0 6px 6px;background:var(--panel)}
+.demo{width:100%;aspect-ratio:12/5;min-height:160px;max-height:280px;border-radius:6px 6px 0 0;border:1px solid var(--line);border-bottom:0;display:block;background:var(--sky)}
+.gauges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.gauges{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.g{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+.g .k{font-size:12px;color:var(--muted)}
+.g .v{font-family:var(--display);font-size:28px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.g .s{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.speedbar{height:14px;border-radius:3px;background:var(--track-soft);position:relative;overflow:hidden}
+.speedbar .fill{position:absolute;inset:0 auto 0 0;background:var(--fg);opacity:.85}
+.speedbar .perm{position:absolute;top:0;bottom:0;width:3px;background:var(--limit)}
+.speedbar .lim{position:absolute;top:0;bottom:0;width:2px;background:var(--signal)}
+.controls{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
+@media (max-width:640px){.controls{grid-template-columns:1fr}}
+.lever{display:flex;flex-direction:column;gap:6px}
+.lever .scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-family:var(--mono)}
+.lever .now{font-family:var(--display);font-size:22px;font-weight:600}
+.flags{display:flex;gap:6px;flex-wrap:wrap}
+.flag-chip{font-family:var(--mono);font-size:12px;padding:2px 8px;border-radius:3px;background:var(--track-soft);color:var(--muted)}
+.flag-chip.hot{background:var(--limit-soft);color:var(--limit);font-weight:600}
+.flag-chip.warn{background:var(--signal-soft);color:var(--signal);font-weight:600}
+.flag-chip.gh{background:var(--ghost-soft);color:var(--ghost);font-weight:600}
+.msg{min-height:22px;font-size:14px}
+.chart{width:100%;height:auto;display:block}
+svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.res-big{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline}
+kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;padding:0 4px;background:var(--panel)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+<header>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div class="note mono" id="eyebrow"></div>
+    <h1 id="h1"></h1>
+  </div>
+  <div class="row">
+    <nav aria-label="sections">
+      <button type="button" id="nav-lessons"></button>
+      <button type="button" id="nav-drive"></button>
+      <button type="button" id="nav-board"></button>
+    </nav>
+    <button type="button" id="lang" aria-label="Language">EN</button>
+  </div>
+</header>
+
+<section id="scr-lessons" class="panel">
+  <div id="intro" style="display:flex;flex-direction:column;gap:10px"></div>
+  <div class="lesson-tabs" id="ltabs"></div>
+  <div id="lesson"></div>
+</section>
+
+<section id="scr-drive" class="panel" hidden>
+  <div id="pick"></div>
+  <div id="cab" class="cab" hidden>
+    <div id="goalbar" class="ok" hidden></div>
+    <div style="position:relative"><canvas id="front" class="front" aria-label="cab front window"></canvas>
+      <button type="button" id="viewbtn" style="position:absolute;top:12px;right:12px;font-size:13px;padding:5px 10px;opacity:.92"></button></div>
+    <canvas id="strip" class="strip" aria-hidden="true"></canvas>
+    <div class="desk">
+      <canvas id="dmi" class="dmi" aria-label="speed display"></canvas>
+      <div class="info">
+        <div><span class="k" id="k-clock"></span><b id="i-clock">10:00:00</b><span id="i-sched"></span></div>
+        <div><span class="k" id="k-stop"></span><b id="i-dist">–</b><span id="i-stop"></span></div>
+        <div><span class="k" id="k-pred"></span><b id="i-pred">–</b><span id="i-pred2"></span></div>
+        <div class="flags" id="flags"></div>
+      </div>
+      <div class="handle">
+        <div class="hlabel" id="k-lever"></div>
+        <div class="hwrap">
+          <div class="notches" aria-hidden="true"><span id="n-p">+100</span><span>+50</span><span id="n-0">0</span><span>−50</span><span id="n-b">−100</span></div>
+          <input type="range" id="lever" class="vlever" min="-1" max="1" step="0.05" value="0" aria-label="controller">
+        </div>
+        <div class="now" id="lever-now"></div>
+      </div>
+      <div class="btns">
+        <button type="button" id="b-sand" class="hw"><i class="lamp" id="l-sand"></i><span id="t-sand"></span></button>
+        <button type="button" id="b-emerg" class="mush"><span id="t-emerg"></span></button>
+        <div class="lamps"><span class="lampbox"><i class="lamp" id="l-slip"></i><span id="t-slip"></span></span><span class="lampbox"><i class="lamp" id="l-atp"></i><span id="t-atp"></span></span></div>
+      </div>
+    </div>
+    <div class="msg" id="msg" role="status"></div>
+    <div class="ok" id="hint" style="font-size:14px"></div>
+    <div class="row">
+      <button type="button" id="b-brake"></button><button type="button" id="b-coast"></button><button type="button" id="b-power"></button>
+      <span class="sep"></span>
+      <button type="button" id="sp-0"></button><button type="button" id="sp-10" class="on">×10</button><button type="button" id="sp-30">×30</button>
+      <label class="row note"><input type="checkbox" id="hints" checked> <span id="hints-l"></span></label>
+      <button type="button" id="quit"></button>
+    </div>
+    <div class="note" id="keys"></div>
+  </div>
+  <div id="result" hidden></div>
+</section>
+
+<section id="scr-board" class="panel" hidden>
+  <div id="board"></div>
+</section>
+</div>
+
+<script>/*SIM*/</script>
+<script>/*SCENE*/</script>
+<script>/*CAB*/</script>
+<script>
+var DATA = /*DATA*/;
+(function(){
+"use strict";
+var S = window.TrainSim, LANG = "ru";
+try { var sl = localStorage.getItem("mash_lang"); if (sl === "en" || sl === "ru") LANG = sl; } catch (e) {}
+var $ = function (id) { return document.getElementById(id); };
+var T = {
+ ru: {eyebrow:"Эпизод 2 · Почувствуй себя…", h1:"Почувствуй себя машинистом", lessons:"Уроки", drive:"Рейс", board:"Лидерборд",
+  l1:"Тормозной путь", l2:"Уклон и сцепление", l3:"Защита", l4:"Энергия и график", l5:"Как работает Extella",
+  speed:"скорость, км/ч", perm:"допустимая, км/ч", stop:"до станции", clock:"время", lever:"Рычаг", brake:"тормоз", coast:"выбег", power:"тяга",
+  b_brake:"− тормоз", b_coast:"0 выбег", b_power:"+ тяга", sand:"Песок", emerg:"Экстренный", pause:"Пауза",
+  keys:"Клавиши: <kbd>↑</kbd><kbd>↓</kbd> контроллер, <kbd>пробел</kbd> выбег, <kbd>Q</kbd> песок, <kbd>E</kbd> экстренный, <kbd>P</kbd> пауза, <kbd>V</kbd> вид.",
+  pick:"Выберите участок и рейс", seed:"Рейс", start:"Отправиться", pusher:"Толкач (второй локомотив, −100 очков)",
+  weather:{dry:"сухо",wet:"дождь, мокрый рельс",leaves:"листопад, скользкий рельс"}, sched:"График", delay:"Задержка отправления", warn:"Лист предупреждений", none:"пусто",
+  track_work:"ремонт пути", ahead:"впереди", behind:"позади", ghost:"Extella", wait_dep:"Ждите отправления", slip:"боксование", slide:"юз", atp:"защита тормозит", emerg_on:"экстренное", sand_on:"песок",
+  late:"опоздание", early:"опережение", result:"Итог рейса", you:"Ты", beat:"Ты обыграл Extella", lost:"Extella впереди", again:"Ещё рейс", save:"Записать в лидерборд", saved:"Записано",
+  parts:{late:"опоздание",energy:"энергия к эталону",stop_precision:"точность остановки",protection:"защита",missed_stops:"пропуск станции",comfort:"комфорт",pusher:"толкач",unfinished:"не доехал"},
+  score:"счёт", chart:"Скорость по километрам: ты (чёрная), Extella (фиолетовая), малая модель без Extella (синяя), большая без Extella (жёлтая), большая с обратной связью (красная), ограничение (пунктир)", board_empty:"Пока никто не записался. Пройдите рейс и запишите результат.", board_off:"Лидерборд работает на странице в claude.ai для участников команды.",
+  board_h:"Кто проехал лучше", name:"кто", best:"лучший счёт", vs:"против Extella", someone:"Участник", plan:"План Extella", why:"почему", tries:"попыток"},
+ en: {eyebrow:"Episode 2 · Feel like a…", h1:"Feel like a train driver", lessons:"Lessons", drive:"Drive", board:"Leaderboard",
+  l1:"Braking distance", l2:"Grade and adhesion", l3:"Protection", l4:"Energy and timetable", l5:"How Extella works",
+  speed:"speed, km/h", perm:"permitted, km/h", stop:"to station", clock:"time", lever:"Lever", brake:"brake", coast:"coast", power:"power",
+  b_brake:"− brake", b_coast:"0 coast", b_power:"+ power", sand:"Sand", emerg:"Emergency", pause:"Pause",
+  keys:"Keys: <kbd>↑</kbd><kbd>↓</kbd> controller, <kbd>space</kbd> coast, <kbd>Q</kbd> sand, <kbd>E</kbd> emergency, <kbd>P</kbd> pause, <kbd>V</kbd> view.",
+  pick:"Pick a line and a run", seed:"Run", start:"Depart", pusher:"Banking engine (second locomotive, −100 points)",
+  weather:{dry:"dry",wet:"rain, wet rail",leaves:"leaf fall, slippery rail"}, sched:"Timetable", delay:"Departure delay", warn:"Notices", none:"none",
+  track_work:"track work", ahead:"ahead", behind:"behind", ghost:"Extella", wait_dep:"Wait for departure", slip:"wheel slip", slide:"wheel slide", atp:"protection braking", emerg_on:"emergency", sand_on:"sand",
+  late:"late", early:"early", result:"Run result", you:"You", beat:"You beat Extella", lost:"Extella is ahead", again:"Another run", save:"Save to leaderboard", saved:"Saved",
+  parts:{late:"lateness",energy:"energy vs reference",stop_precision:"stop precision",protection:"protection",missed_stops:"missed station",comfort:"comfort",pusher:"banking engine",unfinished:"did not arrive"},
+  score:"score", chart:"Speed by kilometre: you (black), Extella (purple), small model without Extella (blue), large model without Extella (yellow), large model with feedback (red), limit (dashed)", board_empty:"Nobody has saved a run yet. Drive one and save it.", board_off:"The leaderboard works on the claude.ai page for team members.",
+  board_h:"Who drove best", name:"who", best:"best score", vs:"vs Extella", someone:"Someone", plan:"Extella's plan", why:"why", tries:"attempts"}
+};
+function t(k){ return T[LANG][k]; }
+function nf(x, d){ var s = (d ? x.toFixed(d) : String(Math.round(x))); s = s.replace("-", "−"); if (LANG === "ru") s = s.replace(".", ","); return s.replace(/\B(?=(\d{3})+(?!\d))/g, LANG === "ru" ? " " : ","); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+var LINE_NAME = function (lid) { return DATA.lines[lid].name[LANG]; };
+var LIDS = ["de_krm", "ch_gotthard", "jp_tokaido"];
+var FLAG = {de_krm:"DE · ICE 3", ch_gotthard:"CH · Re 6/6 + 900 t", jp_tokaido:"JP · N700S"};
+var TEACH = {ru:{de_krm:"300 км/ч и подъёмы до 40 ‰: выбег и энергия", ch_gotthard:"тяжёлый поезд на 26 ‰: сцепление, песок, толкач", jp_tokaido:"285 км/ч: точно по графику и у платформы"},
+             en:{de_krm:"300 km/h and 40 ‰ climbs: coasting and energy", ch_gotthard:"a heavy train on 26 ‰: adhesion, sand, banking engine", jp_tokaido:"285 km/h: on time and at the platform mark"}};
+
+/* ---------- навигация ---------- */
+var screen = "lessons";
+function show(s){ var was = screen; screen = s; if (s === "lessons" && was !== "lessons" && typeof startDemo === "function" && $("demo")) startDemo(); ["lessons","drive","board"].forEach(function(x){ $("scr-"+x).hidden = x !== s; $("nav-"+x).setAttribute("aria-pressed", x === s ? "true" : "false"); }); if (s === "board") renderBoard(); }
+["lessons","drive","board"].forEach(function(x){ $("nav-"+x).addEventListener("click", function(){ show(x); }); });
+$("lang").addEventListener("click", function(){ LANG = LANG === "ru" ? "en" : "ru"; try { localStorage.setItem("mash_lang", LANG); } catch (e) {} renderAll(); });
+
+/* ---------- уроки ---------- */
+var lessonN = 1;
+var L = {
+ ru: {
+  1:'<p>Поезд тяжёлый, а колесо касается рельса пятном размером с монету. Поэтому тормозит он долго. С 300 км/ч при обычном служебном замедлении 0,6 м/с² до остановки уходит почти 6 км. Машинист начинает тормозить задолго до цели.</p>',
+  2:'<p>На подъёме поезд тянет назад сила m·g·i: на 26 ‰ это 26 Н на каждый килоньютон веса. Тянуть локомотив может, только пока колёса не проскальзывают: сила тяги ограничена сцеплением колеса с рельсом. На мокром рельсе сцепление ниже, при листопаде ещё ниже. Песок под колёсами поднимает его на четверть. Толкач добавляет второй локомотив сзади.</p>',
+  3:'<p>Бортовой компьютер (на линиях Германии LZB, в Японии ATC) всё время считает кривую торможения до каждой цели впереди: ограничения, сигнала, станции. Если поезд идёт быстрее допустимой на 5 км/ч, защита тормозит сама; на 15 км/ч даёт экстренное до остановки. В игре за каждое вмешательство −150 очков, за экстренное −400. Под уклон тормоз держит хуже, и кривая это учитывает.</p>',
+  4:'<p>Расписание оставляет запас около 6 % к техническому времени. Его можно потратить на выбег: поезд катится без тяги, а при торможении двигатели возвращают часть энергии в сеть (рекуперация, 10–30 % тяговой энергии). Два машиниста ниже едут по одному участку, сухо, без происшествий.</p>',
+  5:'<p>Extella проходит каждый рейс заранее, и в игре она едет рядом призраком. Ниже: кто ещё с тобой соревнуется, как устроен каждый соперник и чем всё кончилось.</p>'},
+ en: {
+  1:'<p>A train is heavy and its wheel touches the rail on a patch the size of a coin, so it brakes slowly. From 300 km/h at a normal service deceleration of 0.6 m/s² it needs almost 6 km to stop. A driver starts braking long before the target.</p>',
+  2:'<p>On a climb, m·g·i pulls the train back: on 26 ‰ that is 26 N for every kilonewton of weight. A locomotive can pull only while its wheels do not slip: tractive force is capped by wheel-rail adhesion. A wet rail has less, leaf fall even less. Sand under the wheels adds a quarter. A banking engine adds a second locomotive at the rear.</p>',
+  3:'<p>The on-board computer (LZB in Germany, ATC in Japan) keeps computing a braking curve to every target ahead: a limit, a signal, a station. If the train runs 5 km/h over the permitted speed, protection brakes by itself; at 15 km/h it applies the emergency brake to a stop. In the game each intervention costs 150 points, an emergency 400. Downhill the brake holds less, and the curve accounts for it.</p>',
+  4:'<p>The timetable leaves about 6 % over the technical running time. You can spend it coasting: the train rolls without power, and when braking the motors return part of the energy to the grid (regenerative braking, 10–30 % of traction energy). Two drivers below run the same line, dry, with no incidents.</p>',
+  5:'<p>Extella drives every run in advance, and in the game it runs beside you as a ghost. Below: who else races you, how each rival works and how it ended.</p>'}
+};
+function renderIntro(){
+  var U = LANG === "ru";
+  $("intro").innerHTML = '<p>'+(U?"Ты ведёшь настоящий по профилю поезд по трём участкам: скоростная линия в Германии, горный Готард в Швейцарии, синкансэн в Японии. Задача: приехать вовремя, остановиться у платформы и потратить меньше энергии. Рядом едет Extella, тот же рейс с той же погодой. Обыграй её.":"You drive a train over three real line profiles: a high-speed line in Germany, the Gotthard mountain line in Switzerland, the Shinkansen in Japan. Arrive on time, stop at the platform, use less energy. Extella drives the same run with the same weather beside you. Beat it.")+'</p>'+
+    '<div><canvas id="demo" class="demo" aria-label="'+(U?"повтор рейса Extella":"replay of an Extella run")+'"></canvas><canvas id="dstrip" class="strip" aria-hidden="true"></canvas></div>'+
+    '<p class="note">'+(U?"Так выглядит рейс: повтор записанной поездки Extella по Готарду на мокром рельсе, с толкачом. Щиты у пути: ограничения скорости в км/ч, жёлтый щит: ремонт пути. Красный локомотив впереди и толкач сзади.":"This is what a run looks like: a replay of Extella's recorded trip over the Gotthard on a wet rail, with a banking engine. Boards by the track are speed limits in km/h; a yellow board is track work. Red locomotive at the front, banking engine at the rear.")+'</p>'+
+    '<div class="row"><span class="note">'+(U?"Пять коротких тренировок на том же симуляторе, по минуте каждая.":"Five short drills on the same simulator, about a minute each.")+'</span><button type="button" id="skip">'+(U?"Сразу в рейс":"Go straight to a run")+'</button></div>';
+  $("skip").onclick = function(){ show("drive"); };
+  startDemo();
+}
+var demo = {t: 0, raf: 0, last: null};
+function startDemo(){
+  cancelAnimationFrame(demo.raf); demo.last = null;
+  var lid = "ch_gotthard", gh = DATA.ghosts[lid][2], L = DATA.lines[lid], Tr = DATA.trains[lid], W = DATA.worlds[lid][2];
+  var zones = [], prev = null; L.segments.forEach(function(s){ if (prev === null || s.limit_kmh !== prev) zones.push([1000*s.from_km, 1000*s.to_km, s.limit_kmh, "perm"]); prev = s.limit_kmh; });
+  W.temp.forEach(function(tp){ zones.push([1000*tp.from_km, 1000*tp.to_km, tp.limit_kmh, "temp"]); });
+  var j = gh.j, tEnd = j[j.length-1][0];
+  function at(ts){ for (var i = 1; i < j.length; i++) if (j[i][0] >= ts) { var a = j[i-1], b = j[i], f = (ts-a[0])/(b[0]-a[0]); return [a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f]; } return [j[j.length-1][1], 0]; }
+  function frame(ts){
+    var cv = $("demo"); if (!cv || screen !== "lessons") { demo.raf = 0; return; }
+    if (demo.last === null) demo.last = ts;
+    demo.t += Math.min(0.1, (ts - demo.last)/1000) * 40; demo.last = ts;
+    if (demo.t > tEnd) demo.t = 0;
+    var p = at(demo.t), U = LANG === "ru";
+    TrainScene.draw(cv, {L: L, T: Object.assign({}, Tr), km: p[0], v: p[1], t: demo.t, ghostKm: null, zones: zones, weather: W.weather, pusher: /толкач да/.test(gh.plan),
+      caption: "Extella · " + nf(p[1]) + (U ? " км/ч · км " : " km/h · km ") + nf(p[0], 1) + " · " + S.clock(demo.t)});
+    TrainScene.strip($("dstrip"), L, p[0], null);
+    demo.raf = requestAnimationFrame(frame);
+  }
+  demo.raf = requestAnimationFrame(frame);
+}
+function renderTabs(){
+  var h = ""; for (var i = 1; i <= 6; i++) h += '<button type="button" data-l="'+i+'" aria-pressed="'+(i===lessonN)+'">'+(i<6?i+'. ':'')+DR[LANG].names[i-1]+(i<6&&BEST[i]?' '+"★".repeat(BEST[i]):'')+'</button>';
+  $("ltabs").innerHTML = h;
+  Array.prototype.forEach.call($("ltabs").querySelectorAll("button"), function(b){ b.addEventListener("click", function(){ lessonN = +b.dataset.l; renderLesson(); }); });
+}
+var BEST = {};
+try { BEST = JSON.parse(localStorage.getItem("mash_best") || "{}") || {}; } catch (e) { BEST = {}; }
+function saveBest(n, st){ if (!BEST[n] || st > BEST[n]) BEST[n] = st; try { localStorage.setItem("mash_best", JSON.stringify(BEST)); } catch (e) {} }
+var DR = {
+ ru: {names: ["Тронуться", "Остановиться у отметки", "Ограничение впереди", "Мокрый подъём", "По графику", "Как играет Extella"],
+  theory: [
+   "Контроллер машиниста: вверх тяга, посередине выбег (поезд катится сам), вниз тормоз. Тяга нарастает не сразу: поезд весит сотни тонн. Стрелка на дисплее показывает скорость, красная метка на краю шкалы: сколько можно сейчас.",
+   "Поезд тормозит долго: со 120 км/ч до остановки уходят сотни метров. Зелёная пунктирная линия на пути и строка «Остановишься» на пульте показывают, где встанет поезд, если тормозить с текущей силой. Подведи эту линию к жёлтому столбику платформы.",
+   "Щит у пути с числом: дальше нельзя быстрее. Защита считает кривую торможения: красная метка на спидометре опускается заранее. Если стрелка уйдёт за метку больше чем на 5 км/ч, защита затормозит сама. Тормози раньше, чтобы этого не случилось.",
+   "Тяжёлый поезд на подъёме 25 ‰, рельс мокрый. Если тянуть слишком сильно, колёса буксуют (горит лампа «Боксование») и поезд почти не едет. Сбавь тягу, чтобы лампа погасла, и сыпь песок: он повышает сцепление на четверть. Песка на 600 секунд.",
+   "Расписание даёт запас. Раньше времени приезжать незачем: лучше выключить тягу и катиться (выбег), так тратится меньше энергии. Тормози перед станцией, когда поезд уже сбросил скорость сам. Опоздаешь больше чем на 30 с, тренировка не засчитана."],
+  goal: ["Разгонись до 120 км/ч и продержись 20 секунд, не выходя за красную метку.", "Остановись у отметки платформы. 3 звезды: до 2 м, 2: до 10 м, 1: до 50 м.", "Пройди щит 100 на скорости не выше 100 км/ч, и чтобы защита не вмешалась. Лучше всего между 85 и 100.", "Доберись до станции «Перевал» на 2-м км и остановись там. 3 звезды: за 8 минут, 2: за 11.", "Приди по графику (не позже 30 с) и потрать меньше энергии. 3 звезды: не больше 50 % энергии машиниста на полной тяге, 2: до 75 %, 1: до 100 %."],
+  start: "Начать тренировку", again: "Ещё раз", next: "Дальше", stars: ["Не засчитано", "Засчитано", "Хорошо", "Отлично"], toDrive: "В рейс"},
+ en: {names: ["Pull away", "Stop at the mark", "Limit ahead", "Wet climb", "On time", "How Extella plays"],
+  theory: [
+   "The driver's controller: up is power, the middle is coasting (the train rolls on its own), down is the brake. Power builds slowly: the train weighs hundreds of tonnes. The needle shows your speed; the red mark at the edge shows how fast you may go right now.",
+   "A train brakes slowly: from 120 km/h it needs hundreds of metres. The green dashed line on the track and the 'Stops in' readout show where the train will stop at the current brake. Bring that line to the yellow platform post.",
+   "A board by the track with a number: no faster beyond it. Protection computes a braking curve: the red mark on the speedometer drops early. If the needle goes more than 5 km/h past the mark, protection brakes by itself. Brake earlier so it does not.",
+   "A heavy train on a 25 ‰ climb, wet rail. Pull too hard and the wheels slip (the 'Wheel slip' lamp lights) and the train barely moves. Ease off until the lamp goes out and use sand: it adds a quarter to adhesion. There is sand for 600 seconds.",
+   "The timetable has slack. Arriving early gains nothing: switch power off and roll (coasting) to use less energy. Brake for the station once the train has slowed by itself. More than 30 s late does not count."],
+  goal: ["Get to 120 km/h and hold it for 20 seconds without passing the red mark.", "Stop at the platform mark. 3 stars: within 2 m, 2: within 10 m, 1: within 50 m.", "Pass the 100 board at no more than 100 km/h without protection stepping in. Best between 85 and 100.", "Reach 'Summit' station at km 2 and stop there. 3 stars: within 8 minutes, 2: within 11.", "Arrive on time (at most 30 s late) using less energy. 3 stars: at most 50 % of the energy a full-power driver uses, 2: up to 75 %, 1: up to 100 %."],
+  start: "Start the drill", again: "Try again", next: "Next", stars: ["Not passed", "Passed", "Good", "Excellent"], toDrive: "Start driving"}
+};
+function drillLine(n){
+  var ice = DATA.trains.de_krm, fr = DATA.trains.ch_gotthard, U = LANG === "ru";
+  var L, T, W = {seed: 0, weather: "dry", adhesion_factor: 1, temp: [], depart_delay_s: 0, signal: null}, init = null;
+  if (n === 1) { L = {id: "drill1", segments: [{from_km: 0, to_km: 6, grade_permille: 0, limit_kmh: 160}], stations: [{name: U?"Старт":"Start", km: 0}, {name: U?"Конец":"End", km: 6}]}; T = ice; }
+  if (n === 2) { L = {id: "drill2", segments: [{from_km: 0, to_km: 3, grade_permille: 0, limit_kmh: 160}], stations: [{name: U?"Старт":"Start", km: 0}, {name: U?"Платформа":"Platform", km: 2}]}; T = ice; init = {v: 120}; }
+  if (n === 3) { L = {id: "drill3", segments: [{from_km: 0, to_km: 5, grade_permille: 0, limit_kmh: 300}, {from_km: 5, to_km: 9, grade_permille: 0, limit_kmh: 100}], stations: [{name: U?"Старт":"Start", km: 0}, {name: U?"Конец":"End", km: 9}]}; T = ice; init = {v: 250}; }
+  if (n === 4) { L = {id: "drill4", segments: [{from_km: 0, to_km: 2.5, grade_permille: 25, limit_kmh: 80}], stations: [{name: U?"Низ":"Bottom", km: 0}, {name: U?"Перевал":"Summit", km: 2}]}; T = fr; W.weather = "wet"; W.adhesion_factor = 0.75; }
+  if (n === 5) {
+    L = {id: "drill5", segments: [{from_km: 0, to_km: 6, grade_permille: 0, limit_kmh: 250}, {from_km: 6, to_km: 12, grade_permille: -15, limit_kmh: 250}, {from_km: 12, to_km: 20, grade_permille: 0, limit_kmh: 250}],
+         stations: [{name: U?"Старт":"Start", km: 0}, {name: U?"Станция":"Station", km: 20}]};
+    T = ice;
+    if (!DRILL5) { var ref = runDriver(null, W, mkDriver(false), L, T); DRILL5 = {arr: Math.ceil(ref.t*1.12/30)*30, kwh: (ref.E_in - ref.E_back)/3.6e6}; }
+    L.timetable = [{name: L.stations[0].name, arr_s: null, dep_s: 0}, {name: L.stations[1].name, arr_s: DRILL5.arr, dep_s: null}]; L.ref_kwh = DRILL5.kwh;
+  }
+  return {L: L, T: T, W: W, init: init};
+}
+var DRILL5 = null;
+function startDrill(n){
+  var c = drillLine(n);
+  G = new S.Game(c.L, c.T, c.W); GH = null;
+  if (c.init) { G.v = c.init.v/3.6; G.departed = true; G.at_station = false; G.lever = 0; }
+  var st = {held: 0, passed: null};
+  MODE = {kind: "drill", n: n,
+    check: function(g){
+      var v = g.v*3.6;
+      if (n === 1) { if (v >= 117 && v <= g.permitted()*3.6 + 1) st.held += S.DT; else if (v < 110) st.held = 0; return st.held >= 20 || g.x > 5500 || g.counts.emergency > 0; }
+      if (n === 3) { if (st.passed === null && g.x >= 5000) st.passed = v; return g.x >= 5200 || g.counts.emergency > 0; }
+      if (n === 4) return g.t > 900;
+      return false;
+    },
+    finish: function(){ drillFinish(n, st); }
+  };
+  mountCab($("lw")); $("cab").hidden = false; $("result").hidden = true;
+  $("goalbar").hidden = false; $("goalbar").textContent = DR[LANG].goal[n-1];
+  $("lever").value = 0; setSpeed(n === 4 || n === 5 ? 10 : 10); lastTs = null; acc = 0; cancelAnimationFrame(timer); timer = requestAnimationFrame(loop);
+  $("front").scrollIntoView({block: "nearest"});
+}
+function drillFinish(n, st){
+  cancelAnimationFrame(timer);
+  var g = G, U = LANG === "ru", stars = 0, text = "";
+  var atp = g.counts.atp, em = g.counts.emergency;
+  if (n === 1) {
+    if (st.held >= 20 && !atp && !em) { stars = g.t <= 75 ? 3 : g.t <= 110 ? 2 : 1; text = U ? "Разогнался и удержал скорость за "+nf(g.t)+" с." : "Got up to speed and held it in "+nf(g.t)+" s."; }
+    else text = atp || em ? (U ? "Защита вмешалась: скорость ушла за красную метку. Сбавляй тягу заранее, у самой метки ставь выбег." : "Protection stepped in: the speed passed the red mark. Ease off early and coast right at the mark.") : (U ? "Не удержал 120 км/ч 20 секунд. Держи контроллер в тяге, а на 120 поставь чуть-чуть тяги, чтобы скорость не падала." : "You did not hold 120 km/h for 20 seconds. Keep power on, then a little power at 120 so the speed stays.");
+  }
+  if (n === 2) {
+    var s2 = g.stops[0];
+    if (s2 && !s2.missed) { var e = Math.abs(s2.err_m); stars = e <= 2 ? 3 : e <= 10 ? 2 : 1; text = U ? "Встал в "+nf(e,1)+" м от отметки ("+(s2.err_m>0?"проехал":"не доехал")+")." : "Stopped "+nf(e,1)+" m from the mark ("+(s2.err_m>0?"past it":"short of it")+")."; }
+    else text = U ? "Проехал платформу. Начни тормозить, когда зелёная линия подойдёт к отметке, и добавляй тормоз, если она уходит дальше." : "You overran the platform. Start braking when the green line reaches the mark, and add brake if it moves past.";
+    if (stars && stars < 3) text += U ? " Последние 300 м держи зелёную линию прямо на отметке, меняя силу тормоза." : " For the last 300 m keep the green line right on the mark by adjusting the brake.";
+  }
+  if (n === 3) {
+    var pv = st.passed === null ? g.v*3.6 : st.passed;
+    if (em) text = U ? "Экстренное торможение: превышение больше 15 км/ч. Тормози раньше, сразу как красная метка на спидометре пошла вниз." : "Emergency braking: more than 15 km/h over. Brake earlier, as soon as the red mark starts dropping.";
+    else if (atp) { stars = 1; text = U ? "Защита вмешалась, но обошлось без экстренного. Начинай тормозить раньше." : "Protection stepped in, though without an emergency. Start braking earlier."; }
+    else if (pv <= 102) { stars = pv >= 85 ? 3 : 2; text = U ? "Прошёл щит на "+nf(pv)+" км/ч." + (pv < 85 ? " Можно было тормозить позже и потерять меньше времени." : "") : "Passed the board at "+nf(pv)+" km/h." + (pv < 85 ? " You could brake later and lose less time." : ""); }
+    else text = U ? "Прошёл щит на "+nf(pv)+" км/ч, быстрее 100." : "Passed the board at "+nf(pv)+" km/h, faster than 100.";
+  }
+  if (n === 4) {
+    var s4 = g.stops[0];
+    if (s4 && !s4.missed) { stars = g.t <= 480 ? 3 : g.t <= 660 ? 2 : 1; text = U ? "Поднялся за "+mmss(g.t)+". Боксовал "+nf(g.counts.slip_s)+" с, песка ушло "+nf(600 - g.sand_left)+" с." : "Climbed in "+mmss(g.t)+". Wheel slip for "+nf(g.counts.slip_s)+" s, sand used "+nf(600 - g.sand_left)+" s."; }
+    else text = U ? "Не поднялся за 15 минут. Сбавляй тягу, пока горит «Боксование», и включи песок." : "Did not climb within 15 minutes. Ease off while 'Wheel slip' is lit, and use sand.";
+  }
+  if (n === 5) {
+    var s5 = g.stops[0], kwh = (g.E_in - g.E_back)/3.6e6, pct = 100*kwh/g.L.ref_kwh;
+    if (s5 && !s5.missed && s5.late_s <= 30) { stars = pct <= 50 ? 3 : pct <= 75 ? 2 : pct <= 100 ? 1 : 0; text = U ? "Пришёл "+(s5.late_s > 0 ? "с опозданием "+mmss(s5.late_s) : "за "+mmss(-s5.late_s)+" до графика")+", энергия "+nf(pct)+" % эталона." : "Arrived "+(s5.late_s > 0 ? mmss(s5.late_s)+" late" : mmss(-s5.late_s)+" early")+", energy "+nf(pct)+" % of the reference."; if (!stars) text += U ? " Энергии больше эталона: выключай тягу раньше." : " More energy than the reference: switch power off earlier."; }
+    else text = U ? "Опоздание больше 30 с. Выбег начинай позже, а под уклон можно и вовсе не тянуть." : "More than 30 s late. Start coasting later; downhill you may not need power at all.";
+  }
+  if (stars) saveBest(n, stars);
+  var D = DR[LANG];
+  $("result").hidden = false;
+  $("result").innerHTML = '<div class="panel drill-card"><div class="stars">'+"★".repeat(stars)+'<span style="color:var(--line)">'+"★".repeat(3-stars)+'</span></div><h3>'+D.stars[stars]+'</h3><p>'+esc(text)+'</p>'+
+    '<div class="row"><button type="button" id="dagain">'+D.again+'</button>'+(n < 5 ? '<button type="button" class="primary" id="dnext">'+D.next+': '+D.names[n]+'</button>' : '<button type="button" class="primary" id="dnext">'+D.toDrive+'</button>')+'</div></div>';
+  $("cab").hidden = true;
+  $("dagain").onclick = function(){ startDrill(n); };
+  $("dnext").onclick = function(){ G = null; $("result").hidden = true; if (n < 5) { lessonN = n + 1; renderLesson(); } else show("drive"); };
+  renderTabs();
+}
+function renderLesson(){
+  renderIntro(); renderTabs();
+  var box = $("lesson"), n = lessonN, D = DR[LANG];
+  if ($("cab").parentNode && $("cab").parentNode.id === "lw" && MODE.kind === "drill") { cancelAnimationFrame(timer); G = null; }
+  $("scr-drive").appendChild($("cab")); $("scr-drive").appendChild($("result")); $("cab").hidden = true; $("result").hidden = true;
+  if (n === 6) {
+    box.innerHTML = '<div style="display:flex;flex-direction:column;gap:14px"><h2>'+D.names[5]+'</h2>'+L[LANG][5]+'<div id="lw"></div><div class="row"><button type="button" class="primary" id="lnext">'+D.toDrive+'</button></div></div>';
+    lesson5($("lw")); $("lnext").onclick = function(){ show("drive"); };
+    return;
+  }
+  box.innerHTML = '<div style="display:flex;flex-direction:column;gap:14px"><h2>'+(LANG==="ru"?"Тренировка ":"Drill ")+n+'. '+D.names[n-1]+'</h2><p>'+D.theory[n-1]+'</p><div class="ok"><b>'+(LANG==="ru"?"Цель: ":"Goal: ")+'</b>'+D.goal[n-1]+'</div>'+
+    '<div class="row"><button type="button" class="primary" id="dstart">'+D.start+'</button>'+(BEST[n]?'<span class="stars" style="font-size:22px">'+"★".repeat(BEST[n])+'</span>':'')+'<span class="note">'+(LANG==="ru"?"Клавиши: ↑ ↓ контроллер, пробел выбег, Q песок.":"Keys: ↑ ↓ controller, space coast, Q sand.")+'</span></div><div id="lw"></div></div>';
+  $("dstart").onclick = function(){ startDrill(n); };
+}
+
+/* тестовые машинисты для урока 4 (перенос drivers.py, без состояния) */
+function brakeToStop(o, g, lever){
+  var st = o.next_stop; if (!st || o.at_station) return lever;
+  var sv = g.T.brake.service_ms2, gr = 9.81*Math.min(o.grade_permille, 0)/1000, v = o.v_kmh/3.6, dist = st.dist_m;
+  if (dist > 0) { var need = v*v/(2*dist); if (need > 0.8*sv + gr) lever = -Math.min(1, (need-gr)/sv); if (dist < 2 && v < 2) lever = -1; } else lever = -1;
+  if (v < 0.3 && dist > 2) lever = dist > 400 ? 0.6 : 0.35;
+  return lever;
+}
+function mkDriver(coastAhead){
+  var cap = 1;
+  return function(o, g){
+    cap = o.slip ? cap*0.97 : Math.min(1, cap+0.005);
+    if (o.at_station) return o.t >= o.due_s ? {lever: cap} : null;
+    var tgt = Math.min(o.permitted_kmh - 3, o.limit_kmh - 1), v = o.v_kmh, lever = Math.max(-1, Math.min(cap, (tgt - v)/4));
+    var st = o.next_stop;
+    if (coastAhead && st && st.arr_s !== null && v > 20 && lever >= 0) { var left = st.arr_s - o.t; if (left > 0 && st.dist_m/(v/3.6) < 0.95*left && o.grade_permille <= 5) lever = 0; }
+    return {lever: brakeToStop(o, g, lever)};
+  };
+}
+function runDriver(lid, world, drv, line, train){
+  var g = new S.Game(line || DATA.lines[lid], train || DATA.trains[lid], world);
+  while (!g.done()) { var d = drv(g.observe(), g); if (d) g.decide(d); g.step(); }
+  return g;
+}
+function lesson5(el){
+  var U = LANG === "ru", e = DATA.lesson5, h = '';
+  // 1. кто с кем соревнуется: что видит, когда решает, что пишет, кто ведёт поезд
+  var who = U ? [
+    ["Ты", "кабину: скорость, допустимую скорость, знаки впереди, станцию", "всё время", "сам двигаешь контроллер", "ты"],
+    ["Extella", "брифинг до отправления: график, погоду, ремонт пути, профиль", "один раз до отправления (если Проверка отказала, исправляет план, до трёх попыток)", "короткий замысел на языке поездки: «разгон до 280», «песок с км 42 до км 70», «толкач да»", "обработчик Extella: каждые полсекунды держит скорость у допустимой и сам соблюдает ограничения"],
+    ["Малая модель без Extella", "тот же брифинг", "один раз до отправления", "положение контроллера по километрам: «с км 0 тяга 100 %, с км 22 тормоз»", "никто: план исполняется буквально, без поправок"],
+    ["Большая модель без Extella", "тот же брифинг", "один раз до отправления", "то же: контроллер по километрам, посчитанный в уме", "никто: план исполняется буквально"],
+    ["Большая модель с обратной связью", "кабину, как ты", "по ходу рейса на каждом событии: в среднем 61 раз за рейс", "положение контроллера и до какого километра его держать", "сама, по ходу рейса"],
+    ["Простая программа (не ИИ)", "кабину", "каждые полсекунды", "ничего не планирует: всегда едет на 3 км/ч ниже допустимой и тормозит к станции по формуле", "она сама. Это ориентир: сколько набирается без хитростей"]
+  ] : [
+    ["You", "the cab: speed, permitted speed, signs ahead, the station", "all the time", "you move the controller yourself", "you"],
+    ["Extella", "the briefing before departure: timetable, weather, track work, profile", "once before departure (if the check refuses, it fixes the plan, up to three tries)", "a short intent in the trip language: 'accelerate to 280', 'sand from km 42 to km 70', 'banker yes'", "the Extella handler: every half second it holds speed near the permitted one and obeys limits itself"],
+    ["Small model without Extella", "the same briefing", "once before departure", "the controller position per kilometre: 'from km 0 power 100 %, from km 22 brake'", "nobody: the plan runs literally"],
+    ["Large model without Extella", "the same briefing", "once before departure", "the same: controller per kilometre, worked out in its head", "nobody: the plan runs literally"],
+    ["Large model with feedback", "the cab, like you", "during the run at every event: 61 times per run on average", "the controller position and how far to hold it", "itself, during the run"],
+    ["Simple program (not AI)", "the cab", "every half second", "plans nothing: always 3 km/h under the permitted speed, brakes for stations by formula", "itself. It is a yardstick: what you get with no tricks"]
+  ];
+  h += '<h3>'+(U?"Кто с кем соревнуется":"Who races whom")+'</h3><div class="tbl"><table><thead><tr><th></th><th>'+(U?"что видит":"sees")+'</th><th>'+(U?"когда решает":"decides")+'</th><th>'+(U?"что пишет":"writes")+'</th><th>'+(U?"кто ведёт поезд":"who drives")+'</th></tr></thead><tbody>'+
+    who.map(function(r){ return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>'; }).join("")+'</tbody></table></div>';
+  h += '<p class="note">'+(U?"У всех один рейс: та же погода, тот же ремонт пути, та же задержка отправления и тот же поезд впереди. Счёт у всех по одной формуле. Малая модель везде одна: Qwen 9B, она работает на ноутбуке. Большая модель: Claude, работает в облаке.":"Everyone gets the same run: same weather, track work, departure delay and train ahead. One scoring formula for all. The small model is always Qwen 9B, running on a laptop. The large model is Claude, running in the cloud.")+'</p>';
+  // 2. результаты
+  var COLS = [["extella","Extella","Extella"],["small","Малая без Extella","Small without Extella"],["big","Большая без Extella","Large without Extella"],["bigfb","Большая с обратной связью","Large with feedback"]];
+  h += '<h3>'+(U?"Средний счёт по участкам":"Average score by line")+'</h3><div class="tbl"><table><thead><tr><th></th>'+COLS.map(function(c){ var r = RIV.filter(function(x){ return x.key===c[0]; })[0]; return '<th style="text-align:right;color:var('+r.col+')">'+(U?c[1]:c[2])+'</th>'; }).join("")+'<th style="text-align:right">'+(U?"простая программа":"simple program")+'</th></tr></thead><tbody>'+
+    LIDS.map(function(l){ return '<tr><td>'+LINE_NAME(l)+'</td>'+COLS.map(function(c){ var a = rivalAvg(c[0], l), n = rivalN(c[0], l); return '<td class="n">'+(a===null?"–":nf(a))+(n && n < 10 ? '<div class="note">'+(U?"рейсы 1–":"runs 1–")+n+'</div>' : '')+'</td>'; }).join("")+'<td class="n">'+DATA.ladder[l].full+'</td></tr>'; }).join("")+'</tbody></table></div>';
+  h += '<div class="ok">'+(U?"Главное сравнение: большая модель с обратной связью ведёт поезд, как человек, решая по ходу, в среднем 61 решение за рейс. На тех же 9 рейсах Extella выиграла 6: в среднем 554 очка против 253. Модель у Extella вызывается 1–2 раза до отправления и работает на ноутбуке. Защита у Extella не вмешалась ни разу, у большой модели 18 раз.":"The key comparison: the large model with feedback drives like a person, deciding during the run, 61 decisions per run on average. On the same 9 runs Extella won 6: 554 points on average against 253. Extella calls its model 1 to 2 times before departure, on a laptop. Protection never stepped in for Extella; 18 times for the large model.")+'</div>';
+  h += '<p class="note">'+(U?"Почему модели без Extella так плохи: план, написанный заранее, исполняется буквально. Если в нём тормоз чуть раньше станции, поезд встаёт и стоит до конца рейса. Если скорость в плане выше допустимой, защита тормозит снова и снова, каждый раз −150.":"Why the models without Extella do so badly: a plan written in advance runs literally. Brake a little before the station and the train stops there for good. Plan a speed above the permitted one and protection brakes again and again, −150 each time.")+'</p>';
+  // 3. пример
+  h += '<h3>'+(U?"Как это выглядит у Extella: мокрый Готард, рейс 2":"What it looks like for Extella: the wet Gotthard, run 2")+'</h3>';
+  h += (LANG==="en" ? '<p class="note">The model\'s real input and output, in Russian.</p>' : '') + '<div class="code">'+esc(e.briefing.split("\n").slice(0,5).join("\n"))+'\n…</div>';
+  e.calls.forEach(function(c, i){
+    h += '<p><b>'+(U?"Попытка ":"Attempt ")+(i+1)+'</b></p><div class="code">'+esc(c.plan)+'</div>';
+    if (!c.ok) h += '<div class="rej">'+(U?"Проверка отказала: ":"The check refused: ")+esc(U?c.errors[0].ru:c.errors[0].en)+'</div>';
+    else h += '<div class="ok">'+(U?"Проверка приняла. Прогноз счёта ":"Accepted. Forecast score ")+nf(c.forecast.score)+'</div>';
+  });
+  h += '<p>'+(U?"Рейс по принятому плану: ":"The run on the accepted plan: ")+'<b>'+nf(e.score)+'</b>. '+(U?"Простая программа без песка и толкача на этом рейсе не доехала: ":"The simple program without sand or a banking engine did not finish this run: ")+nf(e.full)+'.</p>';
+  // 4. лестница языка
+  var lad = DATA.ladder;
+  h += '<h3>'+(U?"Как Extella улучшили по ошибкам модели":"How Extella was improved from the model's mistakes")+'</h3><p class="note">'+(U?"В первой версии языка поездки модель переписывала профиль строками «держать V до км K» и ставила скорость ниже допустимой. Во второй версии это слово убрали и дали модели один пример. Модель та же, обучения не было. Средний счёт Extella на тех же 30 рейсах:":"In the first version of the trip language the model copied the profile line by line ('hold V until km K') and set speeds too low. The second version drops that word and gives the model one example. Same model, no training. Extella's average score on the same 30 runs:")+'</p>';
+  h += '<div class="tbl"><table><thead><tr><th></th><th style="text-align:right">'+(U?"первая версия языка":"language v1")+'</th><th style="text-align:right">'+(U?"вторая версия":"language v2")+'</th></tr></thead><tbody>'+
+    LIDS.map(function(l){ return '<tr><td>'+LINE_NAME(l)+'</td><td class="n">'+lad[l].v1+'</td><td class="n"><b>'+lad[l].v2+'</b></td></tr>'; }).join("")+'</tbody></table></div>';
+  h += '<p class="note">'+(U?"Всё это можно перепроверить: журналы решений и скрипт перепроверки лежат в репозитории игры, раздел «Как перепроверить».":"All of this can be rechecked: decision logs and a verification script are in the game repository, section 'How to recheck'.")+'</p>';
+  el.innerHTML = h;
+}
+
+/* ---------- рейс ---------- */
+var MODE = {kind: "drive"}, VIEW = "cab", DLOG = [];
+function act(dec){ var r = G.decide(dec); if (!r.length) DLOG.push([Math.round(G.t / S.DT), dec]); return r; }  // журнал решений для пересчёта (train/replay.py)
+try { if (localStorage.getItem("mash_view") === "side") VIEW = "side"; } catch (e) {}
+function viewLabel(){ return LANG === "ru" ? (VIEW === "cab" ? "Вид: из кабины → сбоку" : "Вид: сбоку → из кабины") : (VIEW === "cab" ? "View: cab → side" : "View: side → cab"); }
+var pick = {lid: "ch_gotthard", seed: 2, pusher: false}, G = null, GH = null, timer = null, speed = 10, lastTs = null, msgT = 0, elev = null;
+function briefingHTML(){
+  var Lp = DATA.lines[pick.lid], W = DATA.worlds[pick.lid][pick.seed], st = Lp.stations.filter(function(s){ return !s.pass; }), tt = Lp.timetable;
+  var h = '<div class="tbl"><table><tbody>';
+  h += '<tr><th>'+t("sched")+'</th><td>'+st.map(function(s,i){ return esc(s.name)+' <span class="mono">'+(tt[i].arr_s!==null?S.clock(tt[i].arr_s):"")+(tt[i].dep_s!==null&&tt[i].arr_s!==null?"–":"")+(tt[i].dep_s!==null?S.clock(tt[i].dep_s):"")+'</span>'; }).join(" · ")+'</td></tr>';
+  h += '<tr><th>'+(LANG==="ru"?"Погода":"Weather")+'</th><td>'+T[LANG].weather[W.weather]+'</td></tr>';
+  h += '<tr><th>'+t("delay")+'</th><td>'+(W.depart_delay_s ? nf(W.depart_delay_s/60)+(LANG==="ru"?" мин":" min") : t("none"))+'</td></tr>';
+  h += '<tr><th>'+t("warn")+'</th><td>'+(W.temp.length ? W.temp.map(function(w){ return (LANG==="ru"?"км ":"km ")+nf(w.from_km,1)+"–"+nf(w.to_km,1)+": "+w.limit_kmh+(LANG==="ru"?" км/ч, ":" km/h, ")+t("track_work"); }).join("; ") : t("none"))+'</td></tr>';
+  var Tr = DATA.trains[pick.lid];
+  h += '<tr><th>'+(LANG==="ru"?"Поезд":"Train")+'</th><td class="mono">'+esc(Tr.name)+' · '+nf(Tr.mass_t)+(LANG==="ru"?" т · ":" t · ")+nf(Tr.power_kW)+(LANG==="ru"?" кВт · до ":" kW · up to ")+Tr.vmax_kmh+(LANG==="ru"?" км/ч":" km/h")+'</td></tr>';
+  return h + '</tbody></table></div>';
+}
+function renderPick(){
+  $("cab").hidden = true; $("result").hidden = true;
+  var h = '<div style="display:flex;flex-direction:column;gap:12px"><h2>'+t("pick")+'</h2><div class="grid3">';
+  LIDS.forEach(function(l){ h += '<button type="button" class="card" data-lid="'+l+'" aria-pressed="'+(l===pick.lid)+'"><span class="flag">'+FLAG[l]+'</span><b>'+esc(LINE_NAME(l))+'</b><span class="note">'+TEACH[LANG][l]+'</span></button>'; });
+  h += '</div><div class="row"><label for="seed" class="muted">'+t("seed")+'</label><select id="seed">';
+  for (var s = 1; s <= 10; s++) h += '<option value="'+s+'"'+(s===pick.seed?' selected':'')+'>'+(LANG==="ru"?"Рейс ":"Run ")+s+' · '+T[LANG].weather[DATA.worlds[pick.lid][s].weather]+' · Extella '+nf(DATA.ghosts[pick.lid][s].score)+'</option>';
+  h += '</select></div>'+briefingHTML();
+  if (DATA.trains[pick.lid].pusher) h += '<label class="row"><input type="checkbox" id="push"'+(pick.pusher?' checked':'')+'> '+t("pusher")+'</label>';
+  h += '<div class="row"><button type="button" class="primary" id="go">'+t("start")+'</button><span class="note">'+(LANG==="ru"?"Цель: больше ":"Goal: more than ")+'<b>'+nf(DATA.ghosts[pick.lid][pick.seed].score)+'</b>'+(LANG==="ru"?" очков, столько набрала Extella на этом рейсе.":" points, Extella's score on this run.")+'</span></div>'+rivalsTable()+'</div>';
+  $("pick").innerHTML = h; $("pick").hidden = false;
+  Array.prototype.forEach.call($("pick").querySelectorAll("[data-lid]"), function(b){ b.onclick = function(){ pick.lid = b.dataset.lid; pick.pusher = false; renderPick(); }; });
+  $("seed").onchange = function(){ pick.seed = +this.value; renderPick(); };
+  if ($("push")) $("push").onchange = function(){ pick.pusher = this.checked; };
+  $("go").onclick = startRun;
+  Array.prototype.forEach.call($("pick").querySelectorAll("[data-show]"), function(c){ c.onchange = function(){ SHOW[c.dataset.show] = c.checked; }; });
+}
+function buildElev(lid){
+  var Lp = DATA.lines[lid], seg = Lp.segments.slice().sort(function(a,b){ return a.from_km-b.from_km; }), pts = [[seg[0].from_km, 0]], h = 0;
+  seg.forEach(function(s){ h += (s.to_km - s.from_km)*s.grade_permille; pts.push([s.to_km, h]); });
+  return pts;
+}
+function hAt(km){ for (var i = 1; i < elev.length; i++) if (km <= elev[i][0]) { var a = elev[i-1], b = elev[i]; return a[1] + (b[1]-a[1])*(km-a[0])/(b[0]-a[0]); } return elev[elev.length-1][1]; }
+function mountCab(where){ where.appendChild($("cab")); where.appendChild($("result")); }
+function startRun(){
+  MODE = {kind: "drive"}; mountCab($("scr-drive")); $("goalbar").hidden = true;
+  var W = JSON.parse(JSON.stringify(DATA.worlds[pick.lid][pick.seed]));
+  G = new S.Game(DATA.lines[pick.lid], DATA.trains[pick.lid], W); GH = DATA.ghosts[pick.lid][pick.seed]; elev = buildElev(pick.lid);
+  DLOG = [];
+  if (pick.pusher) act({pusher: true});
+  $("pick").hidden = true; $("cab").hidden = false; $("result").hidden = true;
+  $("lever").value = 0; setSpeed(10); lastTs = null; acc = 0; cancelAnimationFrame(timer); timer = requestAnimationFrame(loop);
+}
+var acc = 0;
+try { if (/[?&]test/.test(location.search)) window.__mashFrame = function(n, steps, lever){ startDrill(n); cancelAnimationFrame(timer); G.decide({lever: lever}); for (var i = 0; i < steps; i++) G.step(); draw(); return G.observe().v_kmh; }; } catch (e) {}
+try { if (/[?&]test/.test(location.search)) window.__mashDrill = function(n, pol){ startDrill(n); cancelAnimationFrame(timer); var guard = 0;
+    while (!G.done() && guard++ < 4000) { var o = G.observe(), d = pol(o, G); if (d) G.decide(d); G.step(); if (MODE.check && MODE.check(G)) break; } draw(); var g = G; MODE.finish(); return {t: g.t, stops: g.stops, counts: g.counts, text: $("result").innerText}; }; } catch (e) {}
+try { if (/[?&]test/.test(location.search)) window.__mashTest = function(drv){ var d = mkDriver(false); while (!G.done()) { var x = d(G.observe(), G); if (x) act(x); G.step(); } draw(); var sc = G.score(); finish(); sc.log = DLOG; return sc; }; } catch (e) {}
+function loop(ts){
+  if (!G) return;
+  if (lastTs === null) lastTs = ts;
+  var dt = Math.min(0.25, (ts - lastTs)/1000); lastTs = ts;
+  acc += dt * speed / S.DT;
+  var n = Math.floor(acc); acc -= n;
+  var stop = false;
+  for (var i = 0; i < n && !G.done(); i++) { G.step(); if (MODE.check && MODE.check(G)) { stop = true; break; } }
+  draw();
+  if (G.done() || stop) return MODE.finish ? MODE.finish() : finish();
+  timer = requestAnimationFrame(loop);
+}
+function setLever(v){
+  v = Math.max(-1, Math.min(1, Math.round(v*20)/20));
+  var r = act({lever: v});
+  if (r.length) say(r[0][LANG], true); else $("lever").value = v;
+}
+function say(text, bad){ $("msg").innerHTML = text ? '<span style="color:'+(bad?'var(--limit)':'var(--muted)')+'">'+esc(text)+'</span>' : ''; msgT = performance.now(); }
+function setSpeed(s){ speed = s; [["sp-0",0],["sp-10",10],["sp-30",30]].forEach(function(p){ $(p[0]).classList.toggle("on", p[1]===s); $(p[0]).setAttribute("aria-pressed", p[1]===s); }); }
+$("lever").addEventListener("input", function(){ if (G) setLever(+this.value); });
+$("b-brake").onclick = function(){ if (G) setLever(G.lever - 0.25); };
+$("b-coast").onclick = function(){ if (G) setLever(0); };
+$("b-power").onclick = function(){ if (G) setLever(G.lever + 0.25); };
+$("b-sand").onclick = function(){ if (G) { var r = act({sand: !G.sand_on}); if (r.length) say(r[0][LANG], true); } };
+$("b-emerg").onclick = function(){ if (G) act({emergency: true}); };
+$("viewbtn").onclick = function(){ VIEW = VIEW === "cab" ? "side" : "cab"; try { localStorage.setItem("mash_view", VIEW); } catch (e) {} this.textContent = viewLabel(); if (G) draw(); };
+$("quit").onclick = function(){ cancelAnimationFrame(timer); G = null; if (MODE.kind === "drill") { $("cab").hidden = true; renderLesson(); } else renderPick(); };
+$("hints").onchange = function(){ $("hint").hidden = !this.checked; };
+function hintText(o){
+  var U = LANG === "ru", sv = G.T.brake.service_ms2, v = o.v_kmh/3.6;
+  if (o.at_station && o.t < o.due_s) return U ? "Стоим на станции. Отправление в "+o.due_clock+": раньше нельзя. Потом двинь рычаг вверх (↑)." : "At the station. Departure at "+o.due_clock+": not earlier. Then push the lever up (↑).";
+  if (o.at_station) return U ? "Пора отправляться: рычаг вверх (↑)." : "Time to go: push the lever up (↑).";
+  if (o.emergency) return U ? "Экстренное торможение до остановки. Это −400 очков." : "Emergency braking to a stop. That costs 400 points.";
+  if (o.atp) return U ? "Защита тормозит: ты превысил допустимую скорость. Сбавь тягу, это −150 очков." : "Protection is braking: you went over the permitted speed. Ease off; that costs 150 points.";
+  if (o.slip) return U ? "Колёса буксуют: сбавь тягу или включи песок (Q)." : "Wheels are slipping: ease off or use sand (Q).";
+  var st = o.next_stop;
+  if (st && st.dist_m > 0) {
+    var need = v*v/(2*st.dist_m);
+    if (st.dist_m < 400 && o.v_kmh < 40) return U ? "Подъезжай медленно и остановись у отметки "+st.name+": до 2 м без штрафа, дальше −5 за метр." : "Roll in slowly and stop at the "+st.name+" mark: up to 2 m is free, then 5 points per metre.";
+    if (need > 0.55*sv) return U ? "Пора тормозить к станции "+st.name+": рычаг вниз (↓)." : "Time to brake for "+st.name+": lever down (↓).";
+  }
+  var nx = o.ahead.filter(function(z){ return z.from_km > o.km && z.limit_kmh < o.v_kmh; })[0];
+  if (nx) { var d = (nx.from_km - o.km)*1000, vt = nx.limit_kmh/3.6; if ((v*v - vt*vt)/(2*Math.max(1, d)) > 0.45*sv) return U ? "Впереди "+nx.limit_kmh+" км/ч через "+nf(d/1000,1)+" км: начинай тормозить." : nx.limit_kmh+" km/h ahead in "+nf(d/1000,1)+" km: start braking."; }
+  if (o.v_kmh > o.permitted_kmh - 3) return U ? "Ты у самой кривой защиты (красная метка на шкале): не разгоняйся." : "You are right at the protection curve (red mark on the bar): do not speed up.";
+  return U ? "Держи скорость под допустимой. Если идёшь с опережением графика, выбег (пробел) экономит энергию." : "Keep under the permitted speed. If you are ahead of time, coasting (space) saves energy.";
+}
+$("sp-0").onclick = function(){ setSpeed(0); }; $("sp-10").onclick = function(){ setSpeed(10); }; $("sp-30").onclick = function(){ setSpeed(30); };
+document.addEventListener("keydown", function(e){
+  if (!G || $("cab").hidden || e.target.tagName === "SELECT") return;
+  var k = e.key;
+  if (k === "ArrowUp" || k === "w" || k === "W") { setLever(G.lever + 0.05); e.preventDefault(); }
+  else if (k === "ArrowDown" || k === "s" || k === "S") { setLever(G.lever - 0.05); e.preventDefault(); }
+  else if (k === " ") { setLever(0); e.preventDefault(); }
+  else if (k === "q" || k === "Q" || k === "й" || k === "Й") $("b-sand").click();
+  else if (k === "e" || k === "E" || k === "у" || k === "У") $("b-emerg").click();
+  else if (k === "p" || k === "P" || k === "з" || k === "З") setSpeed(speed ? 0 : 10);
+  else if (k === "v" || k === "V" || k === "м" || k === "М") $("viewbtn").click();
+});
+var RIV = [
+  {key: "extella", col: "--ghost", ru: "Extella", en: "Extella",
+   d_ru: "малая модель Qwen 9B на ноутбуке плюс Extella: пишет замысел на языке поездки, обработчик проверяет план на прогнозе и ведёт поезд",
+   d_en: "the small Qwen 9B model on a laptop plus Extella: it writes intent in the trip language; the handler checks the plan on the forecast and drives"},
+  {key: "small", col: "--track", ru: "Малая модель без Extella", en: "Small model without Extella",
+   d_ru: "та же Qwen 9B и тот же брифинг, но положение контроллера по километрам пишет сама, без языка и проверки",
+   d_en: "the same Qwen 9B and the same briefing, but it writes the controller position per kilometre itself, with no language or checks"},
+  {key: "big", col: "--signal", ru: "Большая модель без Extella", en: "Large model without Extella",
+   d_ru: "Claude, тот же брифинг, считает в уме и сама пишет контроллер по километрам, без инструментов",
+   d_en: "Claude, the same briefing, reasons in its head and writes the controller per kilometre itself, with no tools"},
+  {key: "bigfb", col: "--limit", ru: "Большая модель с обратной связью", en: "Large model with feedback",
+   d_ru: "Claude ведёт поезд по ходу рейса, как ты: видит кабину и решает снова на каждом событии, в среднем 61 решение за рейс. Прогнана на рейсах 1–3",
+   d_en: "Claude drives during the run, like you: it sees the cab and decides again at every event, 61 decisions per run on average. Run on runs 1 to 3"}
+];
+var SHOW = {extella: true, small: false, big: false, bigfb: false};
+function rival(key, lid, seed){ if (key === "extella") return DATA.ghosts[lid][seed]; var r = DATA.rivals && DATA.rivals[lid] && DATA.rivals[lid][String(seed)]; return (r && r[key]) || null; }
+function rivalAvg(key, lid){ if (key === "extella") return DATA.ladder[lid].v2; var a = DATA.rival_avg && DATA.rival_avg[lid] && DATA.rival_avg[lid][key]; return a ? a.avg : null; }
+function rivalN(key, lid){ if (key === "extella") return 10; var a = DATA.rival_avg && DATA.rival_avg[lid] && DATA.rival_avg[lid][key]; return a ? a.n : 0; }
+function rname(r){ return LANG === "ru" ? r.ru : r.en; }
+function jAt(j, tsec){
+  if (!j || !j.length) return null;
+  if (tsec <= j[0][0]) return j[0];
+  for (var i = 1; i < j.length; i++) if (j[i][0] >= tsec) { var a = j[i-1], b = j[i], f = (tsec-a[0])/(b[0]-a[0]); return [tsec, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f, a[3]+(b[3]-a[3])*f]; }
+  return j[j.length-1];
+}
+function othersAt(tsec){
+  return RIV.filter(function(r){ return r.key !== "extella" && SHOW[r.key]; }).map(function(r){ var d = rival(r.key, pick.lid, pick.seed); var p = d ? jAt(d.j, tsec) : null; return p ? {km: p[1], color: css(r.col), label: rname(r)} : null; }).filter(Boolean);
+}
+function rivalsTable(){
+  var U = LANG === "ru", h = '<h3>'+(U?"С кем ты соревнуешься на этом рейсе":"Who you race on this run")+'</h3><div class="tbl"><table><thead><tr><th></th><th style="text-align:right">'+(U?"этот рейс":"this run")+'</th><th style="text-align:right">'+(U?"в среднем":"average")+'</th><th>'+(U?"призрак":"ghost")+'</th></tr></thead><tbody>';
+  RIV.forEach(function(r){ var d = rival(r.key, pick.lid, pick.seed), av = rivalAvg(r.key, pick.lid);
+    h += '<tr><td><b style="color:var('+r.col+')">●</b> <b>'+rname(r)+'</b><div class="note">'+(U?r.d_ru:r.d_en)+'</div></td><td class="n">'+(d?nf(d.score)+(d.stuck_km?'<div class="note">'+(U?"встал на км ":"stuck at km ")+nf(d.stuck_km,1)+'</div>':''):"…")+'</td><td class="n">'+(av===null?"…":nf(av)+'<div class="note">'+(U?"рейсов: ":"runs: ")+rivalN(r.key, pick.lid)+'</div>')+'</td><td>'+(d?'<input type="checkbox" data-show="'+r.key+'"'+(SHOW[r.key]?' checked':'')+' aria-label="'+rname(r)+'">':'')+'</td></tr>'; });
+  var best = bestHuman(pick.lid, pick.seed);
+  h += '<tr><td><b style="color:var(--fg)">●</b> <b>'+(U?"Люди":"People")+'</b><div class="note">'+(U?"лучший результат команды на этом рейсе из лидерборда":"the team's best on this run, from the leaderboard")+'</div></td><td class="n">'+(best===null?"–":nf(best))+'</td><td></td><td></td></tr>';
+  return h + '</tbody></table></div><p class="note">'+(U?"Счёт у всех по одной формуле, рейс тот же: та же погода, ремонт, задержка и поезд впереди. Модели без Extella пишут управление заранее, и оно исполняется буквально: если в плане тормоз или выбег там, где поезд встал, он так и стоит. Ты и Extella ведёте поезд с обратной связью.":"Everyone is scored by one formula on the same run: same weather, track work, delay and train ahead. Models without Extella write their control in advance and it runs literally: if the plan says brake or coast where the train stopped, it stays there. You and Extella drive with feedback.")+'</p>';
+}
+function bestHuman(lid, seed){ if (!rows) return null; var b = null; rows.forEach(function(r){ var x = r.data.best && r.data.best[lid]; if (x && x.seed === seed && (b === null || x.score > b)) b = x.score; }); return b; }
+function ghostAt(tsec){
+  var j = GH.j; if (!j.length) return null;
+  if (tsec <= j[0][0]) return j[0];
+  for (var i = 1; i < j.length; i++) if (j[i][0] >= tsec) { var a = j[i-1], b = j[i], f = (tsec-a[0])/(b[0]-a[0]); return [tsec, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f, a[3]+(b[3]-a[3])*f]; }
+  return j[j.length-1];
+}
+function stopPrediction(o){
+  // где остановится поезд: при текущем тормозе, а если тормоза нет, при полном служебном
+  var v = o.v_kmh/3.6; if (v < 0.5) return null;
+  var sv = G.T.brake.service_ms2, br = o.lever < 0 ? -o.lever*sv : sv, mu = G.mu(G.v)*S.G;
+  if (br > mu) br = mu*0.7;
+  var dec = br + S.G*o.grade_permille/1000;
+  if (dec <= 0.05) return {m: Infinity, full: o.lever >= 0};
+  return {m: v*v/(2*dec), full: o.lever >= 0};
+}
+function draw(){
+  var o = G.observe(), U = LANG === "ru", gh = (GH && SHOW.extella) ? ghostAt(o.t) : null, oth = MODE.kind === "drive" ? othersAt(o.t) : [];
+  var pred = stopPrediction(o);
+  var ahead = o.ahead.filter(function(z){ return z.from_km > o.km; }).map(function(z){ return {distM: (z.from_km - o.km)*1000, speed: z.limit_kmh}; });
+  var prev = o.limit_kmh, plan = []; ahead.forEach(function(a){ if (a.speed !== prev) plan.push(a); prev = a.speed; });
+  var st = o.next_stop; if (st && st.dist_m > 0) plan.push({distM: st.dist_m, speed: 0});
+  plan.sort(function(a,b){ return a.distM - b.distM; });
+  var target = plan.filter(function(p){ return p.speed < o.v_kmh || p.speed === 0; })[0] || null;
+  if (VIEW === "side") TrainScene.draw($("front"), {L: G.L, T: G.T, km: o.km, v: o.v_kmh, t: o.t, ghostKm: gh ? gh[1] : null, ghosts: oth, zones: sceneZones(), weather: G.W.weather, pusher: G.pusher,
+    caption: nf(o.v_kmh) + (U ? " км/ч · км " : " km/h · km ") + nf(o.km, 1)});
+  else TrainCab.front($("front"), {L: G.L, km: o.km, v: o.v_kmh, t: o.t, zones: sceneZones(), stations: G.stations.slice(1), weather: G.W.weather,
+    ghostAheadM: gh ? (gh[1] - o.km)*1000 : null, ghosts: oth.map(function(g){ return {d: (g.km - o.km)*1000, color: g.color, label: g.label}; }), stopM: pred && isFinite(pred.m) && !o.at_station ? pred.m : null, stopLabel: U ? "здесь остановишься" : "you stop here"});
+  TrainCab.dmi($("dmi"), {v: o.v_kmh, perm: o.permitted_kmh, limit: o.limit_kmh, vmax: Math.ceil((G.T.vmax_kmh + 20)/50)*50, target: target ? {speed: target.speed, distM: target.distM} : null,
+    ahead: plan.slice(0, 5), atp: !!o.atp || o.emergency, units: {kmh: U?"км/ч":"km/h", km: U?"км":"km", m: U?"м":"m", ahead: U?"ВПЕРЕДИ":"AHEAD", atp: U?"ЗАЩИТА ТОРМОЗИТ":"PROTECTION BRAKING"}});
+  TrainScene.strip($("strip"), G.L, o.km, gh ? gh[1] : null, oth);
+  $("i-clock").textContent = o.clock;
+  if (o.at_station && o.t < o.due_s) $("i-sched").textContent = t("wait_dep") + " " + o.due_clock;
+  else if (st && st.arr_s !== null && st.arr_s !== undefined && o.v_kmh >= 30) { var eta = o.t + st.dist_m/(o.v_kmh/3.6), diff = eta - st.arr_s; $("i-sched").textContent = (diff > 0 ? t("late") : t("early")) + " ≈ " + nf(Math.abs(diff)/60, 1) + (U?" мин":" min"); }
+  else $("i-sched").textContent = st && st.arr_clock ? t("sched") + " " + st.arr_clock : "";
+  if (st) { var d = st.dist_m; $("i-dist").textContent = d >= 1000 ? nf(d/1000, 1) + (U?" км":" km") : nf(d) + (U?" м":" m"); $("i-stop").textContent = st.name; }
+  if (!pred || o.at_station) { $("i-pred").textContent = "–"; $("i-pred2").textContent = ""; }
+  else { $("i-pred").textContent = !isFinite(pred.m) ? (U?"не остановится":"won't stop") : pred.m >= 1000 ? nf(pred.m/1000, 1) + (U?" км":" km") : nf(pred.m) + (U?" м":" m");
+    $("i-pred2").textContent = pred.full ? (U?"при полном тормозе":"at full brake") : (U?"при этом тормозе":"at this brake"); }
+  var fl = [];
+  if (gh) { var gap = gh[1] - o.km; fl.push('<span class="flag-chip gh">'+t("ghost")+' '+(gap>=0?t("ahead"):t("behind"))+' '+nf(Math.abs(gap),2)+(U?" км":" km")+'</span>'); }
+  fl.push('<span class="flag-chip">'+nf(o.energy_kwh)+(U?" кВт·ч":" kWh")+'</span>');
+  fl.push('<span class="flag-chip">'+(o.grade_permille>0?"+":"")+nf(o.grade_permille,1)+' ‰</span>');
+  if (o.sand_on) fl.push('<span class="flag-chip warn">'+t("sand_on")+' '+nf(o.sand_left_s)+(U?" с":" s")+'</span>');
+  $("flags").innerHTML = fl.join("");
+  $("l-sand").className = "lamp" + (o.sand_on ? " on" : ""); $("l-slip").className = "lamp" + (o.slip || o.slide ? " on" : ""); $("l-atp").className = "lamp" + (o.atp || o.emergency ? " red" : "");
+  $("lever-now").textContent = o.lever > 0 ? t("power")+" "+Math.round(o.lever*100)+" %" : o.lever < 0 ? t("brake")+" "+Math.round(-o.lever*100)+" %" : t("coast");
+  if (document.activeElement !== $("lever") && +$("lever").value !== o.lever) $("lever").value = o.lever;
+  if (msgT && performance.now() - msgT > 3500) { say(""); msgT = 0; }
+  if (!$("hint").hidden) $("hint").textContent = (MODE.hint && MODE.hint(o)) || hintText(o);
+}
+
+function sceneZones(){
+  var z = [], prev = null;
+  G.seg.forEach(function(s){ if (prev === null || s.limit_kmh !== prev) z.push([1000*s.from_km, 1000*s.to_km, s.limit_kmh, "perm"]); prev = s.limit_kmh; });
+  G.W.temp.forEach(function(tp){ z.push([1000*tp.from_km, 1000*tp.to_km, tp.limit_kmh, "temp"]); });
+  if (G.W.signal && G.signal_visible()) z.push([1000*G.W.signal.km, 1000*(G.W.signal.km+G.W.signal.length_km), G.W.signal.limit_kmh, "signal"]);
+  return z;
+}
+
+
+function finish(){
+  var s = G.score(), gh = GH, U = LANG === "ru", beat = s.score > gh.score;
+  $("cab").hidden = true; $("result").hidden = false;
+  var RV = RIV.map(function(r){ return {r: r, d: rival(r.key, pick.lid, pick.seed)}; }).filter(function(x){ return x.d; });
+  var rows = ["late","energy","stop_precision","protection","missed_stops","comfort","pusher","unfinished"].map(function(k){
+    return '<tr><td>'+t("parts")[k]+'</td><td class="n">'+nf(s.parts[k])+'</td>'+RV.map(function(x){ return '<td class="n">'+nf(x.d.parts[k])+'</td>'; }).join("")+'</tr>'; }).join("");
+  var rhead = RV.map(function(x){ return '<th style="text-align:right;color:var('+x.r.col+')">'+rname(x.r)+'</th>'; }).join("");
+  var rtot = RV.map(function(x){ return '<td class="n"><b>'+nf(x.d.score)+'</b></td>'; }).join("");
+  var place = 1 + RV.filter(function(x){ return x.d.score > s.score; }).length;
+  var h = '<div style="display:flex;flex-direction:column;gap:14px"><h2>'+t("result")+' · '+esc(LINE_NAME(pick.lid))+'</h2>';
+  h += '<div class="res-big"><div><div class="note">'+t("you")+'</div><div class="big">'+nf(s.score)+'</div></div><div><div class="note">Extella</div><div class="big" style="color:var(--ghost)">'+nf(gh.score)+'</div></div><div class="'+(beat?'ok':'rej')+'">'+(beat?t("beat"):t("lost"))+'</div></div>';
+  h += '<p class="note">'+(LANG==="ru"?"Место среди тебя и моделей: ":"Your place among you and the models: ")+'<b>'+place+'</b> '+(LANG==="ru"?"из ":"of ")+(RV.length+1)+'. '+RV.map(function(x){ return rname(x.r)+': '+nf(x.d.score); }).join(" · ")+'</p>';
+  h += breakdown(s, gh);
+  h += '<svg id="rc" class="chart" viewBox="0 0 640 240" role="img" aria-label="'+esc(t("chart"))+'"></svg><p class="note">'+t("chart")+'</p>';
+  h += '<div class="tbl"><table><thead><tr><th></th><th style="text-align:right">'+t("you")+'</th>'+rhead+'</tr></thead><tbody>'+rows+'<tr><td><b>'+t("score")+'</b></td><td class="n"><b>'+nf(s.score)+'</b></td>'+rtot+'</tr></tbody></table></div>';
+  h += '<h3>'+t("plan")+'</h3><div class="code">'+esc(gh.plan)+'</div><p class="note">'+t("tries")+': '+gh.tries+(gh.fallback?(U?" · ни один план не принят, рейс по лучшему прогнозу":" · no plan was accepted, ran the best forecast"):"")+'</p>';
+  h += '<div class="row"><button type="button" class="primary" id="again">'+t("again")+'</button><button type="button" id="savebtn" hidden>'+t("save")+'</button><span class="note" id="savemsg"></span></div></div>';
+  $("result").innerHTML = h;
+  drawResultChart(G, gh);
+  $("again").onclick = function(){ G = null; renderPick(); };
+  offerSave(s.score, beat, gh.score);
+}
+function mmss(x){ x = Math.round(Math.abs(x)); var m = Math.floor(x/60), sec = x % 60; return (m ? m + (LANG==="ru"?" мин ":" min ") : "") + sec + (LANG==="ru"?" с":" s"); }
+function breakdown(s, gh){
+  var U = LANG === "ru", why = [], P = s.parts, Q = gh.parts;
+  var add = function(diff, text){ why.push({d: diff, t: text}); };
+  // по станциям
+  var rows = s.stops.map(function(st, i){ var e = gh.stops[i] || {}; return '<tr><td>'+esc(st.name)+'</td><td class="n">'+(st.missed?(U?"пропуск":"missed"):(st.late_s>0?"+":"−")+mmss(st.late_s))+'</td><td class="n">'+(e.late_s===undefined||e.late_s===null?"–":(e.late_s>0?"+":"−")+mmss(e.late_s))+'</td><td class="n">'+(st.missed?"–":nf(Math.abs(st.err_m),1)+(U?" м":" m"))+'</td></tr>'; }).join("");
+  if (Math.abs(P.late - Q.late) >= 20) {
+    var worst = s.stops.filter(function(x){ return !x.missed && x.late_s > 30; }).sort(function(a,b){ return b.late_s - a.late_s; })[0];
+    add(P.late - Q.late, P.late < Q.late
+      ? (U ? "Опоздание стоило тебе "+nf(-P.late)+" очков, Extella "+nf(-Q.late)+"."+(worst?" Больше всего на "+worst.name+": "+mmss(worst.late_s)+".":"")+" Задержку отправления и ремонт пути можно отыграть, если держаться у самой допустимой скорости."
+           : "Lateness cost you "+nf(-P.late)+" points, Extella "+nf(-Q.late)+"."+(worst?" Worst at "+worst.name+": "+mmss(worst.late_s)+".":"")+" A late departure or track work can be made up by running right at the permitted speed.")
+      : (U ? "По графику ты шёл лучше Extella: "+nf(-P.late)+" против "+nf(-Q.late)+" очков за опоздание." : "You kept time better than Extella: "+nf(-P.late)+" vs "+nf(-Q.late)+" points for lateness."));
+  }
+  var ge = gh.j.length ? gh.j[gh.j.length-1][3] : 0;
+  if (Math.abs(P.energy - Q.energy) >= 15) add(P.energy - Q.energy, U ? "Энергия: ты потратил "+nf(s.kwh)+" кВт·ч, Extella "+nf(ge)+". "+(P.energy < Q.energy ? "Выбег на спусках и перед станциями даёт очки, если график позволяет." : "Ты ехал экономнее.") : "Energy: you used "+nf(s.kwh)+" kWh, Extella "+nf(ge)+". "+(P.energy < Q.energy ? "Coasting downhill and before stations earns points when the timetable allows." : "You drove more economically."));
+  if (P.protection !== Q.protection) add(P.protection - Q.protection, U ? "Защита вмешивалась: "+nf(-P.protection)+" очков у тебя, "+nf(-Q.protection)+" у Extella. Тормози раньше, до красной метки на шкале." : "Protection stepped in: "+nf(-P.protection)+" points for you, "+nf(-Q.protection)+" for Extella. Brake earlier, before the red mark.");
+  if (P.unfinished) add(P.unfinished, U ? "Поезд не доехал: на мокром подъёме колёса буксуют. Нужен песок (Q) или толкач до отправления." : "The train did not arrive: wheels slip on a wet climb. Use sand (Q) or a banking engine before departure.");
+  if (P.pusher !== Q.pusher) add(P.pusher - Q.pusher, U ? (P.pusher ? "Толкач стоил тебе 100 очков." : "Extella взяла толкач за 100 очков.")+(G.W.weather==="dry"?" На сухом рельсе он не нужен.":" На мокром рельсе он спасает подъём.") : (P.pusher ? "The banking engine cost you 100 points." : "Extella took a banking engine for 100 points.")+(G.W.weather==="dry"?" On a dry rail it is not needed.":" On a wet rail it saves the climb."));
+  if (P.stop_precision <= -10) add(P.stop_precision - Q.stop_precision, U ? "Остановки мимо отметки стоили "+nf(-P.stop_precision)+" очков: последние 400 м подъезжай медленно." : "Stops off the mark cost "+nf(-P.stop_precision)+" points: take the last 400 m slowly.");
+  if (P.comfort <= -10) add(P.comfort, U ? "Резкие разгоны и торможения: "+nf(-P.comfort)+" очков. Стоящим пассажирам некомфортно выше 1 м/с²." : "Harsh acceleration and braking: "+nf(-P.comfort)+" points. Standing passengers feel it above 1 m/s².");
+  why.sort(function(a,b){ return Math.abs(b.d) - Math.abs(a.d); });
+  var h = '<h3>'+(U?"Где выиграл и где проиграл":"Where you won and lost")+'</h3>';
+  h += why.length ? '<ul style="margin:0;padding-left:20px;display:grid;gap:6px">'+why.slice(0,4).map(function(w){ return '<li><span style="color:'+(w.d>=0?'var(--ok)':'var(--limit)')+'">'+(w.d>=0?"+":"−")+nf(Math.abs(w.d))+'</span> '+esc(w.t)+'</li>'; }).join("")+'</ul>' : '<p class="muted">'+(U?"Почти поровну по всем частям счёта.":"Nearly even on every part of the score.")+'</p>';
+  if (rows) h += '<div class="tbl"><table><thead><tr><th>'+(U?"станция":"station")+'</th><th style="text-align:right">'+(U?"ты к графику":"you vs timetable")+'</th><th style="text-align:right">Extella</th><th style="text-align:right">'+(U?"остановка":"stop")+'</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  return h;
+}
+function drawResultChart(g, gh){
+  var W = 640, H = 240, Lm = 40, Rm = 10, Tm = 10, Bm = 26, k0 = g.stations[0].km, k1 = g.stations[g.stations.length-1].km, vm = g.T.vmax_kmh + 20;
+  var X = function(k){ return Lm + (k-k0)/(k1-k0)*(W-Lm-Rm); }, Y = function(v){ return Tm + (1 - v/vm)*(H-Tm-Bm); };
+  var s = '';
+  [0, Math.round(vm/2/10)*10, g.T.vmax_kmh].forEach(function(v){ s += '<line x1="'+Lm+'" x2="'+(W-Rm)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--line)"/><text x="'+(Lm-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+v+'</text>'; });
+  var step = (k1-k0) > 150 ? 50 : 20; for (var k = Math.ceil(k0/step)*step; k <= k1; k += step) s += '<text x="'+X(k)+'" y="'+(H-8)+'" text-anchor="middle">'+k+'</text>';
+  var segs = g.seg.map(function(z){ return X(z.from_km)+','+Y(z.limit_kmh)+' '+X(z.to_km)+','+Y(z.limit_kmh); }).join(" ");
+  s += '<polyline points="'+segs+'" fill="none" stroke="var(--signal)" stroke-width="1.5" stroke-dasharray="4 3"/>';
+  RIV.forEach(function(r){ var d = rival(r.key, pick.lid, pick.seed); if (!d) return; s += '<polyline points="'+d.j.map(function(e){ return X(e[1])+','+Y(e[2]); }).join(" ")+'" fill="none" stroke="var('+r.col+')" stroke-width="'+(r.key==="extella"?2:1.5)+'" opacity="'+(r.key==="extella"?1:0.8)+'"/>'; });
+  s += '<polyline points="'+g.journal.map(function(e){ return X(e.km)+','+Y(e.v); }).join(" ")+'" fill="none" stroke="var(--fg)" stroke-width="2"/>';
+  $("rc").innerHTML = s;
+}
+
+/* ---------- лидерборд (общая база страницы) ---------- */
+var DB = null, USER = null, rows = null, dbState = "loading";
+setTimeout(function(){ if (dbState === "loading") { dbState = "off"; if (screen === "board") renderBoard(); } }, 10000);
+(async function(){
+  try { if (!window.claude || !window.claude.use) { dbState = "off"; return; } DB = await window.claude.use("db"); USER = await window.claude.use("user"); } catch (e) { DB = null; }
+  if (!DB) { dbState = "off"; if (screen === "board") renderBoard(); return; }
+  try { DB.collection("scores").onSnapshot(function(snap){ dbState = "on"; rows = snap.docs.map(function(d){ return {id: d.id, data: d.data()}; }); if (screen === "board") renderBoard(); }, function(){ dbState = "off"; if (screen === "board") renderBoard(); }); } catch (e) { dbState = "off"; }
+})();
+async function offerSave(score, beat, ex){
+  if (!DB || !USER) return;
+  var me; try { me = await USER.id(); } catch (e) { return; } if (!me) return;
+  var b = $("savebtn"); if (!b) return; b.hidden = false;
+  b.onclick = async function(){
+    b.disabled = true;
+    try {
+      var ref = DB.collection("scores").doc(me), cur = await ref.get(), data = cur.exists ? cur.data() : {best: {}};
+      var best = data.best || {}, prev = best[pick.lid];
+      if (!prev || score > prev.score) best[pick.lid] = {score: Math.round(score*10)/10, seed: pick.seed, beat: beat, extella: ex, at: new Date().toISOString(), log: DLOG.slice(0, 20000)};
+      await ref.set({best: best});
+      $("savemsg").textContent = t("saved");
+    } catch (e) { b.disabled = false; $("savemsg").textContent = (LANG==="ru"?"Не записалось: ":"Not saved: ") + (e && e.code || "error"); }
+  };
+}
+async function renderBoard(){
+  var el = $("board"), U = LANG === "ru";
+  if (dbState === "loading") { el.innerHTML = '<h2>'+t("board_h")+'</h2><p class="muted">'+(U?"Загружаю результаты…":"Loading results…")+'</p>'; return; }
+  if (!DB || dbState === "off" || !rows) { el.innerHTML = '<h2>'+t("board_h")+'</h2><p class="muted">'+t("board_off")+'</p>'; return; }
+  var ids = rows.map(function(r){ return r.id; }), prof = {};
+  try { if (ids.length && USER) prof = await USER.profiles(ids); } catch (e) {}
+  var h = '<div style="display:flex;flex-direction:column;gap:14px"><h2>'+t("board_h")+'</h2>';
+  if (!rows.length) h += '<p class="muted">'+t("board_empty")+'</p>';
+  LIDS.forEach(function(l){
+    var list = rows.filter(function(r){ return r.data.best && r.data.best[l]; }).map(function(r){ return {id: r.id, b: r.data.best[l]}; }).sort(function(a,b){ return b.b.score - a.b.score; });
+    if (!list.length) return;
+    h += '<h3>'+esc(LINE_NAME(l))+'</h3><div class="tbl"><table><thead><tr><th>'+t("name")+'</th><th style="text-align:right">'+t("best")+'</th><th style="text-align:right">Extella</th><th>'+t("vs")+'</th></tr></thead><tbody>';
+    list.forEach(function(r){ var nm = (prof[r.id] && prof[r.id].name) || t("someone");
+      h += '<tr><td>'+esc(nm)+' <span class="note">· '+(U?"рейс ":"run ")+r.b.seed+'</span></td><td class="n">'+nf(r.b.score)+'</td><td class="n">'+nf(r.b.extella)+'</td><td>'+(r.b.beat?'<span style="color:var(--ok)">'+(U?"обыграл":"beat it")+'</span>':'<span class="muted">'+(U?"нет":"no")+'</span>')+'</td></tr>'; });
+    h += '</tbody></table></div>';
+  });
+  el.innerHTML = h + '</div>';
+}
+
+/* ---------- тексты ---------- */
+function renderAll(){
+  document.documentElement.lang = LANG; document.title = LANG === "ru" ? "Кабина машиниста" : "Train Driver's Cab";
+  $("eyebrow").textContent = t("eyebrow"); $("h1").textContent = t("h1"); $("lang").textContent = LANG === "ru" ? "EN" : "RU";
+  $("nav-lessons").textContent = LANG === "ru" ? "Тренировки" : "Training"; $("nav-drive").textContent = t("drive"); $("nav-board").textContent = t("board");
+  var U = LANG === "ru";
+  $("k-stop").textContent = t("stop"); $("k-clock").textContent = t("clock"); $("k-pred").textContent = U ? "остановишься через" : "stops in";
+  $("k-lever").textContent = U ? "КОНТРОЛЛЕР" : "CONTROLLER"; $("n-p").textContent = U ? "тяга" : "power"; $("n-0").textContent = U ? "выбег" : "coast"; $("n-b").textContent = U ? "тормоз" : "brake";
+  $("b-brake").textContent = t("b_brake"); $("b-coast").textContent = t("b_coast"); $("b-power").textContent = t("b_power");
+  $("hints-l").textContent = U?"Подсказки":"Hints"; $("quit").textContent = U?"Выйти":"Leave";
+  $("t-sand").textContent = U ? "ПЕСОК" : "SAND"; $("t-emerg").textContent = U ? "ЭКСТРЕННЫЙ" : "EMERGENCY"; $("t-slip").textContent = t("slip"); $("t-atp").textContent = U ? "защита" : "protection";
+  $("sp-0").textContent = t("pause"); $("keys").innerHTML = t("keys"); $("viewbtn").textContent = viewLabel();
+  renderLesson();
+  if (!G) renderPick(); else if (!$("result").hidden) finish();
+  if (screen === "board") renderBoard();
+  show(screen);
+}
+renderAll();
+})();
+</script>

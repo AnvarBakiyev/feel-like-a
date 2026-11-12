@@ -1,0 +1,3135 @@
+{
+ "de_krm_s1": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.6,
+    "lever": 0.22
+   },
+   {
+    "km": 22.06,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 28.0,
+    "lever": 0.0
+   },
+   {
+    "km": 29.4,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 130.0,
+    "lever": 0.0
+   },
+   {
+    "km": 140.0,
+    "lever": -0.3
+   },
+   {
+    "km": 148.45,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 165.32,
+    "lever": 0.0
+   },
+   {
+    "km": 167.29,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 1 мин: до Зигбурга держу около 192 км/ч без выбега. Перед ремонтом 30,4-32,4 на подъеме 40 промилле выбег с км 28 гасит скорость до 146, дальше тяга держит около 140. На спусках выбег и легкий тормоз, чтобы не выйти за 300. Тормоз к станциям рассчитан по v2/2a с поправкой на сопротивление и уклон.",
+  "why_en": "One minute late, so the first leg is run at about 192 km/h with no coasting. Before the 30.4-32.4 work zone on the 40 per mille climb I coast from km 28 to drop to 146 km/h, then full power holds about 140. Coasting and light braking on the descents keep speed under 300. Station braking points come from v2/2a with resistance and grade."
+ },
+ "de_krm_s2": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    22.06,
+    24.9
+   ],
+   [
+    87.98,
+    89.6
+   ],
+   [
+    167.37,
+    169.3
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.6,
+    "lever": 0.22
+   },
+   {
+    "km": 22.06,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 135.2,
+    "lever": -0.15
+   },
+   {
+    "km": 140.0,
+    "lever": -0.4
+   },
+   {
+    "km": 148.5,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 158.0,
+    "lever": 0.12
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 164.5,
+    "lever": 0.0
+   },
+   {
+    "km": 167.37,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин и листопад: езда без выбега, на последнем перегоне тяга и на спуске после км 130. Песок на трогании и на каждом торможении к станции, чтобы удержать сцепление. Перед зоной 160 км/ч тормоз на спуске 30 промилле.",
+  "why_en": "Three minutes late with leaf fall: no coasting, full power on the last leg including the descent after km 130. Sand on every start and every station stop to keep adhesion. Braking on the 30 per mille descent before the 160 km/h zone."
+ },
+ "de_krm_s3": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    22.06,
+    24.9
+   ],
+   [
+    87.98,
+    89.6
+   ],
+   [
+    167.29,
+    169.3
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.6,
+    "lever": 0.22
+   },
+   {
+    "km": 22.06,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 130.0,
+    "lever": 0.0
+   },
+   {
+    "km": 140.0,
+    "lever": -0.3
+   },
+   {
+    "km": 148.45,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 165.32,
+    "lever": 0.0
+   },
+   {
+    "km": 167.29,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 1 мин, мокрый рельс: первый перегон без выбега, дальше обычная езда с выбегом на спусках. Песок на трогании и при торможении к станциям.",
+  "why_en": "One minute late on wet rail: the first leg without coasting, then normal running with coasting on descents. Sand on starts and station braking."
+ },
+ "de_krm_s4": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.5,
+    "lever": 0.0
+   },
+   {
+    "km": 10.0,
+    "lever": 1.0
+   },
+   {
+    "km": 11.3,
+    "lever": 0.0
+   },
+   {
+    "km": 23.29,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 109.0,
+    "lever": -1.0
+   },
+   {
+    "km": 111.7,
+    "lever": 0.5
+   },
+   {
+    "km": 113.7,
+    "lever": 1.0
+   },
+   {
+    "km": 135.36,
+    "lever": -0.15
+   },
+   {
+    "km": 140.0,
+    "lever": -0.4
+   },
+   {
+    "km": 148.5,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 158.0,
+    "lever": 0.12
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 164.5,
+    "lever": 0.0
+   },
+   {
+    "km": 167.37,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 111,7-113,7 на подъеме 20 промилле: тормоз с км 109 до 146 км/ч, в зоне половина тяги. Потерянное время добираю тягой на спуске после км 130 и в зоне 160.",
+  "why_en": "Work zone 111.7-113.7 on the 20 per mille climb: brake from km 109 to 146 km/h, half power inside the zone. Lost time is recovered with power on the descent after km 130 and in the 160 zone."
+ },
+ "de_krm_s5": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.5,
+    "lever": 0.0
+   },
+   {
+    "km": 10.0,
+    "lever": 1.0
+   },
+   {
+    "km": 11.3,
+    "lever": 0.0
+   },
+   {
+    "km": 23.29,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.9,
+    "lever": 0.0
+   },
+   {
+    "km": 127.4,
+    "lever": 1.0
+   },
+   {
+    "km": 135.5,
+    "lever": -0.15
+   },
+   {
+    "km": 140.0,
+    "lever": -0.4
+   },
+   {
+    "km": 148.5,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 158.0,
+    "lever": 0.12
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 164.5,
+    "lever": 0.0
+   },
+   {
+    "km": 167.37,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 127,4-129,4 на подъеме 40 промилле: выбег с км 125,9, подъем сам гасит скорость до 146, в зоне полная тяга держит около 140. Дальше тяга на спуске до 285 и тормоз к зоне 160.",
+  "why_en": "Work zone 127.4-129.4 on the 40 per mille climb: coast from km 125.9 and the grade drops speed to 146, full power inside the zone holds about 140. Then power on the descent up to 285 and braking for the 160 zone."
+ },
+ "de_krm_s6": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.5,
+    "lever": 0.0
+   },
+   {
+    "km": 10.0,
+    "lever": 1.0
+   },
+   {
+    "km": 11.3,
+    "lever": 0.0
+   },
+   {
+    "km": 23.29,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 130.0,
+    "lever": 0.0
+   },
+   {
+    "km": 140.0,
+    "lever": -0.3
+   },
+   {
+    "km": 148.45,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 165.32,
+    "lever": 0.0
+   },
+   {
+    "km": 167.29,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Сухо, без задержки и ремонтов: на первом перегоне выбег для экономии, на подъемах полная тяга, на спусках выбег и легкий тормоз до 285-290 км/ч. Перед зоной 160 тормоз на спуске, потом выбег.",
+  "why_en": "Dry, on time, no work zones: coasting on the first leg to save energy, full power on climbs, coasting and light braking on descents to stay near 285-290 km/h. Braking on the descent before the 160 zone, then coasting."
+ },
+ "de_krm_s7": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.5,
+    "lever": 0.0
+   },
+   {
+    "km": 10.0,
+    "lever": 1.0
+   },
+   {
+    "km": 11.3,
+    "lever": 0.0
+   },
+   {
+    "km": 23.29,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 130.0,
+    "lever": 0.0
+   },
+   {
+    "km": 140.0,
+    "lever": -0.3
+   },
+   {
+    "km": 148.45,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 156.9,
+    "lever": -1.0
+   },
+   {
+    "km": 158.0,
+    "lever": 0.0
+   },
+   {
+    "km": 160.0,
+    "lever": 1.0
+   },
+   {
+    "km": 161.1,
+    "lever": 0.12
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 164.6,
+    "lever": 0.0
+   },
+   {
+    "km": 167.37,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 158-160 до 80 км/ч: тормоз с км 156,9 до 75 км/ч, в зоне выбег, после нее разгон до 150 и легкая тяга до км 163.",
+  "why_en": "Work zone 158-160 at 80 km/h: brake from km 156.9 to 75 km/h, coast through the zone, then accelerate to 150 and hold with light power to km 163."
+ },
+ "de_krm_s8": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    22.06,
+    24.9
+   ],
+   [
+    87.98,
+    89.6
+   ],
+   [
+    167.37,
+    169.3
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.6,
+    "lever": 0.22
+   },
+   {
+    "km": 22.06,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 135.2,
+    "lever": -0.15
+   },
+   {
+    "km": 140.0,
+    "lever": -1.0
+   },
+   {
+    "km": 145.66,
+    "lever": -0.42
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 158.0,
+    "lever": 0.12
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 164.66,
+    "lever": 0.0
+   },
+   {
+    "km": 167.37,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин, мокро, ремонт 146,1-148,1 на спуске 30 промилле: тяга до 285 после км 130, с км 140 полный тормоз до 145 км/ч, дальше тормоз 0,42 держит скорость на спуске до км 152,5. Песок на трогании и остановках.",
+  "why_en": "Three minutes late, wet, work zone 146.1-148.1 on the 30 per mille descent: power to 285 after km 130, full brake from km 140 down to 145 km/h, then brake 0.42 holds speed on the descent to km 152.5. Sand on starts and stops."
+ },
+ "de_krm_s9": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    22.06,
+    24.9
+   ],
+   [
+    87.98,
+    89.6
+   ],
+   [
+    167.29,
+    169.3
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.6,
+    "lever": 0.22
+   },
+   {
+    "km": 22.06,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 38.0,
+    "lever": 0.0
+   },
+   {
+    "km": 40.0,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 54.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 130.0,
+    "lever": 0.0
+   },
+   {
+    "km": 140.0,
+    "lever": -0.3
+   },
+   {
+    "km": 148.45,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 165.32,
+    "lever": 0.0
+   },
+   {
+    "km": 167.29,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 1 мин, мокрый рельс: первый перегон без выбега, дальше обычная езда. Песок на трогании и при торможении к станциям.",
+  "why_en": "One minute late on wet rail: the first leg without coasting, then normal running. Sand on starts and station braking."
+ },
+ "de_krm_s10": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    23.29,
+    24.9
+   ],
+   [
+    87.98,
+    89.6
+   ],
+   [
+    167.37,
+    169.3
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 3.5,
+    "lever": 0.0
+   },
+   {
+    "km": 10.0,
+    "lever": 1.0
+   },
+   {
+    "km": 11.3,
+    "lever": 0.0
+   },
+   {
+    "km": 23.29,
+    "lever": -1.0
+   },
+   {
+    "km": 24.3,
+    "lever": 1.0
+   },
+   {
+    "km": 33.0,
+    "lever": 0.0
+   },
+   {
+    "km": 36.0,
+    "lever": -0.42
+   },
+   {
+    "km": 39.8,
+    "lever": 1.0
+   },
+   {
+    "km": 52.0,
+    "lever": 0.0
+   },
+   {
+    "km": 55.0,
+    "lever": -0.3
+   },
+   {
+    "km": 60.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.0,
+    "lever": 0.0
+   },
+   {
+    "km": 87.98,
+    "lever": -1.0
+   },
+   {
+    "km": 89.1,
+    "lever": 1.0
+   },
+   {
+    "km": 94.0,
+    "lever": -0.35
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 100.0,
+    "lever": 0.5
+   },
+   {
+    "km": 110.5,
+    "lever": 1.0
+   },
+   {
+    "km": 135.2,
+    "lever": -0.15
+   },
+   {
+    "km": 140.0,
+    "lever": -0.4
+   },
+   {
+    "km": 148.5,
+    "lever": -1.0
+   },
+   {
+    "km": 152.5,
+    "lever": 0.0
+   },
+   {
+    "km": 158.0,
+    "lever": 0.12
+   },
+   {
+    "km": 163.0,
+    "lever": 1.0
+   },
+   {
+    "km": 164.5,
+    "lever": 0.0
+   },
+   {
+    "km": 167.37,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 37,8-39,8 на спуске 30 промилле: после подъема не разгоняюсь, выбег 33-36 до 146 км/ч, на спуске тормоз 0,42 держит скорость. Опоздание после зоны добираю тягой на последнем перегоне. Мокро, песок на трогании и остановках.",
+  "why_en": "Work zone 37.8-39.8 on the 30 per mille descent: no acceleration after the climb, coast 33-36 to 146 km/h, brake 0.42 holds speed on the descent. Time lost is recovered with power on the last leg. Wet, sand on starts and stops."
+ },
+ "ch_gotthard_s1": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.2,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.753
+   },
+   {
+    "km": 54.4,
+    "lever": 0.73
+   },
+   {
+    "km": 58.4,
+    "lever": 0.668
+   },
+   {
+    "km": 62.8,
+    "lever": 0.708
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.85,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.35,
+    "lever": 0.0
+   },
+   {
+    "km": 81.35,
+    "lever": 1.0
+   },
+   {
+    "km": 81.7,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.35,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 0.0
+   },
+   {
+    "km": 125.8,
+    "lever": -0.4
+   },
+   {
+    "km": 126.3,
+    "lever": 0.0
+   },
+   {
+    "km": 128.3,
+    "lever": 1.0
+   },
+   {
+    "km": 129.0,
+    "lever": 0.0
+   },
+   {
+    "km": 131.267,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Сухо, толкач не нужен: на подъеме частичная тяга, при которой равновесие около 74 км/ч, ниже предела 80. На вершине короткие толчки тяги и выбег. На спусках тормоз, равный уклону минус сопротивление, с небольшим запасом. Перед ремонтом 126,3-128,3 тормоз 0,4 до 42 км/ч, потом разгон и тормоз к Биаске.",
+  "why_en": "Dry, no pusher needed: partial power on the climb gives an equilibrium near 74 km/h, under the 80 limit. Short power bursts and coasting at the summit. On descents the brake matches grade minus resistance with a small margin. Before the 126.3-128.3 work zone brake 0.4 to 42 km/h, then accelerate and brake for Biasca."
+ },
+ "ch_gotthard_s2": {
+  "pusher": true,
+  "sand": [
+   [
+    41.6,
+    42.0
+   ],
+   [
+    46.5,
+    54.4
+   ],
+   [
+    131.2,
+    131.8
+   ]
+  ],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.0,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.367
+   },
+   {
+    "km": 54.4,
+    "lever": 0.356
+   },
+   {
+    "km": 58.4,
+    "lever": 0.326
+   },
+   {
+    "km": 62.8,
+    "lever": 0.345
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.7,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.2,
+    "lever": 0.0
+   },
+   {
+    "km": 81.3,
+    "lever": 1.0
+   },
+   {
+    "km": 81.45,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": -0.4
+   },
+   {
+    "km": 93.75,
+    "lever": 0.0
+   },
+   {
+    "km": 95.8,
+    "lever": 1.0
+   },
+   {
+    "km": 96.0,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.467
+   },
+   {
+    "km": 106.0,
+    "lever": -0.43
+   },
+   {
+    "km": 112.6,
+    "lever": -0.467
+   },
+   {
+    "km": 121.1,
+    "lever": -0.41
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.8,
+    "lever": 0.0
+   },
+   {
+    "km": 131.36,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Мокрый рельс на 25 промилле: одному локомотиву не хватит сцепления, беру толкач, тяга вдвое меньше и песок на самом крутом участке. Ремонт 93,8-95,8: тормоз 0,4 с км 93 до 45 км/ч, выбег, потом короткая тяга. На спусках тормоз по уклону.",
+  "why_en": "Wet rail on 25 per mille: one locomotive may slip, so I take the pusher, use about half the power and sand the steepest part. Work zone 93.8-95.8: brake 0.4 from km 93 to 45 km/h, coast, then a short burst of power. Brake matched to grade on descents."
+ },
+ "ch_gotthard_s3": {
+  "pusher": true,
+  "sand": [
+   [
+    41.6,
+    42.0
+   ],
+   [
+    46.5,
+    54.4
+   ],
+   [
+    131.2,
+    131.8
+   ]
+  ],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.0,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.367
+   },
+   {
+    "km": 54.4,
+    "lever": 0.356
+   },
+   {
+    "km": 58.4,
+    "lever": 0.326
+   },
+   {
+    "km": 62.8,
+    "lever": 0.345
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.7,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.2,
+    "lever": 0.0
+   },
+   {
+    "km": 81.3,
+    "lever": 1.0
+   },
+   {
+    "km": 81.45,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.15,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.75,
+    "lever": 0.0
+   },
+   {
+    "km": 131.329,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Мокро, опоздание 3 мин при запасе графика около 15 мин: толкач и песок на крутом подъеме, тяга вдвое меньше, чтобы с толкачом не превысить 80. На спусках тормоз по уклону, к Биаске короткий разгон и тормоз.",
+  "why_en": "Wet, three minutes late with about 15 minutes of slack: pusher and sand on the steep climb, half power so the pusher does not push past 80. Brake matched to grade on descents, a short acceleration and braking for Biasca."
+ },
+ "ch_gotthard_s4": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.2,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.753
+   },
+   {
+    "km": 54.4,
+    "lever": 0.73
+   },
+   {
+    "km": 58.4,
+    "lever": 0.668
+   },
+   {
+    "km": 62.8,
+    "lever": 0.708
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.85,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.35,
+    "lever": 0.0
+   },
+   {
+    "km": 81.35,
+    "lever": 1.0
+   },
+   {
+    "km": 81.7,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 92.5,
+    "lever": -1.0
+   },
+   {
+    "km": 93.0,
+    "lever": 0.0
+   },
+   {
+    "km": 95.1,
+    "lever": 1.0
+   },
+   {
+    "km": 95.6,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.9,
+    "lever": 0.0
+   },
+   {
+    "km": 131.395,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Сухо, без толкача. Ремонт 93,1-95,1 до 50 км/ч сразу после спуска: полный тормоз с км 92,5 на спуске, в зоне выбег, потом короткая тяга до 75 км/ч. Опоздание 3 мин покрывается запасом графика.",
+  "why_en": "Dry, no pusher. The 93.1-95.1 work zone at 50 km/h comes right after the descent: full brake from km 92.5 on the descent, coast through the zone, then a short burst of power to 75 km/h. Schedule slack covers the 3 minute delay."
+ },
+ "ch_gotthard_s5": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.2,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.753
+   },
+   {
+    "km": 54.4,
+    "lever": 0.73
+   },
+   {
+    "km": 58.4,
+    "lever": 0.668
+   },
+   {
+    "km": 62.8,
+    "lever": 0.708
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.85,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.15,
+    "lever": 0.0
+   },
+   {
+    "km": 85.0,
+    "lever": 1.0
+   },
+   {
+    "km": 85.4,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.35,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.9,
+    "lever": 0.0
+   },
+   {
+    "km": 131.374,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 83-85 до 60 км/ч на вершине: после короткой тяги на км 76 долгий выбег, скорость сама падает до 55. После зоны короткая тяга, чтобы войти в спуск около 75 км/ч.",
+  "why_en": "Work zone 83-85 at 60 km/h at the summit: after a short burst at km 76 a long coast lets speed fall to 55. After the zone a short burst so the descent starts near 75 km/h."
+ },
+ "ch_gotthard_s6": {
+  "pusher": true,
+  "sand": [
+   [
+    41.6,
+    42.0
+   ],
+   [
+    46.5,
+    54.4
+   ],
+   [
+    131.2,
+    131.8
+   ]
+  ],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.0,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.367
+   },
+   {
+    "km": 54.4,
+    "lever": 0.356
+   },
+   {
+    "km": 58.4,
+    "lever": 0.326
+   },
+   {
+    "km": 62.8,
+    "lever": 0.345
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.7,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.2,
+    "lever": 0.0
+   },
+   {
+    "km": 81.3,
+    "lever": 1.0
+   },
+   {
+    "km": 81.45,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.15,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.75,
+    "lever": 0.0
+   },
+   {
+    "km": 131.329,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Мокро, опоздание 1 мин: толкач и песок на крутом подъеме, тяга вдвое меньше. На спусках тормоз по уклону, к Биаске короткий разгон и тормоз.",
+  "why_en": "Wet, one minute late: pusher and sand on the steep climb, half power. Brake matched to grade on descents, a short acceleration and braking for Biasca."
+ },
+ "ch_gotthard_s7": {
+  "pusher": true,
+  "sand": [
+   [
+    41.6,
+    42.0
+   ],
+   [
+    46.5,
+    54.4
+   ],
+   [
+    131.2,
+    131.8
+   ]
+  ],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.0,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.367
+   },
+   {
+    "km": 54.4,
+    "lever": 0.356
+   },
+   {
+    "km": 58.4,
+    "lever": 0.326
+   },
+   {
+    "km": 62.8,
+    "lever": 0.345
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.7,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.2,
+    "lever": 0.0
+   },
+   {
+    "km": 81.3,
+    "lever": 1.0
+   },
+   {
+    "km": 81.45,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.15,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.75,
+    "lever": 0.0
+   },
+   {
+    "km": 131.329,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Мокро, опоздание 3 мин при большом запасе графика: толкач и песок на крутом подъеме, тяга вдвое меньше. На спусках тормоз по уклону.",
+  "why_en": "Wet, three minutes late with plenty of slack: pusher and sand on the steep climb, half power. Brake matched to grade on descents."
+ },
+ "ch_gotthard_s8": {
+  "pusher": true,
+  "sand": [
+   [
+    41.6,
+    42.0
+   ],
+   [
+    46.5,
+    54.4
+   ],
+   [
+    131.2,
+    131.8
+   ]
+  ],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.0,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.367
+   },
+   {
+    "km": 54.4,
+    "lever": 0.356
+   },
+   {
+    "km": 58.4,
+    "lever": 0.326
+   },
+   {
+    "km": 62.8,
+    "lever": 0.345
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.7,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.05,
+    "lever": 0.0
+   },
+   {
+    "km": 85.7,
+    "lever": 1.0
+   },
+   {
+    "km": 85.9,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.453
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.15,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.464
+   },
+   {
+    "km": 106.0,
+    "lever": -0.427
+   },
+   {
+    "km": 112.6,
+    "lever": -0.464
+   },
+   {
+    "km": 121.1,
+    "lever": -0.407
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.75,
+    "lever": 0.0
+   },
+   {
+    "km": 131.342,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Листопад: толкач и песок на подъеме, тяга вдвое меньше. Ремонт 83,7-85,7 до 60 км/ч: на вершине почти сплошной выбег, скорость падает до 50. После зоны короткая тяга и вход в спуск около 75 км/ч.",
+  "why_en": "Leaf fall: pusher and sand on the climb, half power. Work zone 83.7-85.7 at 60 km/h: almost continuous coasting at the summit lets speed fall to 50. After the zone a short burst and the descent starts near 75 km/h."
+ },
+ "ch_gotthard_s9": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.2,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.753
+   },
+   {
+    "km": 54.4,
+    "lever": 0.73
+   },
+   {
+    "km": 58.4,
+    "lever": 0.668
+   },
+   {
+    "km": 62.8,
+    "lever": 0.708
+   },
+   {
+    "km": 70.1,
+    "lever": 0.0
+   },
+   {
+    "km": 73.5,
+    "lever": 1.0
+   },
+   {
+    "km": 74.2,
+    "lever": 0.0
+   },
+   {
+    "km": 79.5,
+    "lever": 1.0
+   },
+   {
+    "km": 79.8,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.455
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.35,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.465
+   },
+   {
+    "km": 106.0,
+    "lever": -0.428
+   },
+   {
+    "km": 112.6,
+    "lever": -0.465
+   },
+   {
+    "km": 121.1,
+    "lever": -0.408
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.9,
+    "lever": 0.0
+   },
+   {
+    "km": 131.441,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 71,5-73,5 до 60 км/ч сразу после подъема: снимаю тягу на км 70,1, подъем гасит скорость до 54, в зоне выбег. Дальше два толчка тяги и вход в спуск около 66 км/ч.",
+  "why_en": "Work zone 71.5-73.5 at 60 km/h right after the climb: power off at km 70.1, the grade drops speed to 54, coast through the zone. Then two power bursts and the descent starts near 66 km/h."
+ },
+ "ch_gotthard_s10": {
+  "pusher": true,
+  "sand": [
+   [
+    41.6,
+    42.0
+   ],
+   [
+    46.5,
+    54.4
+   ],
+   [
+    131.2,
+    131.8
+   ]
+  ],
+  "plan": [
+   {
+    "km": 41.6,
+    "lever": 1.0
+   },
+   {
+    "km": 42.0,
+    "lever": 0.0
+   },
+   {
+    "km": 46.5,
+    "lever": 0.367
+   },
+   {
+    "km": 54.4,
+    "lever": 0.356
+   },
+   {
+    "km": 58.4,
+    "lever": 0.326
+   },
+   {
+    "km": 62.8,
+    "lever": 0.345
+   },
+   {
+    "km": 70.5,
+    "lever": 1.0
+   },
+   {
+    "km": 70.7,
+    "lever": 0.0
+   },
+   {
+    "km": 76.0,
+    "lever": 1.0
+   },
+   {
+    "km": 76.2,
+    "lever": 0.0
+   },
+   {
+    "km": 81.3,
+    "lever": 1.0
+   },
+   {
+    "km": 81.45,
+    "lever": 0.0
+   },
+   {
+    "km": 86.2,
+    "lever": -0.451
+   },
+   {
+    "km": 93.0,
+    "lever": 1.0
+   },
+   {
+    "km": 93.15,
+    "lever": 0.0
+   },
+   {
+    "km": 97.8,
+    "lever": -0.462
+   },
+   {
+    "km": 106.0,
+    "lever": -0.425
+   },
+   {
+    "km": 112.6,
+    "lever": -0.462
+   },
+   {
+    "km": 121.1,
+    "lever": -0.406
+   },
+   {
+    "km": 125.5,
+    "lever": 1.0
+   },
+   {
+    "km": 125.75,
+    "lever": 0.0
+   },
+   {
+    "km": 131.329,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Мокро, без задержки: толкач и песок на крутом подъеме, тяга вдвое меньше. На спусках тормоз по уклону, к Биаске короткий разгон и тормоз.",
+  "why_en": "Wet, on time: pusher and sand on the steep climb, half power. Brake matched to grade on descents, a short acceleration and braking for Biasca."
+ },
+ "jp_tokaido_s1": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    6.2,
+    7.4
+   ],
+   [
+    24.4,
+    26.3
+   ],
+   [
+    341.28,
+    342.0
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 33.2,
+    "lever": 0.37
+   },
+   {
+    "km": 73.6,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 98.5,
+    "lever": 0.37
+   },
+   {
+    "km": 327.76,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин, мокро: до Синагавы около 100 км/ч, до Син-Иокогамы около 140. На главном перегоне держу около 270 км/ч частичной тягой, перед подъемом 255 выбег, на подъеме тяга 0,66. Перед зоной 170 тормоз до 165, потом выбег и тормоз к Нагое. Песок на трогании и остановках.",
+  "why_en": "Three minutes late, wet: about 100 km/h to Shinagawa, about 140 to Shin-Yokohama. On the main leg partial power holds about 270 km/h, coasting before the 255 climb, power 0.66 on the climb. Brake to 165 before the 170 zone, then coast and brake for Nagoya. Sand on starts and stops."
+ },
+ "jp_tokaido_s2": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    6.2,
+    7.4
+   ],
+   [
+    24.4,
+    26.3
+   ],
+   [
+    341.28,
+    342.0
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 33.2,
+    "lever": 0.37
+   },
+   {
+    "km": 73.6,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 98.5,
+    "lever": 0.37
+   },
+   {
+    "km": 327.76,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин, мокро: на главном перегоне около 270 км/ч, чтобы догнать график. Перед подъемом 255 выбег, перед зоной 170 тормоз, к Нагое выбег и тормоз. Песок на трогании и остановках.",
+  "why_en": "Three minutes late, wet: about 270 km/h on the main leg to catch up. Coasting before the 255 climb, braking before the 170 zone, coast and brake for Nagoya. Sand on starts and stops."
+ },
+ "jp_tokaido_s3": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    6.2,
+    7.4
+   ],
+   [
+    24.4,
+    26.3
+   ],
+   [
+    47.42,
+    50.0
+   ],
+   [
+    341.28,
+    342.0
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 32.63,
+    "lever": 0.35
+   },
+   {
+    "km": 47.42,
+    "lever": -1.0
+   },
+   {
+    "km": 50.0,
+    "lever": 0.0
+   },
+   {
+    "km": 52.0,
+    "lever": 1.0
+   },
+   {
+    "km": 58.2,
+    "lever": 0.35
+   },
+   {
+    "km": 74.4,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 97.8,
+    "lever": 0.35
+   },
+   {
+    "km": 327.88,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 50-52 до 140 км/ч: с 265 км/ч тормоз с км 47,42 до 135, в зоне выбег, потом разгон. Запас графика около 110 с покрывает потерю. Мокро, песок на трогании, остановках и тормозе перед зоной.",
+  "why_en": "Work zone 50-52 at 140 km/h: from 265 km/h brake from km 47.42 to 135, coast through the zone, then accelerate. About 110 s of slack covers the loss. Wet, sand on starts, stops and the braking before the zone."
+ },
+ "jp_tokaido_s4": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 33.2,
+    "lever": 0.37
+   },
+   {
+    "km": 73.6,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 98.5,
+    "lever": 0.37
+   },
+   {
+    "km": 327.76,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин, сухо: на главном перегоне около 270 км/ч, чтобы догнать график. Перед подъемом 255 выбег, перед зоной 170 тормоз, к Нагое выбег и тормоз.",
+  "why_en": "Three minutes late, dry: about 270 km/h on the main leg to catch up. Coasting before the 255 climb, braking before the 170 zone, coast and brake for Nagoya."
+ },
+ "jp_tokaido_s5": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    3.06,
+    3.5
+   ],
+   [
+    6.2,
+    7.4
+   ],
+   [
+    24.4,
+    26.3
+   ],
+   [
+    341.28,
+    342.0
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 3.06,
+    "lever": -1.0
+   },
+   {
+    "km": 3.5,
+    "lever": 0.0
+   },
+   {
+    "km": 5.5,
+    "lever": 1.0
+   },
+   {
+    "km": 5.97,
+    "lever": 0.04
+   },
+   {
+    "km": 6.238,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 32.63,
+    "lever": 0.35
+   },
+   {
+    "km": 74.4,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 97.8,
+    "lever": 0.35
+   },
+   {
+    "km": 327.88,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 3,5-5,5 до 50 км/ч: тормоз с км 3,06 до 46 км/ч, в зоне выбег, после разгон до 100 и тормоз к Синагаве. Мокро, песок на трогании, остановках и тормозе перед зоной.",
+  "why_en": "Work zone 3.5-5.5 at 50 km/h: brake from km 3.06 to 46 km/h, coast through the zone, then accelerate to 100 and brake for Shinagawa. Wet, sand on starts, stops and the braking before the zone."
+ },
+ "jp_tokaido_s6": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 32.63,
+    "lever": 0.35
+   },
+   {
+    "km": 74.4,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 81.5,
+    "lever": -1.0
+   },
+   {
+    "km": 83.4,
+    "lever": 0.25
+   },
+   {
+    "km": 85.4,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 99.2,
+    "lever": 0.35
+   },
+   {
+    "km": 327.88,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 83,4-85,4 до 120 км/ч на подъеме 15 промилле: тормоз с км 81,5 до 115, в зоне тяга 0,25 держит скорость на подъеме, потом тяга подъема и разгон до 265.",
+  "why_en": "Work zone 83.4-85.4 at 120 km/h on the 15 per mille climb: brake from km 81.5 to 115, power 0.25 holds speed on the grade in the zone, then climb power and acceleration to 265."
+ },
+ "jp_tokaido_s7": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    6.2,
+    7.4
+   ],
+   [
+    24.4,
+    26.3
+   ],
+   [
+    94.19,
+    96.0
+   ],
+   [
+    341.28,
+    342.0
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 33.2,
+    "lever": 0.37
+   },
+   {
+    "km": 73.6,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 94.19,
+    "lever": -1.0
+   },
+   {
+    "km": 96.0,
+    "lever": 0.0
+   },
+   {
+    "km": 98.0,
+    "lever": 1.0
+   },
+   {
+    "km": 104.9,
+    "lever": 0.37
+   },
+   {
+    "km": 327.76,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин, листопад, ремонт 96-98 до 130 км/ч: тормоз с км 94,19 в конце подъема до 125, в зоне выбег, потом разгон до 270. Песок на трогании, остановках и тормозе перед зоной.",
+  "why_en": "Three minutes late, leaf fall, work zone 96-98 at 130 km/h: brake from km 94.19 at the end of the climb to 125, coast through the zone, then accelerate to 270. Sand on starts, stops and the braking before the zone."
+ },
+ "jp_tokaido_s8": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 15.8,
+    "lever": -1.0
+   },
+   {
+    "km": 16.6,
+    "lever": 0.0
+   },
+   {
+    "km": 18.6,
+    "lever": 1.0
+   },
+   {
+    "km": 19.68,
+    "lever": 0.065
+   },
+   {
+    "km": 24.36,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 33.2,
+    "lever": 0.37
+   },
+   {
+    "km": 73.6,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 98.5,
+    "lever": 0.37
+   },
+   {
+    "km": 327.76,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Ремонт 16,6-18,6 до 80 км/ч: тормоз с км 15,8 до 73, в зоне выбег, потом разгон до 150. Опоздание 1 мин и потерю в зоне добираю на главном перегоне около 270 км/ч.",
+  "why_en": "Work zone 16.6-18.6 at 80 km/h: brake from km 15.8 to 73, coast through the zone, then accelerate to 150. The 1 minute delay and the zone loss are recovered on the main leg at about 270 km/h."
+ },
+ "jp_tokaido_s9": {
+  "pusher": false,
+  "sand": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    6.2,
+    7.4
+   ],
+   [
+    24.4,
+    26.3
+   ],
+   [
+    101.25,
+    104.1
+   ],
+   [
+    341.28,
+    342.0
+   ]
+  ],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 33.2,
+    "lever": 0.37
+   },
+   {
+    "km": 73.6,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 98.5,
+    "lever": 0.37
+   },
+   {
+    "km": 101.25,
+    "lever": -1.0
+   },
+   {
+    "km": 104.1,
+    "lever": 0.0
+   },
+   {
+    "km": 106.1,
+    "lever": 1.0
+   },
+   {
+    "km": 112.96,
+    "lever": 0.37
+   },
+   {
+    "km": 327.76,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Опоздание 3 мин, листопад, ремонт 104,1-106,1 до 130 км/ч: с 270 тормоз с км 101,25 до 125, в зоне выбег, потом разгон. Песок на трогании, остановках и тормозе перед зоной.",
+  "why_en": "Three minutes late, leaf fall, work zone 104.1-106.1 at 130 km/h: from 270 brake from km 101.25 to 125, coast through the zone, then accelerate. Sand on starts, stops and the braking before the zone."
+ },
+ "jp_tokaido_s10": {
+  "pusher": false,
+  "sand": [],
+  "plan": [
+   {
+    "km": 0.0,
+    "lever": 1.0
+   },
+   {
+    "km": 0.55,
+    "lever": 0.04
+   },
+   {
+    "km": 6.215,
+    "lever": -1.0
+   },
+   {
+    "km": 6.8,
+    "lever": 1.0
+   },
+   {
+    "km": 8.1,
+    "lever": 0.065
+   },
+   {
+    "km": 24.43,
+    "lever": -1.0
+   },
+   {
+    "km": 25.5,
+    "lever": 1.0
+   },
+   {
+    "km": 32.63,
+    "lever": 0.35
+   },
+   {
+    "km": 74.4,
+    "lever": 0.0
+   },
+   {
+    "km": 76.7,
+    "lever": 0.66
+   },
+   {
+    "km": 95.4,
+    "lever": 1.0
+   },
+   {
+    "km": 97.8,
+    "lever": 0.35
+   },
+   {
+    "km": 327.88,
+    "lever": -1.0
+   },
+   {
+    "km": 330.0,
+    "lever": 0.0
+   },
+   {
+    "km": 341.28,
+    "lever": -1.0
+   }
+  ],
+  "why_ru": "Сухо, без задержки и ремонтов: на главном перегоне около 265 км/ч частичной тягой, это дает запас около 110 с и экономит энергию. Перед подъемом 255 выбег, перед зоной 170 тормоз, к Нагое выбег и тормоз.",
+  "why_en": "Dry, on time, no work zones: partial power holds about 265 km/h on the main leg, leaving about 110 s of slack and saving energy. Coasting before the 255 climb, braking before the 170 zone, coast and brake for Nagoya."
+ }
+}

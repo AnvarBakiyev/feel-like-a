@@ -1,0 +1,29 @@
+{
+ "id": "re66_freight",
+ "name": "Re 6/6 + 900 т",
+ "mass_t": 1020,
+ "_mass": "локомотив 120 т (П) + состав 900 т (О, ниже нормы 1300 т на 26 ‰, П)",
+ "length_m": 520,
+ "power_kW": 7237,
+ "start_tractive_kN": 395,
+ "powered_share": 0.1176,
+ "resistance": "strahl",
+ "_res": "улучшенная формула Strahl для грузовых (Wende 2003, по диссертации TU Wien, И вторичный)",
+ "brake": {
+  "service_ms2": 0.45,
+  "emergency_ms2": 0.7,
+  "_tag": "О"
+ },
+ "regen_eff": 0.75,
+ "adhesion": {
+  "dry": 0.33
+ },
+ "vmax_kmh": 100,
+ "pusher": {
+  "name": "Re 6/6 толкачом",
+  "mass_t": 120,
+  "power_kW": 7237,
+  "start_tractive_kN": 395,
+  "_tag": "данные Re 6/6 (П); толкач на всю поездку и цена 100 очков (О)"
+ }
+}

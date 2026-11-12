@@ -1,0 +1,134 @@
+{
+ "id": "jp_tokaido",
+ "name": {
+  "ru": "Япония: Токайдо-синкансэн, Токио – Нагоя",
+  "en": "Japan: Tokaido Shinkansen, Tokyo – Nagoya"
+ },
+ "_sources": "км станций, 20 ‰ макс., ATC-NS: en.wikipedia Tokaido Shinkansen (П); 285 км/ч и средняя задержка 1,4 мин: годовой отчёт JR Central 2025 (И); ограничения кроме 285 и места уклонов: О",
+ "protection": "ATC-NS",
+ "segments": [
+  {
+   "from_km": 0,
+   "to_km": 6.8,
+   "grade_permille": 0,
+   "limit_kmh": 110,
+   "_tag": "О"
+  },
+  {
+   "from_km": 6.8,
+   "to_km": 25.5,
+   "grade_permille": 0,
+   "limit_kmh": 160,
+   "_tag": "О"
+  },
+  {
+   "from_km": 25.5,
+   "to_km": 40,
+   "grade_permille": 5,
+   "limit_kmh": 255,
+   "_tag": "О"
+  },
+  {
+   "from_km": 40,
+   "to_km": 76.7,
+   "grade_permille": 0,
+   "limit_kmh": 285,
+   "_tag": "285 И, уклон О"
+  },
+  {
+   "from_km": 76.7,
+   "to_km": 95.4,
+   "grade_permille": 15,
+   "limit_kmh": 255,
+   "_tag": "кривые R 2500 255 км/ч П, место О"
+  },
+  {
+   "from_km": 95.4,
+   "to_km": 111.3,
+   "grade_permille": -10,
+   "limit_kmh": 270,
+   "_tag": "О"
+  },
+  {
+   "from_km": 111.3,
+   "to_km": 167.4,
+   "grade_permille": 0,
+   "limit_kmh": 285,
+   "_tag": "285 И"
+  },
+  {
+   "from_km": 167.4,
+   "to_km": 211.3,
+   "grade_permille": 10,
+   "limit_kmh": 270,
+   "_tag": "О"
+  },
+  {
+   "from_km": 211.3,
+   "to_km": 330,
+   "grade_permille": 0,
+   "limit_kmh": 285,
+   "_tag": "285 И"
+  },
+  {
+   "from_km": 330,
+   "to_km": 342,
+   "grade_permille": 0,
+   "limit_kmh": 170,
+   "_tag": "О"
+  }
+ ],
+ "stations": [
+  {
+   "name": "Tokyo",
+   "km": 0
+  },
+  {
+   "name": "Shinagawa",
+   "km": 6.8,
+   "dwell_s": 60
+  },
+  {
+   "name": "Shin-Yokohama",
+   "km": 25.5,
+   "dwell_s": 60
+  },
+  {
+   "name": "Nagoya",
+   "km": 342.0
+  }
+ ],
+ "check": {
+  "ru": "Токио → Нагоя самый быстрый 1:35 (П), с остановками Синагава и Син-Йокогама"
+ },
+ "timetable": [
+  {
+   "name": "Tokyo",
+   "arr_s": null,
+   "dep_s": 0
+  },
+  {
+   "name": "Shinagawa",
+   "arr_s": 300.0,
+   "dep_s": 360.0,
+   "tech_run_s": 276.5
+  },
+  {
+   "name": "Shin-Yokohama",
+   "arr_s": 900.0,
+   "dep_s": 960.0,
+   "tech_run_s": 499.5
+  },
+  {
+   "name": "Nagoya",
+   "arr_s": 5640.0,
+   "dep_s": null,
+   "tech_run_s": 4390.0
+  }
+ ],
+ "_timetable": "техническое время машиниста full на сухом рельсе × 1.06, вверх до 30 с (О)",
+ "signal_sight_km": 10.0,
+ "_signal": "видимость цели в кабине: LZB и ATC показывают цель за 10 км и больше (О); на горной линии сигнал за 2,5 км (О)",
+ "ref_kwh": 12040.6,
+ "_ref_kwh": "эталон энергии: тот же прогон машиниста full; в счёте ±4 очка за каждый процент к нему (О)"
+}
