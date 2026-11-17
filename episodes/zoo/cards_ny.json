@@ -1,0 +1,219 @@
+{
+ "_note": "Тексты карточек зоопарка для игрока и для Extella. Только то, что управляющий знает вечером; скрытый исход назван только разбросом.",
+ "heatwave": {
+  "ru": {
+   "title": "Волна жары",
+   "text": "С дня {day} три дня Heat Advisory (индекс жары от 95 °F). Посетителей будет меньше."
+  },
+  "en": {
+   "title": "Heat wave",
+   "text": "From day {day}, three days of Heat Advisory (heat index 95 °F and up). Fewer visitors."
+  },
+  "options": {
+   "shade": {
+    "ru": "тент, поливалки и холодная вода ($1 500)",
+    "en": "shade, misters and cold water ($1,500)"
+   },
+   "close_midday": {
+    "ru": "закрыть уличные вольеры с 12 до 16 (посетителей ещё −20 %)",
+    "en": "close outdoor exhibits 12-4 pm (another −20% visitors)"
+   },
+   "none": {
+    "ru": "ничего не делать",
+    "en": "do nothing"
+   }
+  }
+ },
+ "cubs_press": {
+  "ru": {
+   "title": "У барсов родились котята",
+   "text": "Сообщить прессе за $500: интерес до конца месяца от +10 до +35 % посетителей, заранее неизвестно. Без прессы: +5 % по слухам."
+  },
+  "en": {
+   "title": "Snow leopard cubs are born",
+   "text": "Tell the press for $500: interest for the rest of the month from +10 to +35% visitors, unknown in advance. Without press: +5% by word of mouth."
+  },
+  "options": {
+   "press": {
+    "ru": "сообщить прессе ($500)",
+    "en": "tell the press ($500)"
+   },
+   "quiet": {
+    "ru": "не объявлять",
+    "en": "keep it quiet"
+   }
+  }
+ },
+ "cubs_watch": {
+  "ru": {
+   "title": "Первые ночи котят",
+   "text": "Первые 10 ночей самые опасные. Ночной дежурный $220 за ночь: риска нет. Камера $800: риск потери 5 %. Ничего: риск 15 %. Потеря котят: −$100 000 по формуле счёта, интерес пропадает."
+  },
+  "en": {
+   "title": "The cubs' first nights",
+   "text": "The first 10 nights are the riskiest. A night keeper at $220 a night: no risk. A camera for $800: 5% risk of losing them. Nothing: 15% risk. Losing the cubs: −$100,000 in the score, and the interest is gone."
+  },
+  "options": {
+   "keeper": {
+    "ru": "ночной дежурный",
+    "en": "night keeper"
+   },
+   "camera": {
+    "ru": "камера ($800)",
+    "en": "camera ($800)"
+   },
+   "none": {
+    "ru": "ничего",
+    "en": "nothing"
+   }
+  }
+ },
+ "hpai": {
+  "ru": {
+   "title": "Птичий грипп в городе",
+   "text": "Грипп нашли у диких птиц Нью-Йорка. Всех птиц и пингвинов в помещение: птичий дом закрыт, посетителей −8 %, заражения нет. Только уязвимых: −3 %, риск заражения 5 %. Ничего: риск 25 %. Заражение: гибель птиц (−$100 000), птичий дом закрыт до конца месяца, посетителей −15 %, репутация −0,1."
+  },
+  "en": {
+   "title": "Bird flu in the city",
+   "text": "Flu found in New York's wild birds. All birds and penguins indoors: bird house closed, −8% visitors, no infection. Only the vulnerable ones: −3%, 5% risk of infection. Nothing: 25% risk. Infection: birds die (−$100,000), bird house closed for the month, −15% visitors, reputation −0.1."
+  },
+  "options": {
+   "all_indoor": {
+    "ru": "всех в помещение",
+    "en": "everyone indoors"
+   },
+   "vulnerable": {
+    "ru": "только уязвимых",
+    "en": "only the vulnerable"
+   },
+   "none": {
+    "ru": "ничего",
+    "en": "nothing"
+   }
+  }
+ },
+ "pump": {
+  "ru": {
+   "title": "Сломался насос бассейна",
+   "text": "Срочный ремонт за $1 800 к утру дня {day}. Обычный за $600: днём {day} бассейн закрыт, кормления при публике нет, посетителей −10 %."
+  },
+  "en": {
+   "title": "The pool pump broke",
+   "text": "Emergency repair for $1,800 by the morning of day {day}. Regular for $600: on day {day} the pool is closed in the afternoon, no public feeding, −10% visitors."
+  },
+  "options": {
+   "fast": {
+    "ru": "срочный ремонт ($1 800)",
+    "en": "emergency repair ($1,800)"
+   },
+   "slow": {
+    "ru": "обычный ремонт ($600)",
+    "en": "regular repair ($600)"
+   }
+  }
+ },
+ "power": {
+  "ru": {
+   "title": "Отключение света в тропическом доме",
+   "text": "Энергокомпания отключит свет в день {day}. Генератор $900. Перевести животных: ещё по смотрителю утром и днём, тропический дом закрыт, посетителей −5 %. Ничего: животным холодно (нарушение ухода), риск гибели 20 %."
+  },
+  "en": {
+   "title": "Power cut at the tropical house",
+   "text": "The utility will cut power on day {day}. Generator $900. Move the animals: one more keeper morning and afternoon, the house is closed, −5% visitors. Nothing: the animals get cold (a care violation), 20% risk of losing one."
+  },
+  "options": {
+   "generator": {
+    "ru": "генератор ($900)",
+    "en": "generator ($900)"
+   },
+   "move": {
+    "ru": "перевести животных",
+    "en": "move the animals"
+   },
+   "none": {
+    "ru": "ничего",
+    "en": "nothing"
+   }
+  }
+ },
+ "sealion": {
+  "ru": {
+   "title": "Морской лев не ест",
+   "text": "Самка не ест больше суток. Срочный вызов ветеринара $800: в половине случаев болезнь вернётся через 3 дня (нарушение ухода и ещё вызов). Обследование с анализами $1 600: не вернётся."
+  },
+  "en": {
+   "title": "A sea lion is off food",
+   "text": "A female has not eaten for over a day. Emergency vet call $800: in half the cases it comes back in 3 days (a care violation and another call). A full work-up with blood tests $1,600: it does not come back."
+  },
+  "options": {
+   "vet_now": {
+    "ru": "срочный вызов ($800)",
+    "en": "emergency call ($800)"
+   },
+   "vet_full": {
+    "ru": "обследование ($1 600)",
+    "en": "full work-up ($1,600)"
+   },
+   "wait": {
+    "ru": "подождать",
+    "en": "wait"
+   }
+  }
+ },
+ "school": {
+  "ru": {
+   "title": "Школа просит экскурсию",
+   "text": "Утром дня {day}: 120 детей по $6. Нужен ещё смотритель в контактном дворе утром, иначе дети без гида и репутация −0,02."
+  },
+  "en": {
+   "title": "A school asks for a visit",
+   "text": "Morning of day {day}: 120 children at $6. Needs one more keeper in the petting yard that morning, otherwise no guide and reputation −0.02."
+  },
+  "options": {
+   "accept": {
+    "ru": "принять",
+    "en": "accept"
+   },
+   "decline": {
+    "ru": "отказать",
+    "en": "decline"
+   }
+  }
+ },
+ "donor": {
+  "ru": {
+   "title": "Донор просит экскурсию к барсам",
+   "text": "Утром дня {day}: двое смотрителей сверх смены у барсов. Пожертвование от $1 000 до $10 000, заранее неизвестно. Если людей не хватит, экскурсия сорвётся, репутация −0,02."
+  },
+  "en": {
+   "title": "A donor asks for a snow leopard tour",
+   "text": "Morning of day {day}: two extra keepers at the big cats. A donation of $1,000 to $10,000, unknown in advance. If you are short of people, the tour falls through, reputation −0.02."
+  },
+  "options": {
+   "tour": {
+    "ru": "провести экскурсию",
+    "en": "give the tour"
+   },
+   "decline": {
+    "ru": "отказать",
+    "en": "decline"
+   }
+  }
+ },
+ "sick": {
+  "ru": {
+   "title": "Смотритель заболел",
+   "text": "Один смотритель не выйдет в дни {day} и {day2}. Замены из агентства у зоопарка нет: смены пойдут с теми, кто есть."
+  },
+  "en": {
+   "title": "A keeper called in sick",
+   "text": "One keeper is out on days {day} and {day2}. Zoos have no agency cover: shifts run with whoever is left."
+  },
+  "options": {
+   "ok": {
+    "ru": "понятно",
+    "en": "noted"
+   }
+  }
+ }
+}

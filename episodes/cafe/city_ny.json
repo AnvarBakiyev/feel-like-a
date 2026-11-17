@@ -1,0 +1,408 @@
+{
+ "city": "ny",
+ "name": {
+  "ru": "Нью-Йорк, Бруклин",
+  "en": "New York, Brooklyn"
+ },
+ "currency": "$",
+ "_tags": "И первоисточник, П пересказ, О оценка; подробности в ../istochniki.md",
+ "days": 30,
+ "hours": {
+  "open": 7,
+  "close": 19,
+  "dayparts": [
+   [
+    7,
+    11
+   ],
+   [
+    11,
+    15
+   ],
+   [
+    15,
+    19
+   ]
+  ],
+  "share": [
+   0.4,
+   0.35,
+   0.25
+  ],
+  "_tag": "О"
+ },
+ "streets": {
+  "quiet": {
+   "guests": 210,
+   "rent_month": 7500,
+   "_tag": "гости О, аренда П Smith St $90"
+  },
+  "district": {
+   "guests": 300,
+   "rent_month": 9583,
+   "_tag": "гости О, аренда П Court St $115"
+  },
+  "corridor": {
+   "guests": 450,
+   "rent_month": 22917,
+   "_tag": "гости О, аренда П North 6th St $275"
+  }
+ },
+ "money": {
+  "low": 12000,
+  "mid": 25000,
+  "high": 45000
+ },
+ "_money_tag": "параметр игры; аренда за месяц вперёд, поэтому на $12k и $25k в коридоре нужен заём, на $12k в районе денег на закупки мало",
+ "investments": {
+  "machine2": {
+   "cost": 3500,
+   "residual": 0.8,
+   "extra_drinks_per_hour": 2,
+   "_tag": "О: вторая эспрессо-машина; в счёт идёт остаточная стоимость 80 %; при поломке латте не пропадает"
+  },
+  "marketing": {
+   "cost": 1500,
+   "delay": 2,
+   "days": 14,
+   "lift": [
+    0.03,
+    0.08,
+    0.14
+   ],
+   "_tag": "О: реклама в районе; прирост скрыт до запуска"
+  }
+ },
+ "scenarios": {
+  "calm": {
+   "start": [
+    2026,
+    10,
+    1
+   ],
+   "weather": "oct",
+   "events": [
+    "blogger",
+    "repair",
+    "inspection",
+    "breakdown",
+    "sick",
+    "dairy_up",
+    "catering",
+    "fair",
+    "no_show"
+   ]
+  },
+  "winter": {
+   "start": [
+    2027,
+    1,
+    1
+   ],
+   "weather": "jan",
+   "events": [
+    "blogger",
+    "repair",
+    "inspection",
+    "breakdown",
+    "sick",
+    "sick",
+    "dairy_up",
+    "catering",
+    "no_show",
+    "blizzard"
+   ]
+  },
+  "competitor": {
+   "start": [
+    2026,
+    10,
+    1
+   ],
+   "weather": "oct",
+   "events": [
+    "blogger",
+    "repair",
+    "inspection",
+    "breakdown",
+    "sick",
+    "dairy_up",
+    "catering",
+    "catering",
+    "fair",
+    "no_show",
+    "competitor"
+   ]
+  }
+ },
+ "holidays": {
+  "2027-01-01": 0.7
+ },
+ "weather": {
+  "oct": {
+   "rain_days": 5.6,
+   "snow_days": 0.0,
+   "_tag": "И NOAA Central Park 1991-2020"
+  },
+  "jan": {
+   "rain_days": 4.2,
+   "snow_days": 2.1,
+   "_tag": "И NOAA: осадков 6,3 дня, из них снег от 1 дюйма 2,1"
+  }
+ },
+ "weather_mult": {
+  "clear": 1.0,
+  "rain": 0.9,
+  "snow": 0.7,
+  "blizzard": 0.4,
+  "_tag": "О"
+ },
+ "weekday_mult": [
+  0.95,
+  1.0,
+  1.0,
+  1.0,
+  1.05,
+  1.15,
+  1.0
+ ],
+ "noise": 0.08,
+ "elasticity_drinks": {
+  "up": -2.5,
+  "down": [
+   -0.6,
+   -0.8,
+   -1.6
+  ]
+ },
+ "_elasticity_tag": "О: излом у базовой цены; выше рынка гости уходят к соседям, ниже прибавляются слабо, вечером сильнее (скидки вечером работают)",
+ "elasticity_pastry": {
+  "up": -2.0,
+  "down": -0.8
+ },
+ "drinks_per_barista_hour": 12,
+ "_drinks_tag": "О: в среднем за часть дня с учётом пиков, кассы и уборки; на пике бариста делает больше",
+ "lead_capacity_share": 0.5,
+ "max_per_daypart": 6,
+ "menu": {
+  "latte": {
+   "price": 6.25,
+   "share": 0.45,
+   "beans_g": 18,
+   "milk_l": 0.24,
+   "cup": 1,
+   "other": 0.0,
+   "espresso": true
+  },
+  "cold_brew": {
+   "price": 5.75,
+   "share": 0.1,
+   "beans_g": 22,
+   "milk_l": 0.0,
+   "cup": 1,
+   "other": 0.0,
+   "espresso": false
+  },
+  "drip": {
+   "price": 3.75,
+   "share": 0.3,
+   "beans_g": 20,
+   "milk_l": 0.0,
+   "cup": 1,
+   "other": 0.0,
+   "espresso": false
+  },
+  "tea": {
+   "price": 4.0,
+   "share": 0.15,
+   "beans_g": 0,
+   "milk_l": 0.0,
+   "cup": 1,
+   "other": 0.25,
+   "espresso": false
+  },
+  "croissant": {
+   "price": 4.75,
+   "attach": 0.35
+  }
+ },
+ "latte_to_drip": 0.5,
+ "suppliers": {
+  "dairy": {
+   "days": [
+    0,
+    2,
+    4
+   ],
+   "min_order": 150,
+   "items": {
+    "milk": {
+     "price": 4.1,
+     "unit": "gal",
+     "liters": 3.785,
+     "shelf_days": 7
+    }
+   }
+  },
+  "roaster": {
+   "days": [
+    1,
+    4
+   ],
+   "min_order": 200,
+   "items": {
+    "beans": {
+     "price": 12.0,
+     "unit": "lb",
+     "grams": 453.6
+    },
+    "cups": {
+     "price": 75.0,
+     "unit": "case500",
+     "count": 500
+    }
+   }
+  },
+  "bakery": {
+   "days": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "min_qty": 12,
+   "items": {
+    "croissant": {
+     "price": 1.5,
+     "unit": "pc"
+    }
+   }
+  }
+ },
+ "staff": {
+  "barista": {
+   "wage": 17.85,
+   "_tag": "И BLS OEWS 35-3023 май 2025"
+  },
+  "lead": {
+   "wage": 25.49,
+   "_tag": "И BLS OEWS 35-1012"
+  },
+  "min_wage": 17.0,
+  "burden": 0.1265,
+  "overtime_after_h": 40,
+  "overtime_mult": 1.5,
+  "start_baristas": 4,
+  "start_leads": 1,
+  "hire_delay_days": 3,
+  "hire_cost": 500,
+  "_hire_cost_tag": "О: оформление, проверка, форма и оплачиваемая учебная смена; ниже отраслевых оценок полной цены найма",
+  "agency_hourly": 35.0
+ },
+ "fixed_month": 3500,
+ "supplies_pct": 0.03,
+ "_fixed_tag": "О: свет, вода, страховка, касса, вывоз мусора, ремонт; расходники (салфетки, сиропы, сахар) 3 % выручки; аренда за месяц вперёд в первый день",
+ "card_share": 0.85,
+ "card_fee_pct": 0.026,
+ "card_fee_fixed": 0.15,
+ "sales_tax": 0.08875,
+ "penalty_stockout": 3.0,
+ "penalty_queue": 5.0,
+ "loan_penalty": 0.1,
+ "reputation": {
+  "start": 1.0,
+  "min": 0.8,
+  "max": 1.2,
+  "drift": 0.004,
+  "unhappy_k": 0.3
+ },
+ "start_stock_days": {
+  "milk": 2.5,
+  "beans": 4,
+  "cups": 4
+ },
+ "price_bounds": [
+  0.5,
+  2.0
+ ],
+ "max_discount_pct": 50,
+ "events": {
+  "blogger": {
+   "cost": 60,
+   "morning_capacity": 0.5,
+   "days": 5,
+   "outcomes": [
+    -0.1,
+    0.0,
+    0.15,
+    0.35
+   ],
+   "weights": [
+    0.2,
+    0.3,
+    0.3,
+    0.2
+   ]
+  },
+  "repair": {
+   "notice": 2,
+   "days": 7,
+   "mult": 0.8,
+   "sign_cost": 120,
+   "sign_recover": [
+    0.0,
+    0.5,
+    0.8
+   ]
+  },
+  "inspection": {
+   "notice": 3,
+   "clean_cost": 250,
+   "b_risk": 0.35,
+   "b_mult": 0.9
+  },
+  "breakdown": {
+   "fast_cost": 450,
+   "slow_cost": 200
+  },
+  "sick": {
+   "days": 2
+  },
+  "dairy_up": {
+   "notice": 2,
+   "pct": 0.08
+  },
+  "catering": {
+   "drinks": 60,
+   "price": 4.5
+  },
+  "fair": {
+   "notice": 3,
+   "mult": 1.5
+  },
+  "no_show": {},
+  "blizzard": {
+   "notice": 1,
+   "severity": [
+    0.6,
+    0.4,
+    0.2
+   ]
+  },
+  "competitor": {
+   "open_day": 10,
+   "strength": [
+    0.12,
+    0.2,
+    0.28
+   ],
+   "loyalty_cost": 300,
+   "loyalty_rep": 0.05,
+   "promo_cost": 500,
+   "promo_days": 7
+  }
+ }
+}

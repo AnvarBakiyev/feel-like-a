@@ -1,0 +1,21 @@
+@import url('/brand-palette.css?v=20261022-b');
+/* Color-only theme for the game controls; keep type, layout and traffic signals. */
+:root{--ink:var(--ex-text);--soft:var(--ex-muted);--card:color-mix(in srgb,var(--ex-page) 94%,transparent);--line:var(--ex-line);--gold:var(--ex-link);--ok:var(--ex-success-fg);--bad:var(--ex-error-fg)}
+body{background:linear-gradient(180deg,var(--ex-blue),var(--ex-page))}
+.chip,.btn,.cx,.cross-card,.opt,.live div{background:var(--ex-surface);border-color:var(--ex-control-border)}
+.chip.on,.opt.on{background:var(--ex-ink);color:var(--ex-paper);border-color:var(--ex-ink)}
+.chip .mini{color:var(--ex-warning-fg)}
+.chip.on .mini{color:var(--ex-apricot)}
+textarea{background:var(--ex-page);border-color:var(--ex-control-border)}
+textarea:focus{outline-color:var(--ex-focus)}
+.help,.hintText{background:var(--ex-info-bg);color:var(--ex-info-fg)}
+.problems{background:var(--ex-error-bg);color:var(--ex-error-fg)}
+.btn.p{background:var(--ex-primary);border-color:var(--ex-primary-border);color:var(--ex-on-primary);box-shadow:0 4px 0 var(--ex-ink)}
+.btn.p:hover{background:var(--ex-primary-hover)}
+.btn.p:active{background:var(--ex-primary-active);box-shadow:0 2px 0 var(--ex-ink)}
+.cx.light{background:var(--ex-success-bg);border-color:var(--ex-success-fg)}
+.cx.stop,.toggle.amb{background:var(--ex-error-bg);border-color:var(--ex-error-fg)}
+.cx.main{background:var(--ex-warning-bg);border-color:var(--ex-warning-fg)}
+.toggle input{accent-color:var(--ex-pine)}
+.result{background:var(--ex-secondary);border-color:var(--ex-control-border)}
+:focus-visible{outline-color:var(--ex-focus)}

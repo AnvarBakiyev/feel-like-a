@@ -1,0 +1,503 @@
+{
+ "episode": "zoo",
+ "name": {
+  "ru": "Зоопарк Ред-Хук, Бруклин",
+  "en": "Red Hook Zoo, Brooklyn"
+ },
+ "_tags": "И первоисточник, П пересказ, О оценка; подробности в istochniki.md",
+ "days": 30,
+ "halves": {
+  "ru": [
+   "утро 10:00–13:30",
+   "день 13:30–17:00"
+  ],
+  "en": [
+   "morning 10:00–13:30",
+   "afternoon 13:30–17:00"
+  ],
+  "hours": [
+   3.5,
+   3.5
+  ],
+  "share": [
+   0.45,
+   0.55
+  ],
+  "_tag": "О"
+ },
+ "visitors_year": 300000,
+ "_visitors_tag": "И: 303 316 и 317 914 у небольших зоопарков NYC, FY2018",
+ "places": {
+  "park": {
+   "mult": 0.7,
+   "ru": "тихий парк",
+   "en": "quiet park"
+  },
+  "waterfront": {
+   "mult": 1.0,
+   "ru": "набережная",
+   "en": "waterfront"
+  },
+  "subway": {
+   "mult": 1.4,
+   "ru": "у метро",
+   "en": "by the subway"
+  },
+  "_tag": "О"
+ },
+ "teams": {
+  "small": 9,
+  "mid": 12,
+  "large": 15,
+  "_tag": "параметр игры; смотрители на окладе 40 ч в неделю"
+ },
+ "scenarios": {
+  "heat": {
+   "start": [
+    2027,
+    7,
+    1
+   ],
+   "month_share": 0.125,
+   "weather": "jul",
+   "events": [
+    "heatwave",
+    "inspection",
+    "pump",
+    "sealion",
+    "school",
+    "donor",
+    "sick",
+    "no_show",
+    "power"
+   ],
+   "ru": "Жаркий июль",
+   "en": "Hot July"
+  },
+  "spring": {
+   "start": [
+    2027,
+    4,
+    1
+   ],
+   "month_share": 0.085,
+   "weather": "apr",
+   "events": [
+    "cubs",
+    "inspection",
+    "pump",
+    "sealion",
+    "school",
+    "school",
+    "donor",
+    "sick",
+    "no_show"
+   ],
+   "ru": "Весна и детёныш",
+   "en": "Spring and a cub"
+  },
+  "flu": {
+   "start": [
+    2027,
+    10,
+    1
+   ],
+   "month_share": 0.085,
+   "weather": "oct",
+   "events": [
+    "hpai",
+    "inspection",
+    "pump",
+    "sealion",
+    "school",
+    "donor",
+    "sick",
+    "no_show",
+    "power"
+   ],
+   "ru": "Птичий грипп осенью",
+   "en": "Bird flu in the fall"
+  }
+ },
+ "_month_tag": "О: июль 12,5 %, апрель и октябрь 8,5 % годовой посещаемости; опора Canopy",
+ "weather": {
+  "jul": {
+   "rain_days": 6.9,
+   "hot_days": 7.4,
+   "_tag": "И NOAA Central Park 1991–2020"
+  },
+  "apr": {
+   "rain_days": 6.5,
+   "hot_days": 0.2,
+   "_tag": "И"
+  },
+  "oct": {
+   "rain_days": 5.6,
+   "hot_days": 0.0,
+   "_tag": "И"
+  }
+ },
+ "weather_mult": {
+  "clear": 1.0,
+  "rain": 0.55,
+  "hot": 0.75,
+  "advisory": 0.6,
+  "_tag": "О, опора Toronto Zoo (И): осадки почти −50 %"
+ },
+ "holidays": {
+  "2027-07-04": 1.25,
+  "2027-07-05": 1.15
+ },
+ "weekday_mult": [
+  0.74,
+  0.74,
+  0.74,
+  0.74,
+  0.74,
+  1.665,
+  1.665
+ ],
+ "_weekday_tag": "О: выходной в 2,25 раза больше будня",
+ "noise": 0.1,
+ "mix": {
+  "adult": 0.4,
+  "child": 0.25,
+  "group": 0.05,
+  "member": 0.2,
+  "free": 0.1,
+  "_tag": "О, опора структуры Toronto Zoo (И)"
+ },
+ "prices": {
+  "adult": 12.95,
+  "child_share": 0.7,
+  "group": 6.0,
+  "bounds": [
+   0.5,
+   2.0
+  ],
+  "_tag": "О между ценами зоопарков NYC (И)"
+ },
+ "elasticity": {
+  "up": -1.5,
+  "down": -0.5,
+  "_tag": "О"
+ },
+ "free_wed": {
+  "afternoon_mult": 1.3,
+  "_tag": "О: бесплатный вход в среду после 14:00"
+ },
+ "spend": {
+  "food": 8.5,
+  "food_cost": 0.35,
+  "souvenir": 2.5,
+  "souvenir_cost": 0.5,
+  "donation": 0.3,
+  "donation_per_show": 0.15,
+  "_tag": "О, опора Toronto Zoo (И)"
+ },
+ "card_share": 0.85,
+ "card_fee_pct": 0.026,
+ "card_fee_fixed": 0.15,
+ "_card_tag": "П Square, как в кофейне",
+ "gate_per_cashier_hour": 100,
+ "kiosk_per_worker_hour": 60,
+ "_cap_tag": "О",
+ "staff": {
+  "keeper": {
+   "wage": 19.94,
+   "_tag": "И BLS 39-2021",
+   "salaried_h_week": 40
+  },
+  "cashier": {
+   "wage": 18.36,
+   "_tag": "И BLS 41-2011"
+  },
+  "kiosk": {
+   "wage": 17.85,
+   "_tag": "И BLS 35-3023"
+  },
+  "guard": {
+   "wage": 22.18,
+   "count": 2,
+   "hours": 7.5,
+   "_tag": "И BLS 33-9032"
+  },
+  "vet_tech": {
+   "wage": 29.57,
+   "hours": 8,
+   "_tag": "И BLS 29-2056"
+  },
+  "vet": {
+   "wage": 79.95,
+   "visit_hours": 6,
+   "emergency": 800,
+   "_tag": "И BLS 29-1131; срочный вызов О"
+  },
+  "burden": 0.1265,
+  "overtime_after_h": 40,
+  "overtime_mult": 1.5,
+  "hire_delay_days": 7,
+  "max_halves_per_day": 2,
+  "max_per_half": 4
+ },
+ "sections": {
+  "pool": {
+   "ru": "бассейн",
+   "en": "pool",
+   "animals": {
+    "ru": "4 морских льва, 12 пингвинов",
+    "en": "4 sea lions, 12 penguins"
+   },
+   "feed": "fish",
+   "need_kg": 34.4,
+   "min": [
+    3,
+    3
+   ],
+   "outdoor": true
+  },
+  "cats": {
+   "ru": "хищники",
+   "en": "big cats",
+   "animals": {
+    "ru": "2 снежных барса",
+    "en": "2 snow leopards"
+   },
+   "feed": "meat",
+   "need_kg": 2.7,
+   "min": [
+    2,
+    1
+   ],
+   "outdoor": true
+  },
+  "birds": {
+   "ru": "птичий дом",
+   "en": "bird house",
+   "animals": {
+    "ru": "40 птиц",
+    "en": "40 birds"
+   },
+   "feed": "produce",
+   "need_kg": 3.0,
+   "min": [
+    2,
+    1
+   ],
+   "outdoor": false
+  },
+  "yard": {
+   "ru": "контактный двор",
+   "en": "petting yard",
+   "animals": {
+    "ru": "8 коз, 4 альпаки",
+    "en": "8 goats, 4 alpacas"
+   },
+   "feed": "hay",
+   "need_kg": 21.0,
+   "min": [
+    2,
+    2
+   ],
+   "outdoor": true
+  },
+  "tropic": {
+   "ru": "тропический дом",
+   "en": "tropical house",
+   "animals": {
+    "ru": "рептилии, 6 лемуров",
+    "en": "reptiles, 6 lemurs"
+   },
+   "feed": "produce",
+   "need_kg": 5.0,
+   "min": [
+    1,
+    1
+   ],
+   "outdoor": false
+  }
+ },
+ "_sections_tag": "рацион рыбы и мяса И (Columbus, Lincoln Park, Binder Park), остальное О; минимум ухода О: бассейн два вольера (львы и пингвины), барсы и птицы утром уборка, двор с посетителями вдвоём",
+ "fed_ok": 0.9,
+ "suppliers": {
+  "frozen": {
+   "ru": "Поставщик мороженых кормов",
+   "en": "The frozen-feed supplier",
+   "days": [
+    0,
+    3
+   ],
+   "min_order": 300,
+   "items": {
+    "fish": {
+     "price_kg": 8.82,
+     "_tag": "О $4 за фунт"
+    },
+    "meat": {
+     "price_kg": 7.17,
+     "_tag": "О $3.25 за фунт"
+    }
+   },
+   "case_kg": 10
+  },
+  "hay": {
+   "ru": "Сенной поставщик",
+   "en": "The hay supplier",
+   "days": [
+    2
+   ],
+   "min_kg": 500,
+   "items": {
+    "hay": {
+     "price_kg": 0.18,
+     "_tag": "И USDA NASS NY, злаковое $180 за т"
+    }
+   },
+   "bale_kg": 20
+  },
+  "produce": {
+   "ru": "Овощной поставщик",
+   "en": "The produce supplier",
+   "days": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "min_kg": 10,
+   "items": {
+    "produce": {
+     "price_kg": 3.26,
+     "_tag": "И BLS средняя по 5 рядам, $1.48 за фунт"
+    }
+   },
+   "shelf_days": 3
+  }
+ },
+ "freezer_kg": 600,
+ "hay_store_kg": 1500,
+ "start_stock": {
+  "freezer": {
+   "fish": 140,
+   "meat": 12
+  },
+  "thawed": {
+   "fish": 34.4,
+   "meat": 2.7
+  },
+  "hay": 150,
+  "produce": [
+   [
+    16,
+    1
+   ]
+  ]
+ },
+ "electricity": {
+  "kwh_day": 1400,
+  "price": 0.2306,
+  "advisory_extra": 0.2,
+  "_tag": "цена И EIA; расход О"
+ },
+ "shows": {
+  "max": 2,
+  "pool_keepers_needed": 4,
+  "rep": 0.002,
+  "_tag": "О"
+ },
+ "penalties": {
+  "section_day": 5000,
+  "inspection": 15000,
+  "death": 100000,
+  "queue": 5,
+  "vet_visits_missing": 15000,
+  "_tag": "О: правила игры"
+ },
+ "vet_visits_min": 2,
+ "_vet_tag": "И стандарты AZA 2019 п. 2.1.1",
+ "reputation": {
+  "start": 1.0,
+  "min": 0.85,
+  "max": 1.15,
+  "drift": 0.002,
+  "queue_k": 0.3,
+  "violation": 0.02,
+  "closed_k": 0.01
+ },
+ "events": {
+  "heatwave": {
+   "days": 3,
+   "notice": 2,
+   "shade_cost": 1500,
+   "close_mult": 0.8,
+   "risk": 0.5,
+   "death_risk": 0.03
+  },
+  "cubs": {
+   "press_cost": 500,
+   "boost": [
+    0.1,
+    0.2,
+    0.35
+   ],
+   "quiet_boost": 0.05,
+   "watch_days": 10,
+   "watch_cost_night": 220,
+   "cam_cost": 800,
+   "loss_risk": 0.15
+  },
+  "hpai": {
+   "notice": 0,
+   "risk": {
+    "all_indoor": 0.0,
+    "vulnerable": 0.05,
+    "none": 0.25
+   },
+   "mult": {
+    "all_indoor": 0.92,
+    "vulnerable": 0.97,
+    "none": 1.0
+   },
+   "hit_mult": 0.85,
+   "hit_rep": -0.1
+  },
+  "inspection": {
+   "lookback": 3
+  },
+  "pump": {
+   "fast_cost": 1800,
+   "slow_cost": 600,
+   "slow_mult": 0.9
+  },
+  "power": {
+   "notice": 1,
+   "generator_cost": 900,
+   "move_halves": 2,
+   "move_mult": 0.95,
+   "death_risk": 0.2
+  },
+  "sealion": {
+   "vet_full_cost": 1600,
+   "relapse_risk": 0.5
+  },
+  "school": {
+   "kids": 120,
+   "price": 6.0
+  },
+  "donor": {
+   "amounts": [
+    1000,
+    4000,
+    10000
+   ],
+   "cats_halves": 2
+  },
+  "sick": {
+   "days": 2
+  }
+ },
+ "_events_tag": "О: параметры событий игры"
+}
