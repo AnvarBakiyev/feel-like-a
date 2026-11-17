@@ -1,0 +1,21 @@
+{
+ "cases": 450,
+ "levels": [
+  "ambulance",
+  "district",
+  "gridlock"
+ ],
+ "mismatches": 0,
+ "refused": 156,
+ "ran": 294,
+ "stars": {
+  "0": 233,
+  "1": 21,
+  "2": 23,
+  "3": 17
+ },
+ "python_seconds": 63.4,
+ "node_seconds": 5.2,
+ "date": "2026-10-16 17:57",
+ "examples": []
+}

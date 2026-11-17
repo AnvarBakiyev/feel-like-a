@@ -1,0 +1,548 @@
+# The handler of the "traffic" language on a device: the same rules and the same rush hour as site/traffic_core.js.
+# This file becomes the body of the "traffic" handler (with LEVELS embedded by build_traffic.py from the browser's file).
+# Plain Python, no backslashes, no triple single quotes. conformance.py checks it against the browser, result by result.
+
+NL = chr(10)
+DT = 0.1
+CAR = 1.9
+VMAX = 7.5
+ACC, BRAKE = 5.5, 11
+SPACING = 15
+BOX = 2.7
+YELLOW = 2
+MIN_GREEN, MAX_GREEN, MAX_CYCLE = 3, 40, 70
+AMB_SEE = 30
+HEADINGS = {"N": (0, -1), "S": (0, 1), "E": (1, 0), "W": (-1, 0)}
+AXIS = {"N": "ns", "S": "ns", "E": "ew", "W": "ew"}
+LEFT = {"N": "W", "W": "S", "S": "E", "E": "N"}
+RIGHT = {"N": "E", "E": "S", "S": "W", "W": "N"}
+W_NS = ["north-south", "ns", "север-юг", "сю"]
+W_EW = ["east-west", "ew", "запад-восток", "восток-запад", "зв"]
+W_LONGEST = ["longest queue", "самая длинная очередь", "длинная очередь"]
+W_LIGHT = ["light", "светофор"]
+W_STOP = ["stop", "стоп"]
+W_MAIN = ["main", "главная"]
+W_BOX = ["box", "вафля", "вафельная разметка"]
+W_NOBOX = ["no box", "без вафли", "без разметки"]
+W_AMB = ["ambulance first", "пропускать скорую", "скорая первая"]
+PLAN_KEYS = ["ns", "ew", "longest", "min", "max", "offset"]
+COLORS = ["#ef8a6f", "#f2c14e", "#7cc4a0", "#7fb2e5", "#c39be0", "#f39fb5", "#5fc6c9", "#ffb36b"]
+LEVELS = {}   # filled in by build_traffic.py from site/traffic_core.js
+
+
+def i32(v):
+    v &= 0xFFFFFFFF
+    return v - 0x100000000 if v & 0x80000000 else v
+
+
+def u32(v):
+    return v & 0xFFFFFFFF
+
+
+def rng(seed):
+    """mulberry32, exactly as the browser draws it."""
+    state = [u32(seed)]
+
+    def draw():
+        state[0] = u32(state[0] + 0x6D2B79F5)
+        t = state[0]
+        t = i32(i32(t ^ (u32(t) >> 15)) * i32(t | 1))
+        t = i32(t ^ i32(t + i32(i32(t ^ (u32(t) >> 7)) * i32(t | 61))))
+        return u32(t ^ (u32(t) >> 14)) / 4294967296
+    return draw
+
+
+def js_str(v):
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, float) and v == int(v):
+        return str(int(v))
+    return str(v)
+
+
+def cross_names(level):
+    out = []
+    for j in range(level["rows"]):
+        for i in range(level["cols"]):
+            out.append(chr(65 + j * level["cols"] + i))
+    return out
+
+
+def is_int4(s):
+    if not s:
+        return False
+    body = s[1:] if s[0] == "-" else s
+    return 1 <= len(body) <= 4 and all("0" <= ch <= "9" for ch in body)
+
+
+def default_cross():
+    return {"type": "stop", "mode": "fixed", "ns": 15, "ew": 15, "min": 5, "max": 25, "offset": 0, "box": False}
+
+
+NOT_A_PART = '"%s" is not something a crossing can have; use light, main north-south, main east-west, stop, box, or a plan for a light'
+
+
+def parse(text, level):
+    names = cross_names(level)
+    cross, problems = {}, []
+    for n in names:
+        c = default_cross()
+        c["type"] = (level.get("start") or {}).get(n) or "stop"
+        cross[n] = c
+    ambulance_first = False
+    for i, raw in enumerate(str(text or "").split(NL)):
+        line = raw.split("#")[0].strip().lower()
+        if not line:
+            continue
+        at = line.find(":")
+        if at < 0:
+            if " ".join(w for w in line.split(" ") if w) in W_AMB:
+                ambulance_first = True
+                continue
+            problems.append('line %d: a rule is "<crossing>: <what stands there>", for example "A: light, north-south 12, east-west 8", or "ambulance first"' % (i + 1))
+            continue
+        who, what = line[:at].strip(), line[at + 1:].strip()
+        everyone = who in ("all", "все")
+        targets = names if everyone else [n for n in names if n.lower() == who]
+        if not targets:
+            problems.append('line %d: there is no crossing "%s" here; the crossings are %s' % (i + 1, who.upper(), ", ".join(names)))
+            continue
+        parts = [s.strip() for s in what.split(",")]
+        parts = [s for s in parts if s]
+        upd, bad = {}, None
+        for p in parts:
+            words = [w for w in p.split(" ") if w]
+            joined = " ".join(words)
+            if joined in W_LIGHT:
+                upd["type"] = "light"
+                continue
+            if joined in W_STOP:
+                upd["type"] = "stop"
+                continue
+            if joined in W_BOX:
+                upd["box"] = True
+                continue
+            if joined in W_NOBOX:
+                upd["box"] = False
+                continue
+            if joined in W_LONGEST:
+                upd["mode"] = "longest"
+                upd["longest"] = True
+                continue
+            if words[0] in W_MAIN and len(words) > 1:
+                rest = " ".join(words[1:])
+                if rest in W_NS:
+                    upd["type"] = "main-ns"
+                    continue
+                if rest in W_EW:
+                    upd["type"] = "main-ew"
+                    continue
+                bad = '"%s": the main street is north-south or east-west' % p
+                break
+            last, head_ = words[-1], " ".join(words[:-1])
+            if not is_int4(last):
+                bad = NOT_A_PART % p
+                break
+            num = int(last)
+            if head_ in W_NS or head_ in W_EW:
+                if num < MIN_GREEN:
+                    bad = "green for %d s is too short: a car needs %d s just to start" % (num, MIN_GREEN)
+                    break
+                if num > MAX_GREEN:
+                    bad = "green for %d s is too long: the other street would wait more than %d s" % (num, MAX_GREEN)
+                    break
+                upd["ns" if head_ in W_NS else "ew"] = num
+                upd["mode"] = upd.get("mode") or "fixed"
+                continue
+            if head_ in ("offset", "сдвиг"):
+                if num < 0 or num > 60:
+                    bad = "offset %d s: an offset is between 0 and 60 s" % num
+                    break
+                upd["offset"] = num
+                continue
+            if head_ in ("min", "мин"):
+                if num < MIN_GREEN or num > MAX_GREEN:
+                    bad = "min %d s: it must be between %d and %d" % (num, MIN_GREEN, MAX_GREEN)
+                    break
+                upd["min"] = num
+                continue
+            if head_ in ("max", "макс"):
+                if num < MIN_GREEN or num > MAX_GREEN:
+                    bad = "max %d s: it must be between %d and %d" % (num, MIN_GREEN, MAX_GREEN)
+                    break
+                upd["max"] = num
+                continue
+            bad = NOT_A_PART % p
+            break
+        if bad:
+            problems.append("line %d: %s" % (i + 1, bad))
+            continue
+        if ("ns" in upd) != ("ew" in upd):
+            problems.append('line %d: a plan gives green to both streets; "%s" is missing, and that street would never move' % (i + 1, "north-south" if "ns" not in upd else "east-west"))
+            continue
+        has_plan = any(k in upd for k in PLAN_KEYS)
+        for n in targets:
+            c = cross[n]
+            typ = upd.get("type") or c["type"]
+            if has_plan and typ != "light":
+                problems.append('line %d: crossing %s has no traffic light, so it cannot have a plan of greens; write "%s: light, ..."' % (i + 1, n, n))
+                break
+            for k in ("type", "mode", "ns", "ew", "min", "max", "offset", "box"):
+                if k in upd:
+                    c[k] = upd[k]
+            if "ns" in upd and not upd.get("longest"):
+                c["mode"] = "fixed"
+            if c["min"] > c["max"]:
+                problems.append("line %d: min %d s is longer than max %d s" % (i + 1, c["min"], c["max"]))
+                break
+            if c["type"] == "light" and c["mode"] == "fixed" and c["ns"] + c["ew"] + 2 * YELLOW > MAX_CYCLE:
+                problems.append("line %d: a cycle of %d s at %s is longer than %d s; walkers would wait too long" % (i + 1, c["ns"] + c["ew"] + 2 * YELLOW, n, MAX_CYCLE))
+                break
+    lit = [n for n in names if cross[n]["type"] == "light"]
+    if len(lit) > level["lights"]:
+        problems.append("the city has only %d traffic lights, but the rules put lights on %d crossings: %s" % (level["lights"], len(lit), ", ".join(lit)))
+    return cross, ambulance_first, problems
+
+
+def build_city(level):
+    names = cross_names(level)
+    nodes, links, gates = [], {}, []
+    for j in range(level["rows"]):
+        for i in range(level["cols"]):
+            nodes.append({"i": i, "j": j, "name": names[j * level["cols"] + i], "x": i * SPACING, "z": j * SPACING})
+
+    def node(i, j):
+        for n in nodes:
+            if n["i"] == i and n["j"] == j:
+                return n
+        return None
+    length, stub = SPACING - 2 * BOX, SPACING - BOX
+    for n in nodes:
+        for h in "NSEW":
+            dx, dz = HEADINGS[h]
+            nb = node(n["i"] + dx, n["j"] + dz)
+            lid = n["name"] + h
+            links[lid] = {"id": lid, "h": h, "from": n["name"], "to": nb["name"] if nb else None, "len": length if nb else stub, "cars": [], "gate": False, "queue": 0}
+            back = {"N": "S", "S": "N", "E": "W", "W": "E"}[h]
+            bx, bz = HEADINGS[back]
+            if not node(n["i"] + bx, n["j"] + bz):
+                gid = {"S": "N" + str(n["i"]), "N": "S" + str(n["i"]), "E": "W" + str(n["j"]), "W": "E" + str(n["j"])}[h]
+                gl = "in-" + n["name"] + h
+                links[gl] = {"id": gl, "h": h, "from": None, "to": n["name"], "len": stub, "cars": [], "gate": True, "gateId": gid, "queue": 0}
+                gates.append({"id": gid, "link": gl, "side": gid[0]})
+    return nodes, links, gates
+
+
+def rnd1(x):
+    import math
+    v = math.floor(x * 10 + 0.5) / 10
+    return int(v) if v == int(v) else v   # 13.0 is written 13, as the browser writes it
+
+
+def rnd0(x):
+    import math
+    return math.floor(x + 0.5)
+
+
+def simulate(level_key, rules_text):
+    import math
+    level = LEVELS[level_key]
+    cross, ambulance_first, problems = parse(rules_text, level)
+    if problems:
+        return {"problems": problems}
+    nodes_list, links, gates = build_city(level)
+    R = rng(level["seed"])
+    link_list = list(links.values())
+    nodes = {}
+    for n in nodes_list:
+        c = cross[n["name"]]
+        n.update({"cfg": c, "phase": "ns", "yellow": 0, "t": -c["offset"], "green": c["ns"] if c["mode"] == "fixed" else c["min"], "box": []})
+        nodes[n["name"]] = n
+    in_links = {n["name"]: {"N": None, "S": None, "E": None, "W": None} for n in nodes_list}
+    for lk in link_list:
+        if lk["to"] and not in_links[lk["to"]][lk["h"]]:
+            in_links[lk["to"]][lk["h"]] = lk
+    cars = []
+    next_id, t = 1, 0
+    stats = {"delivered": 0, "spawned": 0, "waitSum": 0, "tripSum": 0, "maxQueue": 0, "gateWaiting": 0}
+    pending = {g["id"]: [] for g in gates}
+    amb_pending = {g["id"]: [] for g in gates}
+    ambs = [{"at": a["at"], "gate": a["gate"], "called": False, "car": None} for a in level.get("ambulances") or []]
+    ducks = [{"at": d["at"], "link": d["link"], "until": d["at"] + 4.5} for d in level.get("ducks") or []]
+    steps = math.floor(level["seconds"] / DT + 0.5)
+
+    def queue_at(n, axis):
+        q = 0
+        for h in ("NS" if axis == "ns" else "EW"):
+            lk = in_links[n["name"]][h]
+            if lk:
+                for c in lk["cars"]:
+                    if c["v"] < 0.5 and lk["len"] - c["s"] < 14:
+                        q += 1
+        return q
+
+    def room_at(lk):
+        return (not lk["cars"]) or lk["cars"][-1]["s"] > CAR * 1.15
+
+    def amb_axis(n):
+        for h in "NSEW":
+            lk = in_links[n["name"]][h]
+            if not lk:
+                continue
+            for c in lk["cars"]:
+                if c["amb"] and lk["len"] - c["s"] < AMB_SEE:
+                    return AXIS[h]
+        return None
+
+    def can_enter(n, c, h, out_lk):
+        for b in n["box"]:
+            if b["from"] == h:
+                return False
+            if AXIS[b["from"]] != AXIS[h]:
+                return False
+        if n["cfg"]["box"] and not room_at(out_lk):
+            return False
+        amb = c["amb"] and ambulance_first
+        typ = n["cfg"]["type"]
+        if typ == "light":
+            return amb or ((not n["yellow"]) and n["phase"] == AXIS[h])
+        if amb:
+            return True
+        if typ in ("main-ns", "main-ew"):
+            main = "ns" if typ == "main-ns" else "ew"
+            if AXIS[h] == main:
+                return True
+            for mh in ("NS" if main == "ns" else "EW"):
+                lk = in_links[n["name"]][mh]
+                if not lk or not lk["cars"]:
+                    continue
+                f = lk["cars"][0]
+                if lk["len"] - f["s"] < 7 and (f["v"] > 0.5 or lk["len"] - f["s"] < 1.2):
+                    return False
+            return True
+        if c["arrive"] < 0:
+            return False
+        for hh in "NSEW":
+            lk = in_links[n["name"]][hh]
+            if not lk or not lk["cars"] or lk["cars"][0] is c:
+                continue
+            f = lk["cars"][0]
+            if f["arrive"] >= 0 and f["arrive"] < c["arrive"]:
+                return False
+        return len(n["box"]) == 0
+
+    for step in range(steps):
+        t = step * DT
+        for n in nodes_list:
+            p = n["cfg"]
+            if p["type"] != "light":
+                continue
+            n["t"] += DT
+            if n["t"] < 0:
+                continue
+            if n["yellow"] > 0:
+                n["yellow"] -= DT
+                if n["yellow"] <= 1e-9:
+                    n["yellow"] = 0
+                    n["phase"] = "ew" if n["phase"] == "ns" else "ns"
+                    n["t"] = 0
+                    n["green"] = p[n["phase"]] if p["mode"] == "fixed" else p["min"]
+                continue
+            amb = amb_axis(n) if ambulance_first else None
+            if amb:
+                if n["phase"] != amb:
+                    n["yellow"] = YELLOW
+                continue
+            if p["mode"] == "fixed":
+                if n["t"] >= n["green"] - 1e-9:
+                    n["yellow"] = YELLOW
+            else:
+                mine = queue_at(n, n["phase"])
+                other = queue_at(n, "ew" if n["phase"] == "ns" else "ns")
+                if n["t"] >= p["max"] - 1e-9 or (n["t"] >= p["min"] - 1e-9 and other > mine):
+                    n["yellow"] = YELLOW
+        for a in ambs:
+            if not a["called"] and t >= a["at"]:
+                a["called"] = True
+                amb_pending[a["gate"]].append(a)
+        for g in gates:
+            rate = level["flows"].get(g["side"], 0) or 0
+            b = level.get("burst")
+            if b and b["from"] <= t < b["to"] and g["id"] in b["gates"]:
+                rate += b["rate"]
+            if R() < rate * DT:
+                pending[g["id"]].append(t)
+            lk = links[g["link"]]
+            if room_at(lk) and not (lk["cars"] and lk["cars"][-1]["s"] < CAR * 1.6):
+                if amb_pending[g["id"]]:
+                    a = amb_pending[g["id"]].pop(0)
+                    c = {"id": next_id, "link": lk["id"], "s": 0, "v": VMAX * 0.7, "born": a["at"], "wait": t - a["at"], "color": "#ffffff", "kind": "amb",
+                         "amb": True, "box": None, "still": 0, "turn": None, "gone": -1, "arrive": -1}
+                    next_id += 1
+                    a["car"] = c
+                    lk["cars"].append(c)
+                    cars.append(c)
+                elif pending[g["id"]]:
+                    wanted = pending[g["id"]].pop(0)
+                    color = COLORS[math.floor(R() * len(COLORS))]
+                    if R() < 0.12:
+                        kind = "van"
+                    else:
+                        kind = "bus" if R() < 0.1 else "car"
+                    c = {"id": next_id, "link": lk["id"], "s": 0, "v": VMAX * 0.7, "born": wanted, "wait": t - wanted, "color": color, "kind": kind,
+                         "amb": False, "box": None, "still": 0, "turn": None, "gone": -1, "arrive": -1}
+                    next_id += 1
+                    lk["cars"].append(c)
+                    cars.append(c)
+                    stats["spawned"] += 1
+            stats["gateWaiting"] += len(pending[g["id"]]) * DT
+        for lk in link_list:
+            n = nodes[lk["to"]] if lk["to"] else None
+            k = 0
+            while k < len(lk["cars"]):
+                c = lk["cars"][k]
+                gap = 1e9
+                if k > 0:
+                    gap = lk["cars"][k - 1]["s"] - c["s"] - CAR
+                for d in ducks:
+                    if d["link"] == lk["id"] and d["at"] <= t < d["until"] and c["s"] < lk["len"] * 0.5:
+                        gap = min(gap, lk["len"] * 0.5 - 1.2 - c["s"])
+                to_end = lk["len"] - c["s"]
+                if n:
+                    if not c["turn"]:
+                        if c["amb"]:
+                            c["turn"] = "straight"
+                        else:
+                            r = R()
+                            tr = level["turns"]
+                            c["turn"] = "straight" if r < tr["straight"] else ("right" if r < tr["straight"] + tr["right"] else "left")
+                    out = lk["h"] if c["turn"] == "straight" else (RIGHT[lk["h"]] if c["turn"] == "right" else LEFT[lk["h"]])
+                    if k == 0 and c["arrive"] < 0 and to_end < 0.6 and c["v"] < 0.3:
+                        c["arrive"] = t
+                    may = k == 0 and can_enter(n, c, lk["h"], links[n["name"] + out])
+                    if not may:
+                        gap = min(gap, to_end - 0.15)
+                    if may and to_end < 0.35:
+                        lk["cars"].pop(0)
+                        dur = 1.3 if c["turn"] == "left" else (0.75 if c["turn"] == "right" else 0.95)
+                        c["box"] = {"node": n["name"], "from": lk["h"], "to": out, "turn": c["turn"], "p": 0, "dur": dur}
+                        n["box"].append(c["box"])
+                        c["link"] = None
+                        c["turn"] = None
+                        c["arrive"] = -1
+                        continue
+                elif to_end <= 0:
+                    lk["cars"].pop(0)
+                    c["gone"] = t
+                    if not c["amb"]:
+                        stats["delivered"] += 1
+                        stats["tripSum"] += t - c["born"]
+                        stats["waitSum"] += c["wait"]
+                    continue
+                target = max(0, min(VMAX, (gap - 0.25) * 1.9))
+                c["v"] += max(-BRAKE * DT, min(ACC * DT, target - c["v"]))
+                if c["v"] < 0:
+                    c["v"] = 0
+                c["s"] += c["v"] * DT
+                if c["v"] < 0.4:
+                    c["wait"] += DT
+                    c["still"] += DT
+                else:
+                    c["still"] = 0
+                k += 1
+        for n in nodes_list:
+            k = 0
+            while k < len(n["box"]):
+                b = n["box"][k]
+                if b["p"] < 1:
+                    b["p"] = min(1, b["p"] + DT / b["dur"])
+                lk = links[n["name"] + b["to"]]
+                if b["p"] >= 1 and room_at(lk):
+                    c = next(x for x in cars if x["box"] is b)
+                    n["box"].pop(k)
+                    c["box"] = None
+                    c["link"] = lk["id"]
+                    c["s"] = 0.05
+                    c["v"] = max(c["v"], 3)
+                    lk["cars"].append(c)
+                    lk["cars"].sort(key=lambda x: -x["s"])
+                    continue
+                if b["p"] >= 1:
+                    c = next(x for x in cars if x["box"] is b)
+                    c["wait"] += DT
+                    c["still"] += DT
+                    c["v"] = 0
+                k += 1
+        for lk in link_list:
+            if not lk["to"]:
+                continue
+            q = sum(1 for c in lk["cars"] if c["v"] < 0.5)
+            if lk["gate"]:
+                q += len(pending[lk["gateId"]])
+            lk["queue"] = q
+            if q > stats["maxQueue"]:
+                stats["maxQueue"] = q
+    left_wait, left = 0, 0
+    for c in cars:
+        if c["gone"] < 0 and not c["amb"]:
+            left_wait += c["wait"]
+            left += 1
+    for g in gates:
+        for w in pending[g["id"]]:
+            left_wait += t - w
+            left += 1
+    amb_sum, amb_n, amb_worst = 0, 0, 0
+    for a in ambs:
+        time_ = a["car"]["gone"] - a["at"] if (a["car"] and a["car"]["gone"] >= 0) else t - a["at"]
+        if a["at"] < t:
+            amb_sum += time_
+            amb_n += 1
+            if time_ > amb_worst:
+                amb_worst = time_
+    delivered = stats["delivered"]
+    result = {"delivered": delivered, "spawned": stats["spawned"],
+              "avgWait": rnd1((stats["waitSum"] + left_wait) / (delivered + left)) if delivered + left else 0,
+              "stuck": left,
+              "avgTrip": rnd1(stats["tripSum"] / delivered) if delivered else 0,
+              "maxQueue": stats["maxQueue"], "gateWait": rnd0(stats["gateWaiting"]),
+              "ambulances": amb_n, "ambulance": rnd1(amb_sum / amb_n) if amb_n else 0, "ambulanceWorst": rnd1(amb_worst),
+              "honks": 0, "doors": 0}
+    result["stars"] = stars(level, result)
+    result["sha"] = fingerprint(result)
+    return {"problems": [], "result": result}
+
+
+def stars(level, r):
+    g = level["goals"]
+    third = (1 if r["ambulance"] <= g["ambulance"] else 0) if level.get("ambulances") else (1 if r["stuck"] <= g["stuck"] else 0)
+    return (1 if r["delivered"] >= g["delivered"] else 0) + (1 if r["avgWait"] <= g["wait"] else 0) + third
+
+
+def fingerprint(r):
+    s = "|".join(js_str(r[k]) for k in ("delivered", "spawned", "avgWait", "avgTrip", "maxQueue", "gateWait", "ambulance", "stuck"))
+    h = 0x811c9dc5
+    for ch in s:
+        h = i32(i32(h ^ ord(ch)) * 16777619)
+    return "%08x" % u32(h)
+
+LEVELS = {"ambulance": {"ambulances": [{"at": 20, "gate": "W1"}, {"at": 60, "gate": "W1"}, {"at": 100, "gate": "W1"}, {"at": 140, "gate": "W1"}], "cols": 3, "ducks": [], "flows": {"E": 0.26, "N": 0.2, "S": 0.2, "W": 0.3}, "goals": {"ambulance": 14, "delivered": 330, "wait": 15}, "lights": 3, "rows": 3, "seconds": 160, "seed": 53, "start": {"A": "light", "C": "light", "I": "light"}, "turns": {"left": 0.13, "right": 0.17, "straight": 0.7}}, "district": {"ambulances": [], "cols": 3, "ducks": [{"at": 70, "link": "BS"}], "flows": {"E": 0.34, "N": 0.2, "S": 0.2, "W": 0.42}, "goals": {"delivered": 270, "stuck": 140, "wait": 17}, "lights": 2, "rows": 2, "seconds": 150, "seed": 41, "start": {}, "turns": {"left": 0.13, "right": 0.17, "straight": 0.7}}, "gridlock": {"ambulances": [{"at": 40, "gate": "W1"}, {"at": 120, "gate": "N2"}], "burst": {"from": 50, "gates": ["N1", "N2"], "rate": 0.25, "to": 110}, "cols": 4, "ducks": [{"at": 90, "link": "JE"}], "flows": {"E": 0.26, "N": 0.2, "S": 0.2, "W": 0.26}, "goals": {"ambulance": 30, "delivered": 390, "wait": 15}, "lights": 4, "rows": 3, "seconds": 170, "seed": 67, "start": {"F": "light", "G": "light"}, "turns": {"left": 0.16, "right": 0.18, "straight": 0.66}}}
+HANDLER_VERSION = "traffic v1"
+HANDLER_SHA = "cf31ad6b638fdcc45cbede05d078186de3f0c574746d4149e0cc92419c3508b3"
+
+
+def traffic(code="", filtered_source_code="", func_name="", **extra):
+    import platform, socket, time
+    params = dict(extra)
+    inner = extra.get("kwargs")
+    if isinstance(inner, dict):
+        params.update(inner)
+    level = str(params.get("level") or "district")
+    base = {"language": "traffic", "expert": func_name, "handler_version": HANDLER_VERSION, "handler_sha": HANDLER_SHA,
+            "host": socket.gethostname(), "os": platform.system() + " " + platform.machine(), "model_calls": 0, "level": level}
+    if level not in LEVELS:
+        return dict(base, status="rejected", problems=["there is no level %s; the levels are %s" % (level, ", ".join(sorted(LEVELS)))])
+    t0 = time.time()
+    out = simulate(level, code or filtered_source_code or "")
+    if out["problems"]:
+        return dict(base, status="rejected", problems=out["problems"][:6])
+    return dict(base, status="success", problems=[], result=out["result"], seconds_simulating=round(time.time() - t0, 2))

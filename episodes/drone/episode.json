@@ -1,0 +1,61 @@
+{
+ "id": "drone",
+ "title": {
+  "en": "Feel like a drone courier",
+  "ru": "Почувствуй себя курьером дронов"
+ },
+ "summary": "Run a two-hour shift of cargo drone deliveries in Almaty, Dubai or Rotterdam on real 2025 weather: headwinds on the way back, frost, thin mountain air and 45 °C heat. Race Qwen 3.5 9B with Extella, Claude Opus 5 and Qwen 3.5 9B without Extella on the same shifts.",
+ "authors": [
+  "Extella"
+ ],
+ "license": {
+  "code": "MIT",
+  "data": "CC-BY-4.0",
+  "third_party": "see DATA-SOURCES.md (ERA5 via Open-Meteo, Copernicus DEM)"
+ },
+ "settings": {
+  "city": [
+   "almaty",
+   "dubai",
+   "rotterdam"
+  ]
+ },
+ "open_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "tests": [
+  "python3 test_sim.py",
+  "python3 test_polet.py",
+  "python3 test_replay.py",
+  "cd web && python3 make_parity.py && node parity.mjs",
+  "node web/check_data.mjs"
+ ],
+ "verify": [
+  "python3 verify.py"
+ ],
+ "contract": {
+  "settings": {
+   "city": "rotterdam"
+  },
+  "seeds": [
+   2,
+   8
+  ],
+  "driver": "drivers:careful",
+  "hidden_keys": [
+   "truth",
+   "gust",
+   "gust_k",
+   "dens"
+  ]
+ }
+}
