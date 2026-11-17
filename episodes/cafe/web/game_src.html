@@ -1,0 +1,1544 @@
+<title>Месяц кофейни</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one evening = one column of the owner's notebook: window on the shop, then tomorrow, then decisions, then one button to close the evening */
+:root{
+  --bg:#eceeea; --panel:#ffffff; --fg:#1d1a17; --muted:#615a53; --line:#d5d9d3;
+  --espresso:#4a2f22; --awning:#1f6f68; --awning-soft:#dcefec;
+  --ghost:#6d4bb0; --ghost-soft:#ece6f7; --ok:#22744a; --ok-soft:#e0f1e6; --bad:#b03a2e; --bad-soft:#f7e1de; --warn:#94600a; --warn-soft:#f8eed8;
+  --wall:#e6e0d6; --floor:#cbbba8; --wood:#97663f; --milk:#fbfbf6; --sky:#cfe0ea; --skin:#c99a74; --guest:#6b7f8e; --wall2:#d6cdbf; --floor2:#b09c85; --wood2:#74492a; --wood3:#bd8a55;
+  --display:"Bricolage Grotesque","Avenir Next Condensed","Arial Narrow",system-ui,sans-serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121514; --panel:#1b1f1e; --fg:#ebe7e2; --muted:#a39b93; --line:#2d3331;
+  --espresso:#e2c3ad; --awning:#5cc0b5; --awning-soft:#16302d;
+  --ghost:#b39ae8; --ghost-soft:#261f37; --ok:#6fcf98; --ok-soft:#15301f; --bad:#f0897c; --bad-soft:#3a1d19; --warn:#e9b54a; --warn-soft:#352812;
+  --wall:#262421; --floor:#3b332c; --wood:#7a5338; --milk:#dcdcd3; --sky:#1d2a33; --skin:#b48660; --guest:#8fa3b2; --wall2:#312d29; --floor2:#4d4238; --wood2:#573a26; --wood3:#9a6c4c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121514; --panel:#1b1f1e; --fg:#ebe7e2; --muted:#a39b93; --line:#2d3331;
+  --espresso:#e2c3ad; --awning:#5cc0b5; --awning-soft:#16302d;
+  --ghost:#b39ae8; --ghost-soft:#261f37; --ok:#6fcf98; --ok-soft:#15301f; --bad:#f0897c; --bad-soft:#3a1d19; --warn:#e9b54a; --warn-soft:#352812;
+  --wall:#262421; --floor:#3b332c; --wood:#7a5338; --milk:#dcdcd3; --sky:#1d2a33; --skin:#b48660; --guest:#8fa3b2; --wall2:#312d29; --floor2:#4d4238; --wood2:#573a26; --wood3:#9a6c4c; color-scheme:dark}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.45}
+.wrap{max-width:860px;margin:0 auto;padding-block:18px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.01em;color:var(--espresso);background:none;border:0;padding:0;cursor:pointer}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,7vw,54px);line-height:.98;margin:0;letter-spacing:-.02em;color:var(--espresso);text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.15;margin:0;text-wrap:balance}
+h3{font-size:16px;margin:0;font-weight:700}
+p{margin:0;max-width:66ch}
+.muted{color:var(--muted)} .small{font-size:14px} .note{font-size:13.5px;color:var(--muted)}
+.mono,.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stack{display:flex;flex-direction:column;gap:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.eyebrow{font-size:13px;color:var(--muted);font-weight:700}
+button,.btn{font:inherit;font-size:15px;padding:7px 12px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;min-height:36px}
+button:hover{border-color:var(--muted)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--awning);outline-offset:2px}
+button.primary{background:var(--awning);border-color:var(--awning);color:var(--panel);font-weight:700}
+button.on,button[aria-pressed="true"]{border-color:var(--awning);background:var(--awning-soft);font-weight:600}
+button.link{border:0;background:none;padding:0;min-height:0;color:var(--awning);text-decoration:underline;text-underline-offset:3px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{border:0;border-radius:0;min-height:32px;padding:5px 10px;font-size:14px}
+.seg button+button{border-left:1px solid var(--line)}
+input[type=number]{font:inherit;font-family:var(--mono);width:5.2em;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--fg)}
+select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--fg)}
+.step{display:inline-flex;align-items:center;gap:4px}
+.step button{min-width:34px;padding:4px 0;font-family:var(--mono)}
+.step .v{min-width:2.2em;text-align:center;font-family:var(--mono);font-weight:600}
+.rej{border-left:3px solid var(--bad);background:var(--bad-soft);padding:6px 10px;border-radius:0 6px 6px 0;font-size:14.5px}
+.okmsg{border-left:3px solid var(--ok);background:var(--ok-soft);padding:6px 10px;border-radius:0 6px 6px 0;font-size:14.5px}
+.warnmsg{border-left:3px solid var(--warn);background:var(--warn-soft);padding:6px 10px;border-radius:0 6px 6px 0;font-size:14.5px}
+.ghostbox{border-left:3px solid var(--ghost);background:var(--ghost-soft);padding:8px 12px;border-radius:0 8px 8px 0}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 8px;border-radius:99px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)} .pill.bad{color:var(--bad)} .pill.warn{color:var(--warn)} .pill.ghost{color:var(--ghost)} .pill.mut{color:var(--muted)}
+.statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}
+.stat .k{font-size:13px;color:var(--muted);font-weight:600}
+.stat .v{font-family:var(--mono);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat.ghost{border-color:var(--ghost)} .stat.ghost .v{color:var(--ghost)}
+.tbl{overflow-x:auto} table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+.windowbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.windowbox svg{display:block;width:100%;height:auto}
+.windowbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding:8px 12px;border-top:1px solid var(--line)}
+.rprog{height:4px;background:var(--line);position:relative}
+.rprog i{position:absolute;left:0;top:0;bottom:0;background:var(--espresso);width:0}
+.rpbar{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 12px}
+.rpbar .clock{font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.rpbar .c{font-size:12px;color:var(--muted);font-weight:600}
+.rpbar .c b{font-family:var(--mono);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--fg)}
+.rpbar .c.q b{color:var(--bad)}
+.rpbar .sp{flex:1 1 auto}
+.fc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fc .d{border:1px solid var(--line);border-radius:8px;padding:8px;min-width:0}
+.fc .d.tom{border-color:var(--awning);background:var(--awning-soft)}
+.fc .d{display:grid;gap:2px}
+.fc .n{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.fc .nt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-top:2px}
+@media (max-width:620px){
+  .fc{grid-template-columns:minmax(0,1fr);gap:6px}
+  .fc .d{grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;align-items:center;padding:8px 10px}
+  .fc .hd{grid-column:1;grid-row:1}
+  .fc .rg{grid-column:1;grid-row:2}
+  .fc .n{grid-column:2;grid-row:1/3;text-align:right;font-size:22px}
+  .fc .nt{grid-column:1/-1;grid-row:3}
+}
+.card{border:1px solid var(--warn);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--panel)}
+.card .opts{display:flex;flex-wrap:wrap;gap:6px}
+.supp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding-block:8px;border-bottom:1px dashed var(--line)}
+.supp:last-child{border-bottom:0}
+.qtys{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;grid-column:1/-1}
+.qtys label{display:inline-flex;gap:6px;align-items:center;font-size:14.5px}
+.nl{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:3px 10px;align-items:center;margin:-2px 0 2px}
+.nl .bar{position:relative;display:block;flex:0 0 110px;height:8px;border-radius:3px;background:var(--line);overflow:hidden}
+.nl .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.nl .bar u{position:absolute;top:0;bottom:0;width:2px;background:var(--fg);opacity:.7}
+.nl .t{font-size:12px;color:var(--muted)}
+.nl .t b{color:var(--fg);font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
+.nl .t.ok b,.nl .t.ok{color:var(--ok)}
+.nl .t.bad b,.nl .t.bad{color:var(--bad)}
+.dp3{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:6px 10px;align-items:center}
+.closebar{position:sticky;bottom:0;padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;z-index:5}
+.combo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.opt{display:flex;flex-direction:column;gap:6px}
+.lesson{display:flex;flex-direction:column;gap:12px}
+.chart svg{display:block;width:100%;height:auto}
+details>summary{cursor:pointer;font-weight:700;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"+ ";font-family:var(--mono);color:var(--awning)}
+details[open]>summary::before{content:"− "}
+@media (prefers-reduced-motion:no-preference){.fade{animation:fade .35s ease-out}@keyframes fade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}}
+
+/* --- доработка интерфейса: шапка-дуэль, две колонки, полосы --- */
+#main{display:flex;flex-direction:column;gap:14px}
+.wrap.wide{max-width:1180px}
+.cols{display:grid;grid-template-columns:1fr;gap:14px;align-items:start}
+.cols>div{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (min-width:1040px){.cols{grid-template-columns:minmax(0,420px) minmax(0,1fr)}
+  .cols>.colL{position:sticky;top:12px}}
+.hero{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
+@media (min-width:760px){.hero{grid-template-columns:.8fr 1.2fr}}
+.duel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px 12px;align-items:center}
+.duel .k{font-size:13px;color:var(--muted);font-weight:600}
+.duel .v{font-family:var(--mono);font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.duel .r{text-align:right}
+.duel .r .v{color:var(--ghost)}
+.duel .gap{font-family:var(--display);font-weight:800;font-size:14px;padding:3px 12px;border-radius:99px;white-space:nowrap}
+.duel .gap.ok{background:var(--ok-soft);color:var(--ok)}
+.duel .gap.bad{background:var(--ghost-soft);color:var(--ghost)}
+.duel .gap.mut{background:var(--bg);color:var(--muted)}
+.duel .bar{grid-column:1/-1;height:7px;border-radius:99px;background:var(--line);position:relative}
+.duel .bar i{position:absolute;top:0;bottom:0;border-radius:99px}
+.duel .bar b{position:absolute;top:-3px;bottom:-3px;left:calc(50% - 1px);width:2px;background:var(--muted);opacity:.6}
+.track{display:flex;gap:2px;align-items:flex-end;height:14px;grid-column:1/-1}
+.track i{flex:1 1 0;height:6px;border-radius:2px;background:var(--line)}
+.track i.win{background:var(--ok)}
+.track i.lose{background:var(--ghost)}
+.track i.now{height:14px;background:var(--espresso)}
+.hud{padding:10px 12px 2px;display:flex;flex-direction:column;gap:8px}
+.hudtop{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline}
+.hud .clock{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.hm small{font-size:11.5px;color:var(--muted);font-weight:600;margin-right:6px}
+.hm b{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.hm.ok b{color:var(--ok)}
+.hm.bad b{color:var(--bad)}
+.hstock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 12px}
+.hs{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 6px;font-size:11.5px;align-items:baseline}
+.hs .k{color:var(--muted);font-weight:600}
+.hs .v{font-family:var(--mono);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.hs .bar{grid-column:1/-1;height:7px;border-radius:99px;background:var(--line);overflow:hidden;position:relative;display:block}
+.hs .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--awning)}
+.hs.low .bar i{background:var(--warn)}
+.hs.out .bar i{background:var(--bad)}
+.hs.out .v{color:var(--bad)}
+.hprob{display:flex;flex-wrap:wrap;gap:5px;min-height:24px;align-items:center}
+@media (max-width:560px){.hstock{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sit .lg{display:none}
+.rpP .mk{display:none}
+.rpP.dec .mk{display:inline}
+.rpC.drop .bx{display:none}
+.dance{animation:dance .46s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes dance{from{transform:rotate(-9deg)}to{transform:rotate(9deg) translateY(-3px)}}
+.nts text{animation:fl 1.6s linear infinite}
+.nts text:nth-child(2){animation-delay:.8s}
+@keyframes fl{from{opacity:.9;transform:translateY(0)}to{opacity:0;transform:translateY(-14px)}}
+.rpS.hop{animation:hop .42s ease-in-out infinite alternate}
+@keyframes hop{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.dance,.nts text,.rpS.hop{animation:none}}
+.steam path{animation:steam 2.6s ease-in-out infinite;opacity:0}
+.steam path:nth-child(2){animation-delay:.9s}
+.steam path:nth-child(3){animation-delay:1.7s}
+@keyframes steam{0%{opacity:0;transform:translateY(3px)}40%{opacity:.6}100%{opacity:0;transform:translateY(-7px)}}
+.rain line{animation:rain .6s linear infinite}
+@keyframes rain{from{transform:translate(3px,-9px)}to{transform:translate(-3px,9px)}}
+.snow circle{animation:snow 4s linear infinite}
+@keyframes snow{from{transform:translateY(-12px)}to{transform:translateY(70px)}}
+@media (prefers-reduced-motion:reduce){.steam path{animation:none;opacity:.4}.rain line,.snow circle{animation:none}}
+.ecard{padding:0}
+.ecard>details>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:12px 14px;cursor:pointer;list-style:none}
+.ecard summary::-webkit-details-marker{display:none}
+.ecard>details>summary::before,.ecard>details[open]>summary::before{content:none}
+.ecard .et{font-family:var(--display);font-weight:800;font-size:18px;line-height:1.15}
+.ecard .et::before{content:"\25B8";color:var(--muted);margin-right:6px;font-size:14px}
+.ecard details[open] .et::before{content:"\25BE"}
+.ecard .es{grid-column:1;font-size:13.5px;font-weight:400;color:var(--muted);min-width:0;line-height:1.35}
+.ecard summary .pill{grid-column:2;grid-row:1/3;align-self:center;white-space:nowrap}
+.ecard .eb{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line)}
+.daystage{display:flex;flex-direction:column;gap:14px;max-width:760px;margin:0 auto;width:100%}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap}
+.dayhead h1{margin:0}
+.reveal{display:flex;flex-direction:column;gap:14px;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.bigday{font-family:var(--display);font-weight:800;font-size:clamp(30px,7vw,48px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.race{display:grid;gap:7px}
+.duel .race{grid-column:1/-1}
+.lane{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px}
+.lane .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lane .nm small{font-family:var(--mono);color:var(--muted);font-weight:600;margin-right:4px}
+.lane .tr{position:relative;height:14px;border-radius:99px;background:var(--line);overflow:hidden}
+.lane .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.lane .sc{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lane.me .nm{color:var(--espresso)}
+.says{display:grid;gap:10px}
+.says .s{border-left:3px solid var(--line);padding:1px 0 1px 10px}
+.says .s b{display:block;font-size:13px}
+.says .s span{font-size:13.5px;color:var(--muted);line-height:1.4}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+@media (prefers-reduced-motion:reduce){.reveal{animation:none}.lane .tr i{transition:none}}
+@media (max-width:560px){.lane{grid-template-columns:minmax(0,92px) minmax(0,1fr) auto;gap:8px;font-size:12px}}
+.stand{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.stand .ch{display:inline-flex;gap:5px;align-items:center;font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:2px 9px;white-space:nowrap}
+.stand .ch b{font-family:var(--mono);font-weight:600;color:var(--fg);font-variant-numeric:tabular-nums}
+.stand .ch.me{background:var(--espresso);border-color:var(--espresso);color:var(--panel)}
+.stand .ch.me b{color:var(--panel)}
+.stand .ch.ext b{color:var(--ghost)}
+.who{display:grid;gap:10px}
+.who .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline}
+.who .r .n{font-weight:700}
+.who .r .s{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.who .r .d{grid-column:1/-1;font-size:13px;color:var(--muted);line-height:1.35}
+.who .r.me .n{color:var(--espresso)}
+.cell{display:block;min-width:0}
+.capbar{position:relative;display:block;max-width:150px;height:9px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:3px}
+.capbar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.capbar u{position:absolute;top:0;bottom:0;width:2px;background:var(--fg);opacity:.75}
+.supp.off{opacity:.5}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(76px,1fr));gap:6px 10px;padding:0 12px 10px}
+.mini>div{min-width:0}
+.mini .k{font-size:11.5px;color:var(--muted);font-weight:600;line-height:1.2}
+.mini .v{font-family:var(--mono);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.dayres{border-left-width:4px;border-left-style:solid}
+@media (max-width:560px){
+  .duel{grid-template-columns:minmax(0,1fr) minmax(0,auto);padding:10px 12px}
+  .duel>div:first-child{order:1} .duel .r{order:2} .duel .gap{order:3;grid-column:1/-1;justify-self:center}
+  .duel .bar{order:4} .duel .track{order:5} .duel .stand{order:6} .duel .race{order:6}
+  .duel .k{font-size:12px}
+  .supp{grid-template-columns:minmax(0,1fr)}
+  .supp>.seg{justify-self:start}
+  .dp3{gap:5px 6px;grid-template-columns:minmax(0,auto) repeat(3,minmax(0,1fr))}
+  .dp3 .step button{min-width:26px;padding:4px 0}
+  .dp3 .step .v{min-width:1.5em}
+  .dp3>.small,.dp3>.eyebrow{font-size:12px;line-height:1.2}
+  .capbar{max-width:100%}
+}
+.verdict .big{font-family:var(--display);font-weight:800;font-size:clamp(26px,5.5vw,42px);line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.dbar{position:relative;display:block;height:9px;background:var(--line);border-radius:3px;width:96px;margin-left:auto}
+.dbar i{position:absolute;top:0;bottom:0;border-radius:3px}
+.dbar b{position:absolute;top:-2px;bottom:-2px;left:calc(50% - 1px);width:2px;background:var(--muted);opacity:.5}
+</style>
+
+<div class="wrap" id="app">
+  <header class="top">
+    <button class="brand" id="home" type="button">Месяц кофейни</button>
+    <div class="row">
+      <div class="seg" role="group" aria-label="Language"><button type="button" id="lang-ru">RU</button><button type="button" id="lang-en">EN</button></div>
+      <div class="seg" role="group" aria-label="Theme"><button type="button" id="th-light" aria-label="Light theme">Aa</button><button type="button" id="th-dark" aria-label="Dark theme" style="background:var(--fg);color:var(--bg)">Aa</button></div>
+      <button type="button" id="snd" aria-pressed="true">Звук</button>
+    </div>
+  </header>
+  <main id="main"><p class="muted">Загружаю симулятор…</p></main>
+</div>
+
+<script>/*SIM*/</script>
+<script>
+var DATA = /*DATA*/;
+(function(){
+"use strict";
+var S = window.CafeSim, C = DATA.city;
+var $ = function(id){ return document.getElementById(id); };
+var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+var SITE = !!window.CAFE_SITE, LANG = SITE ? "en" : "ru";
+try { var l0 = localStorage.getItem(SITE ? "robot_lang" : "cafe_lang"); if (l0 === "en" || l0 === "ru") LANG = l0; } catch (e) {}
+try { var th0 = localStorage.getItem("cafe_theme"); if (th0) document.documentElement.setAttribute("data-theme", th0); } catch (e) {}
+
+/* ---------- тексты ---------- */
+var T = {
+ru: {
+  brand:"Месяц кофейни", tag:"Ты и Extella ведёте одну и ту же кофейню в Бруклине 30 дней. Тот же месяц, та же погода, те же события, те же цифры на экране. Разница в счёте означает только разницу решений.",
+  how_h:"Как идёт игра", how:"Каждый вечер ты видишь, как прошёл день, прогноз гостей на три дня и карточки событий. Решаешь, что заказать поставщикам, сколько людей поставить в смену, какие цены держать и что ответить на события. Проверка игры отказывает, если решение нарушает правило, и называет правило. Потом наступает день.",
+  score_h:"Как считается счёт", score:"Прибыль за месяц минус штрафы: $3 за каждого гостя, которому не хватило позиции, $5 за каждого, кто ушёл из-за очереди, и 10 % займа, если деньги кончились. Аренда за месяц вносится в первый день. Остатки зерна и стаканов и вторая машина (80 % цены) засчитываются в конце.",
+  ghost_h:"Кто такая Extella здесь", ghost:"Малая модель qwen3.5:9b пишет замысел вечера коротким языком плана, эксперт на Extella переводит его в заказы и смены и считает оценки вариантов в долларах, Проверка игры та же, что у тебя. Её месяц сыгран заранее и записан: страница только показывает журнал.",
+  street:"Улица", money:"Деньги на старте", scen:"Месяц",
+  st_quiet:"Тихая улица", st_quiet_d:"210 гостей в день, аренда $7 500", st_district:"Торговый район", st_district_d:"300 гостей, аренда $9 583", st_corridor:"Оживлённый проспект", st_corridor_d:"450 гостей, аренда $22 917",
+  sc_calm:"Спокойный октябрь", sc_calm_d:"9 событий", sc_winter:"Январь с метелью", sc_winter_d:"снег, два больничных, метель", sc_competitor:"Октябрь с конкурентом", sc_competitor_d:"с 11-го дня рядом конкурент",
+  mo_low:"$12 000", mo_mid:"$25 000", mo_high:"$45 000",
+  play:"Начать месяц", lessons:"Три урока за 3 минуты", board:"Таблица рекордов",
+  ext_month:"Extella на этом месяце",
+  evening:"Вечер", of30:"из 30", tomorrow:"Завтра", cash:"Деньги", loan:"Заём", rep:"Репутация", grade:"Оценка DOHMH",
+  you:"Ты", sofar:"счёт сейчас", ext:"Extella",
+  yday_h:"Как прошёл день", first_h:"Кофейня перед первым днём", first:"Аренда за месяц спишется утром. Запасы на 2–4 дня, четыре бариста и старший.",
+  came:"пришло", served:"обслужено", queue:"ушли из-за очереди", stockout:"без заказа", revenue:"выручка", wages:"зарплата", written:"списано",
+  fc_h:"Прогноз гостей", fc_note:"середина и разброс за день; в скобках утро · день · вечер",
+  cards_h:"События", no_cards:"Сегодня событий нет.", decide_by:"решить до вечера дня", def:"если не ответить", chosen:"выбрано",
+  orders_h:"Заказ на завтра утром", level:"Запас", lean:"впритык", normal:"обычный", safe:"с запасом",
+  u_gal:"галлонов", u_lb:"фунтов", u_box:"коробок", u_pc:"шт.",
+  need_day:"нужно на завтра", need_days:"нужно на {d} дн.", have_now:"есть", no_keep:"не хранятся",
+  enough:"хватит", short:"не хватит на",
+  lv_note:"Запас считается от прогноза гостей: впритык — по середине прогноза, обычный — между серединой и верхом, с запасом — по верхней границе. Кнопка подставляет числа, править их можно руками. В «есть» попадает только то, что доживёт до следующего привоза: молоко с коротким сроком туда не считается.",
+  covers:"до следующей поставки", days:"дн.", no_deliv:"завтра не возит, возит", stock_now:"на складе",
+  milk:"молоко, галлоны", beans:"зерно, фунты", cups:"стаканы, коробки по 500", croissant:"круассаны, шт",
+  rp_play:"Проиграть день", rp_again:"Ещё раз", rp_stop:"Стоп", rp_close:"Картинка дня", rp_unit:"одна фигура = {n} гостей",
+  log_h:"Журнал: день за днём", log_sum:"прибыль за месяц", log_all:"всего",
+  log_note:"Каждая строка — движение денег за день. Закупки списываются в день привоза, аренда за весь месяц ушла в первый день. «Касса» — сколько денег на счету к вечеру, «счёт» — то, по чему идёт сравнение.",
+  day_col:"день", g_col:"гости", rev_col:"выручка", buy_col:"закупки", wag_col:"зарплата", oth_col:"прочее", pro_col:"за день", cash_col:"касса", score_col:"счёт",
+  disc_when:"когда", disc_note:"Скидка снижает цену всех напитков и круассанов в выбранные часы: гостей приходит больше, с каждого выручка меньше.",
+  who_h:"С кем ты играешь", who_note:"Соперники — модели. Все они видят ровно то же, что ты, и каждая сама пишет решение на вечер. Месяц у них записан заранее, тот же самый: та же погода, те же события, те же числа.",
+  stand_h:"Чем кончился месяц у всех", place_of:"Твоё место: {p} из {n}", who_col:"кто", month_col:"за месяц", vs_you:"разница с тобой",
+  r_extella:"Extella + Qwen 3.5 9B", r_qwen:"Qwen 3.5 9B", r_opus:"Claude Opus 5",
+  r_qwen_d:"Та же малая модель, но без Extella: заказы, смены и цены она пишет сама.",
+  r_opus_d:"Большая модель без Extella: решения целиком свои.",
+  r_me_d:"Ты. Решения принимаешь каждый вечер сам.",
+  r_extella_d:"Малая модель с экспертом на Extella: модель выбирает замысел, эксперт считает заказы и смены. Видит то же, что ты, и каждый вечер объясняет, что собирается делать.",
+  staff_h:"Смены", staff_note:"одна раскладка на все дни недели; старший утром обязателен", morning:"утро", midday:"день", evening_dp:"вечер",
+  baristas:"бариста", lead:"старший", fits:"вместит", fcst:"прогноз", hire:"нанять ($500 за человека, выйдут через 3 дня)", fire:"уволить", headcount:"в штате бариста",
+  hours_week:"часов бариста в неделю", hours_cap:"без сверхурочных", overtime:"сверх 40 ч в неделю платится в полтора раза",
+  more_h:"Цены, скидка, вложения", price:"цена", base:"база", cost:"себестоимость", ev_disc:"Скидка на всё", none:"нет",
+  inv_h:"Вложения", machine2:"Вторая эспрессо-машина", machine2_d:"+2 напитка в час на бариста, при поломке латте не пропадает; в конце засчитывается 80 % цены",
+  marketing:"Реклама в районе", marketing_d:"14 дней, начнётся через 2 дня; прирост гостей заранее неизвестен", buy:"купить", bought:"куплено", from_day:"с дня",
+  check_ok:"Проверка игры: всё по правилам.", check_bad:"Проверка игры отказала. Отклонённое не применится:",
+  close:"Закрыть вечер", close_n:"Закрыть вечер, начнётся день",
+  ec_pend:"ждут ответа: {n}", ec_answered:"ответы выбраны", ec_wait:"реши", ec_ok:"готово",
+  ec_short:"не хватит", ec_short_l:"не хватит:", ec_cover:"хватит до следующих привозов",
+  ec_bar:"бариста", ec_queue:"будет очередь", ec_queue_l:"не справится:", ec_tight:"в упор", ec_tight_l:"в упор:", ec_fine:"справится", ec_fine_l:"хватит и на верх прогноза",
+  end_win:"Ты выиграл месяц", end_place:"Ты на {p}-м месте из {n}",
+  m_guests:"гостей обслужено", m_lost:"гостей потеряно", m_best:"лучший день", m_worst:"худший день",
+  kd_h:"Ключевые дни", kd_note:"Дни, когда разрыв с Extella менялся сильнее всего, и что она решила накануне.",
+  kd_lost:"Extella отыграла у тебя", kd_won:"ты отыграл у Extella", kd_she:"Extella в тот вечер:",
+  hud_pen:"штрафы", hud_out:"кончилось", hud_ok:"проблем нет",
+  snd:"Звук",
+  skip:"Пропустить", fast:"Без показа", day_profit:"Итог дня", spent:"расходы", race_h:"Гонка месяца",
+  says_h:"Что решили соперники в этот вечер", to_eve:"К вечеру", to_end:"Итог месяца",
+  b_clean:"Ни одного потерянного гостя", b_best:"Лучший день месяца", b_over:"Ты обошёл:", b_lost:"Тебя обошли:",
+  rent_note:"В первый день списана аренда за весь месяц, поэтому итог дня отрицательный.",
+  day_res:"День", you_day:"ты", ext_day:"Extella", ahead:"ты впереди на", behind:"ты позади на",
+  ext_why:"Extella в тот вечер", ext_plan:"замысел",
+  end_h:"Месяц закончен", you_score:"Твой счёт", ext_score:"Extella",
+  won:"Ты впереди Extella", lost:"Extella впереди", tie:"Ничья",
+  chart_h:"Счёт по дням", chart_note:"Счёт месяца на конец каждого дня. Провал в первый день: аренда за месяц.",
+  parts_h:"Где выигрыш и где проигрыш", part:"статья", diff:"разница",
+  p_revenue:"выручка", p_purchases:"закупки", p_leftover_stock:"остатки на складе", p_wages:"зарплата и агентство", p_rent_fixed:"аренда и постоянные", p_card_fees:"комиссия за карты",
+  p_event_costs:"события", p_investments:"вложения", p_leftover_equipment:"машина в конце", p_stockout_penalty:"штраф: не хватило позиции", p_queue_penalty:"штраф: очередь", p_loan_penalty:"штраф: заём",
+  again:"Сыграть ещё раз", other:"Другой месяц", save:"Записать в таблицу", saved:"Записано.", board_h:"Таблица рекордов",
+  board_empty:"Пока никто не записался. Сыграй месяц и запиши результат.", board_off:"Таблица работает на странице в claude.ai для тех, кому дали ссылку.",
+  name:"игрок", best:"счёт", vs:"против Extella", someone:"Игрок", beat:"впереди Extella", nobeat:"нет",
+  verify:"В таблицу пишется не только счёт, но и все решения месяца: любой может пересчитать их тем же симулятором (replay).",
+  lessons_h:"Три урока", l_next:"Дальше", l_done:"Готово, к игре",
+  wd:["пн","вт","ср","чт","пт","сб","вс"], wdl:["понедельник","вторник","среда","четверг","пятница","суббота","воскресенье"],
+  wx:{clear:"ясно",rain:"дождь",snow:"снег",blizzard:"метель"},
+  notes:{fair:"ярмарка",repair:"ремонт тротуара",blogger:"отзыв блогера",blizzard:"метель",competitor:"конкурент",marketing:"реклама",grade_b:"оценка B"},
+  closed:"закрыто", loading:"Загружаю результаты…", no_deliv_h:"Сегодня не привезли заказ", no_deliv_t:"Деньги за него вернулись на счёт; на складе этого нет.", sup:{dairy:"молочный поставщик",roaster:"обжарщик",bakery:"пекарня"}, last_ev:"последний вечер, чтобы решить", no_cash:"не хватит денег: после заказа останется", buy_on:"покупаю", legend:"Полоса — сколько гостей успеет смена завтра, метка — середина прогноза. Зелёная значит, что смена справится и с верхней границей; жёлтая, что только с серединой; красная, что гости уйдут из-за очереди.", sum_order:"Завтра: заказ", sum_staff_new:"смены меняются", sum_staff_same:"смены как были", sum_cards:"ответы на события", show:"показать", saving:"Записываю…", save_fail:"Не записалось. Проверь, что ты вошёл в claude.ai, и нажми ещё раз.", mismatch:"Пересчёт по журналу решений не совпал со счётом. Это ошибка страницы: сообщи команде, в таблицу такой результат не попадёт.", zero:"(в своих словах Extella считает дни с нуля: её день 9 здесь день 10)"
+},
+en: {
+  brand:"A Month at the Café", tag:"You and Extella run the same Brooklyn coffee shop for 30 days. Same month, same weather, same events, same numbers on screen. Any gap in the score comes from decisions alone.",
+  how_h:"How it plays", how:"Each evening you see how the day went, a three-day guest forecast and event cards. You decide what to order, how many people to put on shift, what prices to hold and how to answer events. The game's check refuses a decision that breaks a rule and names the rule. Then the day happens.",
+  score_h:"How the score works", score:"Profit for the month minus penalties: $3 for every guest who could not get their order, $5 for every guest who left because of the queue, and 10% of any loan if cash runs out. Rent for the month is paid on day one. Leftover beans and cups and the second machine (80% of its price) count at the end.",
+  ghost_h:"What Extella is here", ghost:"A small model, qwen3.5:9b, writes the evening's intent in a short plan language; an expert on Extella turns it into orders and shifts and prices the options in dollars; the game's check is the same as yours. Its month was played in advance and recorded: this page only shows the log.",
+  street:"Street", money:"Starting cash", scen:"Month",
+  st_quiet:"Quiet street", st_quiet_d:"210 guests a day, rent $7,500", st_district:"Shopping district", st_district_d:"300 guests, rent $9,583", st_corridor:"Busy avenue", st_corridor_d:"450 guests, rent $22,917",
+  sc_calm:"Calm October", sc_calm_d:"9 events", sc_winter:"January with a blizzard", sc_winter_d:"snow, two sick days, a blizzard", sc_competitor:"October with a competitor", sc_competitor_d:"a rival opens on day 11",
+  mo_low:"$12,000", mo_mid:"$25,000", mo_high:"$45,000",
+  play:"Start the month", lessons:"Three lessons, 3 minutes", board:"Leaderboard",
+  ext_month:"Extella on this month",
+  evening:"Evening", of30:"of 30", tomorrow:"Tomorrow", cash:"Cash", loan:"Loan", rep:"Reputation", grade:"DOHMH grade",
+  you:"You", sofar:"score now", ext:"Extella",
+  yday_h:"How the day went", first_h:"The shop before day one", first:"The month's rent goes out in the morning. Stock for 2 to 4 days, four baristas and a lead.",
+  came:"came", served:"served", queue:"left the queue", stockout:"no order", revenue:"revenue", wages:"wages", written:"written off",
+  fc_h:"Guest forecast", fc_note:"middle and range for the day; in brackets morning · midday · evening",
+  cards_h:"Events", no_cards:"No events tonight.", decide_by:"decide by the evening of day", def:"if you don't answer", chosen:"chosen",
+  orders_h:"Order for tomorrow morning", level:"Stock", lean:"tight", normal:"normal", safe:"spare",
+  u_gal:"gal", u_lb:"lb", u_box:"boxes", u_pc:"pcs",
+  need_day:"needed for tomorrow", need_days:"needed for {d} days", have_now:"in stock", no_keep:"do not keep",
+  enough:"enough", short:"short by",
+  lv_note:"Stock is counted from the guest forecast: tight is the middle of the range, normal is between the middle and the top, spare is the top. The button fills the numbers in; you can type your own. The in-stock number counts only what survives until the next delivery: milk past its date is not counted.",
+  covers:"until the next delivery", days:"d", no_deliv:"no delivery tomorrow, delivers", stock_now:"in stock",
+  milk:"milk, gallons", beans:"beans, lb", cups:"cups, cases of 500", croissant:"croissants",
+  rp_play:"Replay the day", rp_again:"Again", rp_stop:"Stop", rp_close:"Still picture", rp_unit:"one figure = {n} guests",
+  log_h:"Day by day", log_sum:"month profit", log_all:"total",
+  log_note:"Each row is the money that moved that day. Orders are charged on the day they arrive; the whole month's rent went out on day one. Cash is what is on the balance by the evening; score is what the comparison runs on.",
+  day_col:"day", g_col:"guests", rev_col:"revenue", buy_col:"orders", wag_col:"wages", oth_col:"other", pro_col:"on the day", cash_col:"cash", score_col:"score",
+  disc_when:"when", disc_note:"The discount lowers the price of every drink and the croissant during the chosen hours: more guests come in, each one brings less.",
+  who_h:"Who you are up against", who_note:"Your rivals are models. Each of them sees exactly what you see and writes its own decision for the evening. Their month is recorded in advance and it is the same one: same weather, same events, same numbers.",
+  stand_h:"How the month ended for everyone", place_of:"Your place: {p} of {n}", who_col:"who", month_col:"month", vs_you:"vs you",
+  r_extella:"Extella + Qwen 3.5 9B", r_qwen:"Qwen 3.5 9B", r_opus:"Claude Opus 5",
+  r_qwen_d:"The same small model without Extella: it writes the orders, shifts and prices itself.",
+  r_opus_d:"A large model without Extella: every decision is its own.",
+  r_me_d:"You. Every evening the decisions are yours.",
+  r_extella_d:"A small model with an expert on Extella: the model picks the intent, the expert computes the orders and shifts. Sees what you see and explains each evening what it is about to do.",
+  staff_h:"Shifts", staff_note:"one layout for every day of the week; a lead is required in the morning", morning:"morning", midday:"midday", evening_dp:"evening",
+  baristas:"baristas", lead:"lead", fits:"fits", fcst:"forecast", hire:"hire ($500 each, start in 3 days)", fire:"let go", headcount:"baristas on staff",
+  hours_week:"barista hours a week", hours_cap:"without overtime", overtime:"hours over 40 a week are paid time and a half",
+  more_h:"Prices, discount, investments", price:"price", base:"base", cost:"cost", ev_disc:"Discount on everything", none:"none",
+  inv_h:"Investments", machine2:"Second espresso machine", machine2_d:"+2 drinks an hour per barista, lattes survive a breakdown; 80% of the price counts at the end",
+  marketing:"Neighbourhood ads", marketing_d:"14 days, starts in 2 days; the lift is unknown in advance", buy:"buy", bought:"bought", from_day:"from day",
+  check_ok:"Game check: everything follows the rules.", check_bad:"The game check refused. Refused parts will not apply:",
+  close:"Close the evening", close_n:"Close the evening, the day begins",
+  ec_pend:"waiting for an answer: {n}", ec_answered:"answers chosen", ec_wait:"decide", ec_ok:"done",
+  ec_short:"short", ec_short_l:"short of:", ec_cover:"enough until the next deliveries",
+  ec_bar:"baristas", ec_queue:"queue ahead", ec_queue_l:"cannot cope:", ec_tight:"tight", ec_tight_l:"tight:", ec_fine:"will cope", ec_fine_l:"covers the top of the forecast",
+  end_win:"You won the month", end_place:"You finished {p} of {n}",
+  m_guests:"guests served", m_lost:"guests lost", m_best:"best day", m_worst:"worst day",
+  kd_h:"Key days", kd_note:"The days when the gap to Extella moved the most, and what it decided the evening before.",
+  kd_lost:"Extella gained on you", kd_won:"you gained on Extella", kd_she:"Extella that evening:",
+  hud_pen:"penalties", hud_out:"out", hud_ok:"no problems",
+  snd:"Sound",
+  skip:"Skip", fast:"No replay", day_profit:"Day result", spent:"costs", race_h:"The month race",
+  says_h:"What the rivals decided that evening", to_eve:"To evening", to_end:"Month result",
+  b_clean:"Not a single guest lost", b_best:"Best day of the month", b_over:"You passed:", b_lost:"Passed you:",
+  rent_note:"The whole month's rent went out on day one, so the day result is negative.",
+  day_res:"Day", you_day:"you", ext_day:"Extella", ahead:"you lead by", behind:"you trail by",
+  ext_why:"Extella that evening", ext_plan:"intent",
+  end_h:"The month is over", you_score:"Your score", ext_score:"Extella",
+  won:"You beat Extella", lost:"Extella is ahead", tie:"A tie",
+  chart_h:"Score by day", chart_note:"Month score at the end of each day. The dip on day one is the month's rent.",
+  parts_h:"Where you won and lost", part:"line", diff:"difference",
+  p_revenue:"revenue", p_purchases:"purchases", p_leftover_stock:"leftover stock", p_wages:"wages and agency", p_rent_fixed:"rent and fixed", p_card_fees:"card fees",
+  p_event_costs:"events", p_investments:"investments", p_leftover_equipment:"machine at the end", p_stockout_penalty:"penalty: no order", p_queue_penalty:"penalty: queue", p_loan_penalty:"penalty: loan",
+  again:"Play again", other:"Another month", save:"Save to the leaderboard", saved:"Saved.", board_h:"Leaderboard",
+  board_empty:"Nobody has saved a month yet. Play one and save it.", board_off:"The leaderboard works on the claude.ai page for people with the link.",
+  name:"player", best:"score", vs:"vs Extella", someone:"Player", beat:"beat it", nobeat:"no",
+  verify:"The leaderboard stores every decision of the month, not just the score: anyone can recompute it with the same simulator (replay).",
+  lessons_h:"Three lessons", l_next:"Next", l_done:"Done, let's play",
+  wd:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], wdl:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+  wx:{clear:"clear",rain:"rain",snow:"snow",blizzard:"blizzard"},
+  notes:{fair:"street fair",repair:"sidewalk repair",blogger:"blogger review",blizzard:"blizzard",competitor:"competitor",marketing:"ads",grade_b:"grade B"},
+  closed:"closed", loading:"Loading results…", no_deliv_h:"Today an order did not arrive", no_deliv_t:"The money went back to your balance; the stock is not on the shelf.", sup:{dairy:"the dairy",roaster:"the roaster",bakery:"the bakery"}, last_ev:"last evening to decide", no_cash:"not enough cash: after the order you have", buy_on:"buying", legend:"The bar is how many guests the shift can serve tomorrow, the mark is the middle of the forecast. Green means the shift handles even the top of the range; amber, only the middle; red, guests will leave the queue.", sum_order:"Tomorrow: order", sum_staff_new:"shifts change", sum_staff_same:"shifts unchanged", sum_cards:"event answers", show:"show", saving:"Saving…", save_fail:"Not saved. Check that you are signed in to claude.ai and press again.", mismatch:"Recomputing from the decision log does not match the score. This is a page bug: tell the team; this result will not go to the leaderboard.", zero:"(in its own words Extella counts days from zero: its day 9 is day 10 here)"
+}};
+function t(k){ return T[LANG][k]; }
+function money(x, sign){ var v = Math.round(x), s = Math.abs(v).toLocaleString(LANG === "ru" ? "ru-RU" : "en-US"); return (v < 0 ? "−" : (sign && v > 0 ? "+" : "")) + "$" + s; }
+function money2(x){ return "$" + x.toFixed(2); }
+function num(x){ return Math.round(x).toLocaleString(LANG === "ru" ? "ru-RU" : "en-US"); }
+function dayN(d){ return d + 1; }
+
+/* ---------- состояние ---------- */
+var screen = "start", pick = {sc:"calm", st:"district", mo:"mid"};
+try { var p0 = JSON.parse(localStorage.getItem("cafe_pick") || "null"); if (p0 && p0.sc) pick = p0; } catch (e) {}
+var lastDeliv = null, dayCtx = null, FAST = false, ecOpen = {cards: null, orders: false, staff: false};
+try { FAST = localStorage.getItem("cafe_fast") === "1"; } catch (e0) {}
+var moreOpen = false, logOpen = false, G = null, DLOG = [], hist = [], ledger = [], draft = null, levels = {dairy:"normal", roaster:"normal", bakery:"normal"}, dpView = 0, lastDay = null, lessonN = 0, saveState = "";
+function key(){ return pick.sc + "_" + pick.st + "_" + pick.mo; }
+function ghost(){ return DATA.ghosts[key()]; }
+
+/* ---------- помощник заказа: только из прогноза и склада на экране ---------- */
+function levelGuests(f, lv){ var g = f.guests.reduce(function(a,b){return a+b;},0), h = f.high.reduce(function(a,b){return a+b;},0), lo = f.low.reduce(function(a,b){return a+b;},0); return lv === "lean" ? g : lv === "safe" ? h : Math.round((g + h) / 2); }
+function coverDays(obs, s){ var S = obs.suppliers[s]; if (s === "bakery") return 1; for (var k = 1; k <= 7; k++) if (S.days.indexOf((obs.wd + k) % 7) >= 0) return Math.min(k, obs.days_total - obs.day); return 1; }
+function guestsOver(obs, n, lv){ var fc = obs.forecast, sum = 0, avg = 0; fc.forEach(function(f){ avg += levelGuests(f, lv); }); avg = avg / fc.length;
+  for (var i = 0; i < n; i++) { var f = fc[i]; if (f && f.closed_if_chosen) continue; sum += f ? levelGuests(f, lv) : avg; } return sum; }
+function needRow(obs, s, it, lv){
+  var M = C.menu, n = coverDays(obs, s), g = guestsOver(obs, n, lv), S = C.suppliers[s];
+  if (it === "milk") return {days: n, u: t("u_gal"), per: S.items.milk.liters,
+    need: g * M.latte.share * M.latte.milk_l / S.items.milk.liters,
+    have: obs.stock.milk_l.filter(function(x){ return x[1] >= obs.day + n - 1; }).reduce(function(a, x){ return a + x[0]; }, 0) / S.items.milk.liters};
+  if (it === "beans") { var bg = 0; ["latte","cold_brew","drip","tea"].forEach(function(k){ bg += M[k].share * M[k].beans_g; });
+    return {days: n, u: t("u_lb"), need: g * bg / S.items.beans.grams, have: obs.stock.beans_lb}; }
+  if (it === "cups") return {days: n, u: t("u_box"), need: g / S.items.cups.count, have: obs.stock.cups / S.items.cups.count};
+  if (it === "croissant") return {days: n, u: t("u_pc"), need: g * M.croissant.attach, have: 0, keep: false};
+  return null;
+}
+function needHTML(obs, s, it, lv, order){
+  var r = needRow(obs, s, it, lv);
+  if (!r) return "";
+  var after = r.have + order, mx = Math.max(r.need, after, 1e-6), lack = r.need - after, enough = lack <= 0.5;
+  var fill = Math.min(100, 100 * after / mx), mark = Math.min(100, 100 * r.need / mx);
+  var fmt = function(x){ return x >= 10 ? num(Math.round(x)) : (Math.round(x * 10) / 10).toString(); };
+  return '<span class="bar"><i style="width:'+fill.toFixed(1)+'%;background:'+(enough ? 'var(--ok)' : 'var(--bad)')+'"></i><u style="left:calc('+mark.toFixed(1)+'% - 1px)"></u></span>' +
+    '<span class="t">'+esc(t(r.days > 1 ? "need_days" : "need_day").replace("{d}", r.days))+' <b>'+fmt(r.need)+'</b>' +
+      (r.keep === false ? ' · '+esc(t("no_keep")) : ' · '+esc(t("have_now"))+' <b>'+fmt(r.have)+'</b>') + '</span>' +
+    '<span class="t '+(enough ? 'ok' : 'bad')+'">'+esc(enough ? t("enough") : t("short"))+(enough ? '' : ' <b>'+fmt(lack)+'</b>')+'</span>';
+}
+function refreshNeeds(){
+  var obs = draft.obs, tot = 0;
+  [].slice.call(document.querySelectorAll("[data-nl]")).forEach(function(el){
+    var p = el.dataset.nl.split(":");
+    el.innerHTML = needHTML(obs, p[0], p[1], levels[p[0]], draft.qty[p[0]][p[1]] || 0);
+  });
+  Object.keys(draft.qty).forEach(function(s){ var st = 0;
+    Object.keys(draft.qty[s]).forEach(function(it){ st += (draft.qty[s][it] || 0) * (it === "milk" ? obs.suppliers.dairy.prices.milk : C.suppliers[s].items[it].price); });
+    var e2 = document.querySelector('[data-sub="'+s+'"]'); if (e2) e2.textContent = money2(st); tot += st; });
+  var e3 = document.querySelector("[data-ordtot]"); if (e3) e3.textContent = money2(tot);
+  var oS = ordStat(obs), e4 = document.querySelector("[data-ordtxt]"), e5 = document.querySelector("#ec-orders summary .pill");
+  if (e4) e4.textContent = oS.txt;
+  if (e5) { e5.className = "pill " + oS.cls; e5.textContent = oS.pill; }
+}
+function suggest(obs, s, lv){
+  var M = C.menu, n = coverDays(obs, s), g = guestsOver(obs, n, lv), S = C.suppliers[s], out = {};
+  if (s === "dairy") { var need = g * M.latte.share * M.latte.milk_l, have = obs.stock.milk_l.filter(function(x){ return x[1] >= obs.day + n - 1; }).reduce(function(a,x){ return a + x[0]; }, 0);
+    var gal = Math.max(0, Math.ceil((need - have) / S.items.milk.liters)); if (gal > 0 && gal * obs.suppliers.dairy.prices.milk < S.min_order) gal = Math.ceil(S.min_order / obs.suppliers.dairy.prices.milk); out.milk = gal; }
+  if (s === "roaster") { var bg = 0; ["latte","cold_brew","drip","tea"].forEach(function(k){ bg += M[k].share * M[k].beans_g; });
+    var lb = Math.max(0, Math.ceil((g * bg / S.items.beans.grams) - obs.stock.beans_lb)), cs = Math.max(0, Math.ceil((g - obs.stock.cups) / S.items.cups.count));
+    var tot = lb * S.items.beans.price + cs * S.items.cups.price; if (tot > 0 && tot < S.min_order) lb += Math.ceil((S.min_order - tot) / S.items.beans.price); out.beans = lb; out.cups = cs; }
+  if (s === "bakery") { var cr = Math.round(g * M.croissant.attach); if (cr > 0 && cr < S.min_qty) cr = S.min_qty; out.croissant = cr; }
+  return out;
+}
+
+/* ---------- черновик вечера ---------- */
+function newDraft(){
+  var obs = G.observe(), row = G.schedule["0"];
+  var d = {obs: obs, qty: {}, sched: row.barista.slice(), leads: row.lead.slice(), hire: 0, fire: 0, prices: Object.assign({}, G.prices),
+    disc: G.discounts.length ? G.discounts[0].pct : 0,
+    dparts: G.discounts.length && G.discounts[0].dayparts ? G.discounts[0].dayparts.slice() : [2], buy: [], choices: {}};
+  Object.keys(C.suppliers).forEach(function(s){ d.qty[s] = obs.suppliers[s].delivers_tomorrow ? suggest(obs, s, levels[s]) : {}; });
+  obs.cards.forEach(function(c){ d.choices[c.id] = c.chosen || null; });
+  return d;
+}
+function buildDec(){
+  var d = draft, dec = {}, orders = {};
+  Object.keys(d.qty).forEach(function(s){ var q = {}, any = false; Object.keys(d.qty[s]).forEach(function(it){ if (d.qty[s][it] > 0) { q[it] = d.qty[s][it]; any = true; } }); if (any) orders[s] = q; });
+  if (Object.keys(orders).length) dec.orders = orders;
+  var row = G.schedule["0"];
+  if (JSON.stringify(row.barista) !== JSON.stringify(d.sched) || JSON.stringify(row.lead) !== JSON.stringify(d.leads)) {
+    dec.schedule = {}; for (var w = 0; w < 7; w++) dec.schedule[String(w)] = {barista: d.sched.slice(), lead: d.leads.slice()}; }
+  if (d.hire) dec.hire = d.hire; if (d.fire) dec.fire = d.fire;
+  var pr = {}; Object.keys(d.prices).forEach(function(k){ if (Math.abs(d.prices[k] - G.prices[k]) > 1e-9) pr[k] = d.prices[k]; }); if (Object.keys(pr).length) dec.prices = pr;
+  var cur = G.discounts.length ? G.discounts[0].pct : 0;
+  var curDp = (G.discounts.length && G.discounts[0].dayparts ? G.discounts[0].dayparts : []).join(",");
+  if (d.disc !== cur || (d.disc && d.dparts.join(",") !== curDp))
+    dec.discounts = d.disc && d.dparts.length ? ["latte","cold_brew","drip","tea","croissant"].map(function(k){ return {item:k, pct:d.disc, dayparts:d.dparts.slice().sort()}; }) : [];
+  if (d.buy.length) dec.buy = d.buy.slice();
+  var ch = {}; Object.keys(d.choices).forEach(function(id){ if (d.choices[id]) ch[id] = d.choices[id]; }); if (Object.keys(ch).length) dec.choices = ch;
+  return dec;
+}
+function orderTotal(){ var obs = draft.obs, tot = 0; Object.keys(draft.qty).forEach(function(s){ Object.keys(draft.qty[s]).forEach(function(it){ tot += (draft.qty[s][it]||0) * (it === "milk" ? obs.suppliers.dairy.prices.milk : C.suppliers[s].items[it].price); }); }); return tot; }
+function rejections(){ var r = G.check(buildDec()); return r[0] || []; }
+function rejFor(prefix, list){ return list.filter(function(r){ return r.field === prefix || r.field.indexOf(prefix + ".") === 0; }); }
+function rejHTML(list){ return list.map(function(r){ return '<div class="rej">' + esc(r[LANG]) + '</div>'; }).join(""); }
+
+/* ---------- окно: каждая фигура из поля отчёта шага ---------- */
+/* ---------- звук: всё синтезируется на месте, файлов нет ---------- */
+var SND = {on: true, ctx: null, out: null, amb: null, last: 0};
+try { SND.on = localStorage.getItem("cafe_snd") !== "0"; } catch (e3) {}
+function sndInit(){
+  if (SND.ctx || !SND.on) return;
+  try { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    SND.ctx = new AC(); SND.out = SND.ctx.createGain(); SND.out.gain.value = .55; SND.out.connect(SND.ctx.destination); } catch (e) { SND.ctx = null; }
+}
+function tone(f, dur, vol, type, delay, f2){
+  if (!SND.on || !SND.ctx) return;
+  try { var c = SND.ctx, t0 = c.currentTime + (delay || 0), o = c.createOscillator(), g = c.createGain();
+    o.type = type || "sine"; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .008); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    o.connect(g); g.connect(SND.out); o.start(t0); o.stop(t0 + dur + .02); } catch (e) {}
+}
+function hiss(dur, vol, kind, freq, delay){
+  if (!SND.on || !SND.ctx) return null;
+  try { var c = SND.ctx, t0 = c.currentTime + (delay || 0), n = Math.floor(c.sampleRate * Math.min(dur, 2)), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0), last = 0;
+    for (var i = 0; i < n; i++) { var w = Math.random() * 2 - 1; last = (last + .04 * w) / 1.04; d[i] = kind === "lowpass" ? last * 3 : w; }
+    var s = c.createBufferSource(), fl = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = buf; s.loop = dur > 2; fl.type = kind; fl.frequency.value = freq;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + Math.min(.25, dur / 3));
+    if (dur <= 2) g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    s.connect(fl); fl.connect(g); g.connect(SND.out); s.start(t0); if (dur <= 2) s.stop(t0 + dur + .05);
+    return {s: s, g: g}; } catch (e) { return null; }
+}
+function sfx(name){
+  if (!SND.on || !SND.ctx) return;
+  var now = SND.ctx.currentTime;
+  if (name === "serve" || name === "queue" || name === "empty") { if (now - SND.last < .11) return; SND.last = now; }   // чтобы касса не строчила
+  if (name === "click") tone(720, .035, .05, "triangle");
+  else if (name === "bell") { tone(1318, .7, .10, "sine"); tone(1976, .5, .05, "sine"); tone(1046, .9, .09, "sine", .18); tone(1568, .6, .04, "sine", .18); }
+  else if (name === "serve") { var p = [1568, 1760, 1976][Math.floor(Math.random() * 3)]; tone(p, .06, .035, "triangle"); tone(p * 1.335, .11, .03, "triangle", .05); }
+  else if (name === "queue") tone(196, .16, .05, "sawtooth", 0, 130);
+  else if (name === "empty") tone(330, .09, .04, "triangle", 0, 262);
+  else if (name === "thud") { hiss(.14, .3, "lowpass", 220); tone(90, .12, .12, "sine", 0, 55); }
+  else if (name === "steam") hiss(.7, .035, "highpass", 3200);
+  else if (name === "good") [523, 659, 784, 1047].forEach(function(f, i){ tone(f, .22, .09, "triangle", i * .085); });
+  else if (name === "bad") [392, 330, 262].forEach(function(f, i){ tone(f, .3, .08, "triangle", i * .16); });
+  else if (name === "pass") { tone(784, .12, .08, "triangle", 0); tone(1047, .12, .08, "triangle", .1); tone(1319, .25, .08, "triangle", .2); }
+  else if (name === "lose") { tone(440, .16, .07, "triangle", 0); tone(349, .28, .07, "triangle", .14); }
+  else if (name === "win") { [523, 659, 784, 1047, 1319].forEach(function(f, i){ tone(f, .28, .09, "triangle", i * .1); }); [523, 659, 784, 1047].forEach(function(f){ tone(f, 1.1, .05, "sine", .55); }); }
+  else if (name === "end") { [392, 494, 587].forEach(function(f){ tone(f, .9, .05, "sine"); }); }
+}
+function ambOn(){ ambOff(); SND.amb = hiss(999, .05, "lowpass", 420); }
+function ambOff(){ if (SND.amb) { try { SND.amb.g.gain.setTargetAtTime(0, SND.ctx.currentTime, .15); SND.amb.s.stop(SND.ctx.currentTime + .6); } catch (e) {} SND.amb = null; } }
+
+var PSEED = 0;
+var HAIR = ["#2b211c", "#5a3d28", "#8a5a2b", "#1c1a19", "#b8956a", "#6f6a66"], SKIN = ["#e8b98f", "#c99a74", "#a8754f", "#f0c9a4", "#8a5a3c"];
+var TABLES = [[204, 176], [256, 176], [308, 176], [230, 204], [282, 204]];
+var SEATS = (function(){ var a = []; TABLES.forEach(function(T){ a.push([T[0] - 15, T[1] + 7], [T[0] + 15, T[1] + 7], [T[0] - 6, T[1] + 1], [T[0] + 7, T[1] + 1]); }); return a; })();
+function person(x, y, fill, apron, dashed){
+  var n = PSEED++, hair = HAIR[n % HAIR.length], skin = SKIN[(n * 3 + 1) % SKIN.length], st = n % 3;
+  var body = 'fill="'+fill+'"' + (dashed ? ' fill-opacity=".35" stroke="var(--fg)" stroke-width=".8" stroke-dasharray="2 2"' : '');
+  var s = '<g transform="translate('+x+','+y+')"><g class="lg"><ellipse cx="0" cy=".6" rx="9" ry="2.6" fill="#000" opacity=".14"/>' +
+    '<rect x="-4.6" y="-13" width="3.9" height="13" rx="1.6" fill="#3a3f4a"/><rect x=".7" y="-13" width="3.9" height="13" rx="1.6" fill="#3a3f4a"/>' +
+    '<ellipse cx="-3" cy="-.3" rx="3.1" ry="1.5" fill="#22252b"/><ellipse cx="3" cy="-.3" rx="3.1" ry="1.5" fill="#22252b"/></g>' +
+    '<rect x="-9.8" y="-29.5" width="4.2" height="13.5" rx="2.1" '+body+'/><rect x="5.6" y="-29.5" width="4.2" height="13.5" rx="2.1" '+body+'/>' +
+    '<circle cx="-7.7" cy="-15.6" r="1.9" fill="'+skin+'"/><circle cx="7.7" cy="-15.6" r="1.9" fill="'+skin+'"/>' +
+    '<rect x="-6.9" y="-30.8" width="13.8" height="19.6" rx="4.6" '+body+'/>' +
+    (dashed ? '' : '<path d="M-6.9 -26.2 a4.6 4.6 0 0 1 4.6 -4.6 h.6 v19.6 h-.6 a4.6 4.6 0 0 1 -4.6 -4.6 z" fill="#000" opacity=".09"/>');
+  if (apron) s += '<path d="M-4.7 -26 h9.4 v12.6 a2.2 2.2 0 0 1 -2.2 2.2 h-5 a2.2 2.2 0 0 1 -2.2 -2.2 z" fill="'+apron+'"/><path d="M-4.4 -26 L-2.6 -30.6 M4.4 -26 L2.6 -30.6" stroke="'+apron+'" stroke-width="1.3" fill="none"/>';
+  s += '<rect x="-1.7" y="-34" width="3.4" height="4.4" fill="'+skin+'"/><circle cx="0" cy="-38.4" r="5.9" fill="'+skin+'"/>';
+  if (st === 0) s += '<path d="M-5.9 -38.8 a5.9 5.9 0 0 1 11.8 0 q-2.4 -2.9 -5.9 -2.9 t-5.9 2.9 z" fill="'+hair+'"/>';
+  else if (st === 1) s += '<path d="M-6.2 -37.4 a6.2 6.2 0 0 1 12.4 0 v3.6 q-.9 -5.2 -6.2 -5.4 q-5.3 .2 -6.2 5.4 z" fill="'+hair+'"/>';
+  else s += '<circle cx="0" cy="-45" r="2.4" fill="'+hair+'"/><path d="M-5.9 -38.8 a5.9 5.9 0 0 1 11.8 0 q-2.4 -2.9 -5.9 -2.9 t-5.9 2.9 z" fill="'+hair+'"/>';
+  s += '<circle cx="-2.1" cy="-37.6" r=".75" fill="#2a211c"/><circle cx="2.1" cy="-37.6" r=".75" fill="#2a211c"/>';
+  return s + '</g>';
+}
+/* окно на улицу: дома напротив и погода */
+function wxArt(wx){
+  var s = '<rect x="170" y="20" width="132" height="90" rx="3" fill="var(--wood2)"/><rect x="176" y="26" width="120" height="78" fill="var(--sky)"/>' +
+    '<clipPath id="wclip"><rect x="176" y="26" width="120" height="78"/></clipPath><g clip-path="url(#wclip)">';
+  [[176, 64, 26], [202, 52, 30], [232, 70, 22], [254, 58, 26], [280, 74, 20]].forEach(function(b, i){
+    s += '<rect x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="'+(104 - b[1])+'" fill="var(--guest)" opacity="'+(i % 2 ? ".30" : ".42")+'"/>';
+    for (var r = 0; r < 3; r++) s += '<rect x="'+(b[0] + 5)+'" y="'+(b[1] + 6 + r * 9)+'" width="4" height="5" fill="var(--milk)" opacity=".5"/><rect x="'+(b[0] + 13)+'" y="'+(b[1] + 6 + r * 9)+'" width="4" height="5" fill="var(--milk)" opacity=".35"/>'; });
+  if (wx === "clear") s += '<circle cx="270" cy="42" r="9" fill="#f6c453"/><circle cx="270" cy="42" r="14" fill="#f6c453" opacity=".25"/>';
+  else s += '<g fill="var(--milk)" opacity=".85"><ellipse cx="206" cy="40" rx="16" ry="6"/><ellipse cx="218" cy="36" rx="11" ry="6"/><ellipse cx="262" cy="46" rx="18" ry="6"/><ellipse cx="250" cy="42" rx="10" ry="5"/></g>';
+  if (wx === "rain") { s += '<g class="rain" stroke="var(--awning)" stroke-width="1.3" opacity=".8">'; for (var i = 0; i < 16; i++) s += '<line x1="'+(182 + i * 7.4)+'" y1="'+(30 + (i * 17) % 60)+'" x2="'+(179 + i * 7.4)+'" y2="'+(39 + (i * 17) % 60)+'"/>'; s += '</g>'; }
+  if (wx === "snow" || wx === "blizzard") { s += '<g class="snow" fill="#fff">'; for (var j = 0; j < (wx === "snow" ? 16 : 38); j++) s += '<circle cx="'+(180 + (j * 37) % 114)+'" cy="'+(28 + (j * 23) % 70)+'" r="'+(wx === "snow" ? 1.7 : 1.4)+'" style="animation-delay:-'+((j * 7) % 40) / 10+'s"/>'; s += '</g>'; }
+  s += '</g><rect x="234.5" y="26" width="3" height="78" fill="var(--wood2)"/><rect x="176" y="50" width="120" height="2.6" fill="var(--wood2)"/>' +
+    '<rect x="166" y="108" width="140" height="6" rx="2" fill="var(--wood3)"/>' +
+    '<text x="236" y="126" text-anchor="middle" font-size="9" fill="var(--muted)" font-family="var(--sans)">'+esc(T[LANG].wx[wx] || "")+'</text>';
+  if (wx === "clear") s += '<polygon points="196,150 300,150 276,206 150,206" fill="#fff6d8" opacity=".16"/>';
+  return s;
+}
+function staffArt(rep, dp){
+  var nb = rep.staff_on.barista[dp], nl = rep.staff_on.lead[dp], na = rep.staff_on.agency[dp], k = 0, s = "";
+  var step = Math.min(20, 72 / Math.max(1, nb + nl + na - 1));
+  for (var a = 0; a < nb; a++) s += person(78 + (k++) * step, 152, "var(--espresso)", "var(--awning)");
+  for (var b = 0; b < nl; b++) s += person(78 + (k++) * step, 152, "var(--ghost)", "var(--milk)");
+  for (var c2 = 0; c2 < na; c2++) s += person(78 + (k++) * step, 152, "var(--espresso)", null, true);
+  return s;
+}
+/* задник: стена, пол в перспективе, окно, лампы */
+function sceneBack(wx){
+  var s = '<rect width="400" height="150" fill="var(--wall)"/><rect y="112" width="400" height="34" fill="var(--wall2)" opacity=".55"/><rect y="146" width="400" height="4" fill="var(--wood2)" opacity=".55"/>' +
+    '<rect y="150" width="400" height="90" fill="var(--floor)"/><g stroke="var(--floor2)" stroke-width=".9" opacity=".6">';
+  for (var i = -7; i <= 7; i++) s += '<line x1="'+(200 + i * 30)+'" y1="150" x2="'+(200 + i * 52)+'" y2="240"/>';
+  [160, 174, 192, 214].forEach(function(y){ s += '<line x1="0" y1="'+y+'" x2="400" y2="'+y+'" opacity=".5"/>'; });
+  s += '</g>' + wxArt(wx);
+  [156, 318].forEach(function(x){ s += '<line x1="'+x+'" y1="0" x2="'+x+'" y2="24" stroke="var(--fg)" stroke-width="1" opacity=".55"/>' +
+    '<ellipse cx="'+x+'" cy="58" rx="24" ry="30" fill="#ffd98a" opacity=".13"/><polygon points="'+(x-10)+',37 '+(x+10)+',37 '+(x+5)+',24 '+(x-5)+',24" fill="var(--espresso)"/><circle cx="'+x+'" cy="38.5" r="2.6" fill="#ffd98a"/>'; });
+  return s;
+}
+/* доска на стене: остатки склада в игре или меню на витрине */
+function sceneBoard(rows, note){
+  var s = '<rect x="20" y="14" width="126" height="'+(note ? 88 : 80)+'" rx="4" fill="#2c3834" stroke="var(--wood2)" stroke-width="3"/>';
+  rows.forEach(function(r, i){ var y = 28 + i * 17.5;
+    s += '<text x="28" y="'+y+'" font-size="8.6" fill="#e9efe9" font-family="var(--sans)">'+esc(r[0])+'</text><text x="138" y="'+y+'" font-size="8.6" text-anchor="end" fill="#e9efe9" font-family="var(--mono)">'+esc(r[1])+'</text>';
+    if (r[2] != null) s += '<rect x="28" y="'+(y + 3)+'" width="110" height="4.4" rx="2" fill="#fff" opacity=".16"/><rect x="28" y="'+(y + 3)+'" width="'+(110 * r[2]).toFixed(1)+'" height="4.4" rx="2" fill="'+(r[2] < 1 / 3 ? "#f08a7a" : "#8fd3c8")+'"/>'; });
+  if (note) s += '<text x="83" y="97" text-anchor="middle" font-size="7" fill="#e9efe9" opacity=".7" font-family="var(--sans)">'+esc(note)+'</text>';
+  return s;
+}
+function sceneCounter(noEsp){
+  var s = '<rect x="14" y="190" width="150" height="5" fill="#000" opacity=".10"/>' +
+    '<rect x="18" y="150" width="136" height="42" fill="var(--wood)"/><polygon points="154,150 162,143 162,185 154,192" fill="var(--wood2)"/><polygon points="14,150 158,150 166,143 22,143" fill="var(--wood3)"/>' +
+    '<g stroke="var(--wood2)" stroke-width="1" opacity=".55"><line x1="52" y1="154" x2="52" y2="188"/><line x1="86" y1="154" x2="86" y2="188"/><line x1="120" y1="154" x2="120" y2="188"/></g>' +
+    '<rect x="18" y="150" width="136" height="3.5" fill="#000" opacity=".12"/>';
+  // кофемашина с паром
+  s += '<rect x="28" y="121" width="36" height="22.5" rx="3" fill="#c5cbd1"/><rect x="28" y="121" width="36" height="6.5" rx="3" fill="#9aa2aa"/><rect x="33" y="131" width="26" height="8" rx="1.5" fill="#5d646c"/>' +
+    '<circle cx="39" cy="124.3" r="1.3" fill="#f08a7a"/><circle cx="44" cy="124.3" r="1.3" fill="#8fd3c8"/><rect x="38" y="139" width="3" height="4" fill="#3a3f4a"/><rect x="51" y="139" width="3" height="4" fill="#3a3f4a"/>';
+  if (!noEsp) s += '<g class="steam" fill="none" stroke="var(--milk)" stroke-width="1.4" stroke-linecap="round"><path d="M38 118 q-3 -4 0 -8 t0 -8"/><path d="M46 118 q3 -4 0 -8 t0 -8"/><path d="M54 118 q-3 -4 0 -8 t0 -8"/></g>';
+  // стаканы и витрина с выпечкой
+  s += '<g fill="var(--milk)" stroke="var(--line)" stroke-width=".5"><path d="M74 143 l1.2 -9 h6.6 l1.2 9 z"/><path d="M84.5 143 l1.2 -9 h6.6 l1.2 9 z"/><path d="M79.2 134 l1 -7.5 h5.6 l1 7.5 z"/></g>' +
+    '<rect x="104" y="125.5" width="44" height="18" rx="2.5" fill="var(--milk)" opacity=".55" stroke="var(--wood2)" stroke-width="1"/>' +
+    '<g fill="#d9a05b" stroke="#b47a3a" stroke-width=".5"><path d="M108 141 q5 -8 10 0 z"/><path d="M120 141 q5 -8 10 0 z"/><path d="M132 141 q5 -8 10 0 z"/><path d="M114 134 q5 -7 10 0 z"/><path d="M126 134 q5 -7 10 0 z"/></g>';
+  return s;
+}
+function sceneTables(){
+  var s = "";
+  TABLES.forEach(function(T){ var x = T[0], y = T[1];
+    s += '<ellipse cx="'+x+'" cy="'+(y + 20)+'" rx="17" ry="4" fill="#000" opacity=".13"/><ellipse cx="'+x+'" cy="'+(y + 19)+'" rx="7.5" ry="2.4" fill="var(--wood2)"/><rect x="'+(x - 1.7)+'" y="'+(y + 2)+'" width="3.4" height="17" fill="var(--wood2)"/>' +
+      '<ellipse cx="'+x+'" cy="'+(y + 2.6)+'" rx="18" ry="5.6" fill="var(--wood2)"/><ellipse cx="'+x+'" cy="'+y+'" rx="18" ry="5.6" fill="var(--wood3)"/>' +
+      '<path d="M'+(x - 3)+' '+(y - 1)+' l.7 -4.6 h4 l.7 4.6 z" fill="var(--milk)" stroke="var(--line)" stroke-width=".4"/>'; });
+  return s;
+}
+function sceneDoor(){
+  return '<rect x="330" y="56" width="52" height="94" rx="2" fill="var(--wood2)"/><rect x="335" y="61" width="42" height="89" fill="var(--wood)"/>' +
+    '<rect x="340" y="66" width="32" height="48" rx="1.5" fill="var(--sky)" opacity=".9"/><rect x="340" y="66" width="32" height="48" rx="1.5" fill="#fff" opacity=".12"/>' +
+    '<rect x="347" y="80" width="18" height="9" rx="1.5" fill="var(--milk)"/><text x="356" y="86.6" text-anchor="middle" font-size="5.6" font-weight="700" fill="var(--awning)" font-family="var(--sans)">OPEN</text>' +
+    '<rect x="340" y="120" width="32" height="24" rx="1.5" fill="var(--wood3)" opacity=".7"/><circle cx="342" cy="112" r="2" fill="#e3c26a"/>' +
+    '<polygon points="332,152 380,152 388,164 324,164" fill="var(--awning)" opacity=".55"/>';
+}
+function menuRows(){
+  var pr = (typeof G !== "undefined" && G && G.prices) ? G.prices : null, M = C.menu;
+  return [["latte", "latte"], ["cold_brew", "cold brew"], ["drip", "drip"], ["croissant", "croissant"]].map(function(k){
+    return [k[1], "$" + (pr ? pr[k[0]] : M[k[0]].price).toFixed(2), null]; });
+}
+function drawWindow(rep, obs, dp, bare){
+  PSEED = 3;
+  var s = '<svg viewBox="0 0 400 240" role="img" aria-label="'+esc(LANG==="ru"?"Кофейня":"The shop")+'" xmlns="http://www.w3.org/2000/svg">';
+  s += sceneBack(rep ? rep.weather : obs.forecast[0].weather);
+  if (bare) s += sceneBoard(menuRows());
+  else {
+    var st = rep ? rep.stock : {milk_l: obs.stock.milk_l.reduce(function(a,x){return a+x[0];},0), beans_lb: obs.stock.beans_lb, cups: obs.stock.cups, croissant: obs.stock.croissant};
+    var g = C.streets[pick.st].guests, M = C.menu;
+    var perDay = {milk_l: g*M.latte.share*M.latte.milk_l, beans_lb: g*(M.latte.share*18+M.cold_brew.share*22+M.drip.share*20)/453.6, cups: g, croissant: g*M.croissant.attach};
+    s += sceneBoard([["milk_l", LANG==="ru"?"молоко, л":"milk, L"], ["beans_lb", LANG==="ru"?"зерно, фунты":"beans, lb"], ["cups", LANG==="ru"?"стаканы":"cups"], ["croissant", LANG==="ru"?"круассаны к вечеру":"croissants left"]].map(function(sh){
+      return [sh[1], num(st[sh[0]]), Math.max(0, Math.min(1, st[sh[0]] / (perDay[sh[0]] * 3)))]; }), LANG==="ru"?"полоса = 3 обычных дня":"bar = 3 normal days");
+  }
+  // смена стоит за стойкой, поэтому рисуется до неё
+  if (bare) s += person(80, 152, "var(--espresso)", "var(--awning)") + person(104, 152, "var(--ghost)", "var(--milk)") + person(132, 152, "var(--espresso)", "var(--awning)");
+  if (rep && rep.staff_on) s += staffArt(rep, dp);
+  var noEsp = !!(rep && rep.events.indexOf("no_espresso") >= 0);
+  s += sceneCounter(noEsp) + sceneDoor();
+  // гости за столиками: одна фигура = 10 обслуженных
+  var R = rep && rep.by_dp ? rep.by_dp[dp] : null, served = R ? R.served : 0, sold = R ? Object.values(R.sold).reduce(function(a,b){return a+b;},0) : 0;
+  var empty = R ? Math.max(0, served - sold) + (R.croissant_missing || 0) : 0, queue = R ? Math.max(0, R.demand - R.served) : 0;
+  var want = bare ? 9 : Math.round(sold / 10), placed = Math.min(SEATS.length, want), COL = ["var(--guest)", "#b5764a", "#7d8f5c", "#8b6fa3", "#c58a3d", "#5f8ea3"];
+  for (var i = 0; i < placed; i++) if (i % 4 >= 2) s += '<g class="sit">' + person(SEATS[i][0], SEATS[i][1], COL[i % COL.length], null) + '</g>';
+  s += sceneTables();
+  for (var i2 = 0; i2 < placed; i2++) if (i2 % 4 < 2) s += '<g class="sit">' + person(SEATS[i2][0], SEATS[i2][1], COL[i2 % COL.length], null) + '</g>';
+  if (want > placed) s += '<text x="336" y="182" font-size="10" fill="var(--muted)" font-family="var(--mono)">+'+(want - placed)+'</text>';
+  if (bare) s += person(250, 226, "#c58a3d", null) + person(302, 222, "#5f8ea3", null);
+  // те, кто ушёл: из-за очереди и без заказа
+  var qn = Math.min(6, Math.round(queue / 10)); for (var q = 0; q < qn; q++) s += person(304 - q * 15, 226 + (q % 2) * 5, "var(--bad)", null);
+  var en = Math.min(4, Math.round(empty / 5)); for (var e2 = 0; e2 < en; e2++) s += '<g opacity=".6">' + person(378 - e2 * 13, 232, "var(--muted)", null) + '</g>';
+  var lab = function(x, y, txt, col, anchor){ return '<text x="'+x+'" y="'+y+'" font-size="10" font-family="var(--sans)" fill="'+(col||"var(--fg)")+'" text-anchor="'+(anchor||"start")+'">'+txt+'</text>'; };
+  if (R) {
+    s += lab(20, 208, esc(t("served")) + ' <tspan font-family="var(--mono)" font-weight="600">' + num(sold) + '</tspan>');
+    s += lab(20, 221, esc(t("came")) + ' <tspan font-family="var(--mono)">' + num(R.demand) + '</tspan> · ' + esc(LANG==="ru"?"вмещает":"capacity") + ' <tspan font-family="var(--mono)">' + num(R.capacity) + '</tspan>', "var(--muted)");
+    s += lab(20, 234, esc(LANG==="ru"?"бариста ":"baristas ") + '<tspan font-family="var(--mono)">' + rep.staff_on.barista[dp] + '</tspan>' + (rep.staff_on.lead[dp] ? (LANG==="ru"?" + старший":" + lead") : "") + (rep.staff_on.agency[dp] ? (LANG==="ru"?" + агентство ":" + agency ") + rep.staff_on.agency[dp] : "") +
+      (R.catering != null ? ' · ' + (LANG==="ru"?"кейтеринг ":"catering ") + R.catering : ""), "var(--muted)");
+    if (queue) s += lab(310, 178, esc(t("queue")) + " " + num(queue), "var(--bad)", "end");
+    if (empty) s += lab(392, 186, esc(t("stockout")) + " " + num(empty), "var(--muted)", "end");
+  } else if (!bare) {
+    s += lab(20, 214, esc(LANG==="ru"?"первый день ещё впереди":"day one is still ahead"), "var(--muted)");
+  }
+  if (rep && rep.closed) s += '<rect x="115" y="92" width="170" height="44" rx="6" fill="var(--bad)"/><text x="200" y="121" text-anchor="middle" font-size="18" font-weight="700" fill="var(--panel)" font-family="var(--display)">'+esc(t("closed"))+'</text>';
+  if (noEsp) s += lab(84, 118, LANG==="ru"?"машина не работает":"machine down", "var(--bad)", "middle");
+  return s + '</svg>';
+}
+/* пьедестал итога месяца: кто на каком месте, фигурки те же, что в зале */
+function podiumSVG(fin){
+  PSEED = 20;
+  var s = '<svg viewBox="0 0 400 214" role="img" aria-label="'+esc(t("stand_h"))+'" xmlns="http://www.w3.org/2000/svg">' +
+    '<rect width="400" height="214" fill="var(--wall)"/><rect y="118" width="400" height="56" fill="var(--wall2)" opacity=".5"/><rect y="174" width="400" height="40" fill="var(--floor)"/><rect y="170" width="400" height="4" fill="var(--wood2)" opacity=".55"/>';
+  [70, 330].forEach(function(x){ s += '<line x1="'+x+'" y1="0" x2="'+x+'" y2="20" stroke="var(--fg)" stroke-width="1" opacity=".55"/><ellipse cx="'+x+'" cy="54" rx="26" ry="32" fill="#ffd98a" opacity=".13"/>' +
+    '<polygon points="'+(x-10)+',33 '+(x+10)+',33 '+(x+5)+',20 '+(x-5)+',20" fill="var(--espresso)"/><circle cx="'+x+'" cy="34.5" r="2.6" fill="#ffd98a"/>'; });
+  if (fin[0].me) { var CF = ["#f6c453", "var(--awning)", "#f08a7a", "var(--ghost)", "#8fd3c8"];
+    for (var c = 0; c < 46; c++) s += '<rect x="'+(8 + (c * 83) % 384)+'" y="'+(6 + (c * 37) % 96)+'" width="5" height="2.6" rx="1" fill="'+CF[c % CF.length]+'" transform="rotate('+((c * 47) % 180)+' '+(10 + (c * 83) % 384)+' '+(7 + (c * 37) % 96)+')"/>'; }
+  var slot = {1: [200, 62], 2: [116, 42], 3: [284, 28], 4: [356, 0]}, SH = {extella: "Extella", qwen: "Qwen 9B", opus: "Opus 5"};
+  fin.forEach(function(r){ var sl = slot[r.place] || [356, 0], x = sl[0], hgt = sl[1], top = 174 - hgt, feet = hgt ? top - 5 : 190;
+    if (hgt) s += '<rect x="'+(x - 36)+'" y="'+top+'" width="72" height="'+hgt+'" fill="var(--wood)"/><polygon points="'+(x + 36)+','+top+' '+(x + 42)+','+(top - 5)+' '+(x + 42)+','+(169)+' '+(x + 36)+',174" fill="var(--wood2)"/>' +
+      '<polygon points="'+(x - 36)+','+top+' '+(x + 36)+','+top+' '+(x + 42)+','+(top - 5)+' '+(x - 30)+','+(top - 5)+'" fill="var(--wood3)"/>' +
+      '<text x="'+x+'" y="'+(top + hgt / 2 + 8)+'" text-anchor="middle" font-size="22" font-weight="800" fill="var(--milk)" opacity=".92" font-family="var(--display)">'+r.place+'</text>';
+    s += person(x, feet, r.me ? "var(--awning)" : (MCOLOR[r.k] || "var(--muted)"), r.me ? "var(--milk)" : null);
+    if (r.place === 1) s += '<g transform="translate('+(x + 17)+','+(feet - 2)+')"><rect x="-4" y="-3" width="8" height="3" rx="1" fill="#b98a2e"/><rect x="-1.2" y="-8" width="2.4" height="5" fill="#d9a93f"/>' +
+      '<path d="M-6 -19 h12 v4 a6 6 0 0 1 -12 0 z" fill="#f6c453"/><path d="M-6 -18 q-4 0 -3 4 q1 3 4 3 M6 -18 q4 0 3 4 q-1 3 -4 3" fill="none" stroke="#d9a93f" stroke-width="1.4"/></g>';
+    s += '<text x="'+x+'" y="'+(feet - 60)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--fg)" font-family="var(--sans)">'+esc(r.me ? r.name : (SH[r.k] || r.name))+'</text>' +
+      '<text x="'+x+'" y="'+(feet - 49)+'" text-anchor="middle" font-size="9.5" font-weight="600" fill="'+(r.score < 0 ? "var(--bad)" : "var(--fg)")+'" font-family="var(--mono)">'+money(r.score)+'</text>'; });
+  return s + '</svg>';
+}
+/* фасад для стартового экрана: улица, сезон и конкурент берутся из выбора игрока */
+function drawFacade(){
+  PSEED = 11;
+  var winter = pick.sc === "winter", comp = pick.sc === "competitor", s = '<svg viewBox="0 0 400 240" role="img" aria-label="'+esc(t("brand"))+'" xmlns="http://www.w3.org/2000/svg">';
+  s += '<rect width="400" height="240" fill="var(--sky)"/>';
+  [[0, 60, 44], [44, 36, 40], [316, 48, 44], [360, 70, 40]].forEach(function(b, i){ s += '<rect x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="'+(196 - b[1])+'" fill="var(--guest)" opacity="'+(i % 2 ? ".34" : ".46")+'"/>';
+    for (var r = 0; r < 6; r++) for (var c = 0; c < 3; c++) s += '<rect x="'+(b[0] + 6 + c * 12)+'" y="'+(b[1] + 8 + r * 16)+'" width="6" height="8" fill="var(--milk)" opacity="'+((r + c + i) % 3 ? ".45" : ".2")+'"/>'; });
+  // здание кофейни
+  s += '<rect x="66" y="34" width="268" height="162" fill="var(--wall)"/><rect x="62" y="28" width="276" height="9" rx="2" fill="var(--wood2)"/><g stroke="var(--wall2)" stroke-width="1" opacity=".9">';
+  for (var y = 46; y < 104; y += 9) s += '<line x1="66" y1="'+y+'" x2="334" y2="'+y+'"/>';
+  s += '</g><rect x="112" y="48" width="176" height="27" rx="4" fill="var(--espresso)"/><text x="200" y="67" text-anchor="middle" font-size="15" font-weight="800" fill="var(--panel)" font-family="var(--display)">'+esc(t("brand"))+'</text>';
+  // витрина с тёплым светом и силуэтами
+  s += '<rect x="84" y="108" width="150" height="76" rx="2" fill="var(--wood2)"/><rect x="89" y="113" width="140" height="66" fill="#f7dca6"/><rect x="89" y="113" width="140" height="66" fill="#fff" opacity=".12"/>' +
+    '<g fill="#6b4a33" opacity=".55"><rect x="96" y="152" width="58" height="27"/><circle cx="110" cy="136" r="6"/><rect x="103" y="142" width="14" height="12" rx="4"/><circle cx="136" cy="138" r="6"/><rect x="129" y="144" width="14" height="10" rx="4"/>' +
+    '<ellipse cx="192" cy="164" rx="18" ry="4"/><rect x="190" y="164" width="4" height="15"/><circle cx="178" cy="150" r="5.5"/><rect x="172" y="155" width="12" height="12" rx="4"/><circle cx="207" cy="151" r="5.5"/><rect x="201" y="156" width="12" height="11" rx="4"/></g>' +
+    '<line x1="172" y1="113" x2="172" y2="124" stroke="#6b4a33" stroke-width="1"/><polygon points="165,131 179,131 176,123 168,123" fill="#6b4a33" opacity=".7"/><circle cx="172" cy="132" r="2" fill="#fff3c9"/>' +
+    '<rect x="157.5" y="113" width="3" height="66" fill="var(--wood2)"/>';
+  // дверь
+  s += '<rect x="250" y="104" width="56" height="92" rx="2" fill="var(--wood2)"/><rect x="255" y="109" width="46" height="87" fill="var(--wood)"/><rect x="261" y="115" width="34" height="46" fill="#f7dca6" opacity=".9"/>' +
+    '<rect x="269" y="128" width="18" height="9" rx="1.5" fill="var(--milk)"/><text x="278" y="134.6" text-anchor="middle" font-size="5.6" font-weight="700" fill="var(--awning)" font-family="var(--sans)">OPEN</text><circle cx="259" cy="156" r="2.2" fill="#e3c26a"/>';
+  // маркиза в полоску
+  s += '<polygon points="76,104 324,104 314,84 86,84" fill="var(--awning)"/>';
+  for (var k = 0; k < 8; k++) s += '<polygon points="'+(76 + k * 31)+',104 '+(91.5 + k * 31)+',104 '+(100.2 + k * 28.5)+',84 '+(86 + k * 28.5)+',84" fill="var(--milk)" opacity=".92"/>';
+  for (var k2 = 0; k2 < 16; k2++) s += '<circle cx="'+(83.7 + k2 * 15.5)+'" cy="104" r="7.75" fill="'+(k2 % 2 ? "var(--awning)" : "var(--milk)")+'"/>';
+  s += '<rect x="76" y="96" width="248" height="8" fill="none"/>';
+  // тротуар и дорога
+  s += '<rect y="196" width="400" height="30" fill="var(--floor)"/><rect y="226" width="400" height="14" fill="var(--floor2)"/><g stroke="var(--floor2)" stroke-width="1" opacity=".7">';
+  for (var x = 20; x < 400; x += 44) s += '<line x1="'+x+'" y1="196" x2="'+(x - 10)+'" y2="226"/>';
+  s += '</g>';
+  // фонарь, дерево, штендер
+  s += '<rect x="30" y="92" width="3.4" height="106" fill="var(--fg)" opacity=".7"/><rect x="24" y="84" width="16" height="10" rx="2" fill="var(--fg)" opacity=".75"/><circle cx="32" cy="97" r="3" fill="#ffd98a"/><ellipse cx="32" cy="118" rx="20" ry="26" fill="#ffd98a" opacity=".14"/>' +
+    '<rect x="362" y="128" width="6" height="70" fill="var(--wood2)"/>';
+  if (winter) s += '<g stroke="var(--wood2)" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M365 130 l-14 -22 M365 138 l16 -24 M365 122 l2 -26 M358 119 l-10 -6 M374 124 l10 -4"/></g><g fill="#fff"><ellipse cx="352" cy="107" rx="6" ry="2.2"/><ellipse cx="380" cy="113" rx="6" ry="2.2"/><ellipse cx="367" cy="96" rx="5" ry="2"/></g>';
+  else s += '<g fill="#5f8a4e"><circle cx="365" cy="108" r="22"/><circle cx="348" cy="122" r="14"/><circle cx="382" cy="120" r="15"/></g><g fill="#fff" opacity=".12"><circle cx="358" cy="100" r="12"/></g>';
+  s += '<polygon points="318,170 334,170 338,198 314,198" fill="#2c3834" stroke="var(--wood2)" stroke-width="2"/><text x="326" y="183" text-anchor="middle" font-size="5.4" fill="#e9efe9" font-family="var(--sans)">latte</text><text x="326" y="191" text-anchor="middle" font-size="5.4" fill="#e9efe9" font-family="var(--mono)">$'+C.menu.latte.price.toFixed(2)+'</text>';
+  if (comp) s += '<rect x="0" y="118" width="40" height="78" fill="var(--wall2)"/><polygon points="0,118 46,118 40,104 0,104" fill="var(--ghost)"/><rect x="6" y="130" width="26" height="40" fill="#f7dca6" opacity=".8"/><text x="19" y="114" text-anchor="middle" font-size="7" font-weight="700" fill="var(--panel)" font-family="var(--sans)">COFFEE</text>';
+  if (winter) { s += '<rect y="194" width="400" height="5" rx="2" fill="#fff" opacity=".85"/><g class="snow" fill="#fff">'; for (var j = 0; j < 40; j++) s += '<circle cx="'+((j * 53) % 400)+'" cy="'+((j * 29) % 180)+'" r="1.6" style="animation-delay:-'+((j * 7) % 40) / 10+'s"/>'; s += '</g>'; }
+  // прохожие: чем люднее улица, тем их больше
+  var n = pick.st === "quiet" ? 2 : pick.st === "district" ? 4 : 7, COL = ["#c58a3d", "#5f8ea3", "#8b6fa3", "#7d8f5c", "#b5764a", "var(--guest)", "#a35f6b"];
+  for (var p = 0; p < n; p++) s += person(54 + ((p * 97) % 300), 212 + (p % 3) * 8, COL[p % COL.length], null);
+  return s + '</svg>';
+}
+
+
+/* ---------- журнал: откуда взялись деньги каждого дня ---------- */
+function ledgerHTML(open){
+  if (!ledger.length) return "";
+  var sum = {rev: 0, buy: 0, wag: 0, oth: 0, pro: 0, guests: 0};
+  ledger.forEach(function(r){ ["rev","buy","wag","oth","pro","guests"].forEach(function(k){ sum[k] += r[k]; }); });
+  var head = ["day_col","g_col","rev_col","buy_col","wag_col","oth_col","pro_col","cash_col","score_col"];
+  var rows = ledger.map(function(r){
+    return '<tr><td class="mono">'+dayN(r.day)+'</td><td class="n mono">'+num(r.guests)+'</td>' +
+      '<td class="n mono">'+money(r.rev)+'</td><td class="n mono">'+money(-r.buy, true)+'</td><td class="n mono">'+money(-r.wag, true)+'</td><td class="n mono">'+money(-r.oth, true)+'</td>' +
+      '<td class="n mono" style="font-weight:600;color:'+(r.pro >= 0 ? 'var(--ok)' : 'var(--bad)')+'">'+money(r.pro, true)+'</td>' +
+      '<td class="n mono">'+money(r.cash)+(r.loan > 0.5 ? ' <span class="pill bad">'+esc(t("loan"))+'</span>' : '')+'</td>' +
+      '<td class="n mono">'+money(r.score)+'</td></tr>'; }).join("");
+  return '<section class="panel"><details'+(open ? ' open' : '')+' id="daylog"><summary>'+esc(t("log_h"))+' <span class="note" style="font-weight:400">· '+esc(t("log_sum"))+' '+money(sum.pro, true)+'</span></summary>' +
+    '<p class="note" style="margin:6px 0 8px">'+esc(t("log_note"))+'</p>' +
+    '<div class="tbl"><table><thead><tr>'+head.map(function(k, i){ return '<th'+(i ? ' class="n"' : '')+'>'+esc(t(k))+'</th>'; }).join("")+'</tr></thead><tbody>'+rows +
+    '<tr style="border-top:2px solid var(--line);font-weight:700"><td>'+esc(t("log_all"))+'</td><td class="n mono">'+num(sum.guests)+'</td><td class="n mono">'+money(sum.rev)+'</td><td class="n mono">'+money(-sum.buy, true)+'</td><td class="n mono">'+money(-sum.wag, true)+'</td><td class="n mono">'+money(-sum.oth, true)+'</td>' +
+      '<td class="n mono" style="color:'+(sum.pro >= 0 ? 'var(--ok)' : 'var(--bad)')+'">'+money(sum.pro, true)+'</td><td></td><td></td></tr>' +
+    '</tbody></table></div></details></section>';
+}
+
+/* ---------- соперники: призрак Extella и четыре счётных игрока ---------- */
+var MODELS = ["extella", "qwen", "opus"];   // соперники — только модели
+var MCOLOR = {extella: "var(--ghost)", qwen: "var(--bad)", opus: "var(--ok)"};
+function rivalData(k){
+  if (k === "extella") return ghost();
+  return ((DATA.models || {})[key()] || {})[k] || null;
+}
+function rivalName(k){ return t("r_" + k); }
+function modelsHere(){ return MODELS.filter(function(k){ return !!rivalData(k); }); }
+/* счёт каждого на конец дня tday; tday 0 — все по нулям */
+function standings(tday, myScore, keys){
+  var rows = [{k: "me", name: t("you"), score: tday ? myScore : 0, me: true}];
+  (keys || modelsHere()).forEach(function(k){ var d = rivalData(k);
+    if (d) rows.push({k: k, name: rivalName(k), score: tday ? d.daily[tday - 1] : 0}); });
+  rows.sort(function(a, b){ return b.score - a.score; });
+  rows.forEach(function(r, i){ r.place = i + 1; });
+  return rows;
+}
+/* дорожки: у каждого своя, длина полосы = счёт. Кто ушёл втрое ниже остальных,
+   масштаб не задаёт: его полоса у левого края, а число красное. */
+function raceHTML(rows, prev){
+  var order = ["me"].concat(MODELS), byK = {}, byP = {};
+  rows.forEach(function(r){ byK[r.k] = r; }); (prev || []).forEach(function(r){ byP[r.k] = r; });
+  var base = rows.filter(function(r){ return r.me || r.k === "extella"; }).map(function(r){ return r.score; });
+  var loB = Math.min.apply(null, base.concat([0])), vals = [];
+  rows.forEach(function(r){ if (r.score >= loB * 3 - 1) { vals.push(r.score); if (byP[r.k]) vals.push(byP[r.k].score); } });
+  var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), span = Math.max(1, hi - lo);
+  var w = function(v){ return v < lo ? 3 : Math.max(3, Math.min(100, 8 + 92 * (v - lo) / span)); };
+  return '<div class="race">' + order.filter(function(k){ return byK[k]; }).map(function(k){ var r = byK[k], out = r.score < lo;
+    var col = r.me ? "var(--awning)" : (MCOLOR[k] || "var(--muted)"), w1 = w(r.score), w0 = byP[k] ? w(byP[k].score) : w1;
+    var short = r.me ? r.name : ({extella: "Extella", qwen: "Qwen 9B", opus: "Opus 5"}[k] || r.name);
+    return '<div class="lane'+(r.me ? " me" : "")+'"><span class="nm" title="'+esc(r.name)+'"><small>'+r.place+'</small>'+esc(short)+'</span>' +
+      '<span class="tr"><i data-w="'+w1.toFixed(1)+'" style="width:'+(prev ? w0 : w1).toFixed(1)+'%;background:'+col+'"></i></span>' +
+      '<span class="sc"'+(out ? ' style="color:var(--bad)"' : '')+'>'+money(r.score)+'</span></div>'; }).join("") + '</div>';
+}
+function countUp(el, v){
+  if (!el) return; var t0 = 0;
+  (function f(ts){ if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / 700), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = money(v * e, true); if (p < 1) requestAnimationFrame(f); })(performance.now());
+}
+
+/* ---------- вечер карточками: в закрытом виде видно решение и хватает ли его ---------- */
+function ecard(id, title, sumHTML, cls, pill, open, body){
+  return '<section class="panel ecard"><details id="'+id+'"'+(open ? ' open' : '')+'><summary><span class="et">'+esc(title)+'</span><span class="es">'+sumHTML+'</span>' +
+    '<span class="pill '+cls+'">'+esc(pill)+'</span></summary><div class="eb">'+body+'</div></details></section>';
+}
+function ordStat(obs){
+  var short = [];
+  Object.keys(C.suppliers).forEach(function(s){ if (!obs.suppliers[s].delivers_tomorrow) return;
+    Object.keys(C.suppliers[s].items).forEach(function(it){ var r = needRow(obs, s, it, levels[s]);
+      if (r && r.need - (r.have + (draft.qty[s][it] || 0)) > 0.5) short.push(t(it).split(",")[0]); }); });
+  return short.length ? {cls: "bad", pill: t("ec_short"), txt: t("ec_short_l") + " " + short.join(", ")} : {cls: "ok", pill: t("enough"), txt: t("ec_cover")};
+}
+function staffStat(obs, dph){
+  var f = obs.forecast[0], bad = [], warn = [], nm = ["morning", "midday", "evening_dp"];
+  [0, 1, 2].forEach(function(i){ var cap = Math.round((draft.sched[i] + C.lead_capacity_share * draft.leads[i]) * dph * 4);
+    if (cap < f.guests[i]) bad.push(t(nm[i])); else if (cap < f.high[i]) warn.push(t(nm[i])); });
+  var base = t("ec_bar") + " " + draft.sched.join(" \u00b7 ");
+  return bad.length ? {cls: "bad", pill: t("ec_queue"), txt: base + " \u00b7 " + t("ec_queue_l") + " " + bad.join(", ")} :
+    warn.length ? {cls: "warn", pill: t("ec_tight"), txt: base + " \u00b7 " + t("ec_tight_l") + " " + warn.join(", ")} :
+    {cls: "ok", pill: t("ec_fine"), txt: base + " \u00b7 " + t("ec_fine_l")};
+}
+
+/* ---------- экран дня: сцена играет сама, потом итог ---------- */
+function dayHTML(){
+  var D = dayCtx, rep = D.rep;
+  return '<section class="daystage"><div class="dayhead"><h1>'+esc(t("day_res"))+' '+dayN(D.tday)+'</h1>' +
+    '<span class="note">'+esc(T[LANG].wd[rep.wd != null ? rep.wd : 0] || "")+' \u00b7 '+esc(T[LANG].wx[rep.weather] || "")+'</span>' +
+    '<span class="row" style="gap:6px"><button type="button" id="day-fast" aria-pressed="'+FAST+'">'+esc(t("fast"))+'</button>' +
+    '<button type="button" id="day-skip">'+esc(t("skip"))+'</button></span></div>' +
+    '<div class="windowbox" id="daybox"></div><div id="day-result" hidden></div></section>';
+}
+function dayStart(skip){
+  var D = dayCtx; if (!D) return;
+  rpStart(D.rep, $("daybox"), dayReveal, true);
+  if (!RP) { dayReveal(); return; }
+  var sk = skip || FAST || D.seen;
+  D.seen = true;
+  if (sk) rpFinish();
+}
+function dayReveal(){
+  var D = dayCtx, el = $("day-result"); if (!el || !D) return;
+  var sk = $("day-skip"); if (sk) sk.hidden = true;
+  var L = ledger[ledger.length - 1], rep = D.rep, bd = [];
+  if (!rep.closed && rep.queue_guests + rep.stockout_guests === 0) bd.push(['ok', t("b_clean")]);
+  if (ledger.length > 2 && L.pro >= Math.max.apply(null, ledger.map(function(x){ return x.pro; })) - 1e-9) bd.push(['ok', t("b_best")]);
+  if (D.prev) { var meP = D.prev.filter(function(r){ return r.me; })[0], meN = D.rows.filter(function(r){ return r.me; })[0];
+    D.rows.forEach(function(r){ if (r.me) return; var p = D.prev.filter(function(x){ return x.k === r.k; })[0]; if (!p) return;
+      if (meP.score < p.score && meN.score >= r.score) bd.push(['ok', t("b_over") + " " + r.name]);
+      if (meP.score >= p.score && meN.score < r.score) bd.push(['bad', t("b_lost") + " " + r.name]); }); }
+  var me = D.rows.filter(function(r){ return r.me; })[0], gh = ghost();
+  var says = modelsHere().map(function(k){ var d = rivalData(k), w = (d["why_" + LANG] || [])[D.tday] || "";
+    return w ? '<div class="s" style="border-left-color:'+(MCOLOR[k] || "var(--line)")+'"><b>'+esc(rivalName(k))+'</b><span>'+esc(w)+'</span></div>' : ""; }).join("");
+  el.innerHTML = '<div class="reveal">' +
+    '<section class="panel"><div class="row" style="justify-content:space-between;align-items:flex-end;gap:12px"><div><div class="eyebrow">'+esc(t("day_profit"))+'</div>' +
+      '<div class="bigday" id="day-big" style="color:'+(L.pro >= 0 ? 'var(--ok)' : 'var(--bad)')+'">'+money(0, true)+'</div></div>' +
+      '<div class="small muted" style="text-align:right">'+esc(t("revenue"))+' <span class="mono">'+money(L.rev)+'</span><br>'+esc(t("spent"))+' <span class="mono">'+money(-(L.buy + L.wag + L.oth), true)+'</span></div></div>' +
+      (D.tday === 0 ? '<p class="note" style="margin:8px 0 0">'+esc(t("rent_note"))+'</p>' : '') +
+      (bd.length ? '<div class="badges">'+bd.map(function(b){ return '<span class="pill '+b[0]+'">'+esc(b[1])+'</span>'; }).join("")+'</div>' : '') + '</section>' +
+    '<section class="panel"><div class="row" style="justify-content:space-between"><h2>'+esc(t("race_h"))+'</h2><span class="note">'+esc(t("place_of").replace("{p}", me.place).replace("{n}", D.rows.length))+'</span></div>' + raceHTML(D.rows, D.prev) + '</section>' +
+    (says ? '<section class="panel"><h2>'+esc(t("says_h"))+'</h2><div class="says">'+says+'</div></section>' : '') +
+    '<div class="row"><button type="button" class="primary" id="day-next">'+esc(G.t >= C.days ? t("to_end") : t("to_eve") + " " + dayN(G.t))+'</button></div></div>';
+  el.hidden = false;
+  sfx(L.pro >= 0 ? "good" : "bad");
+  if (bd.some(function(b){ return b[1].indexOf(t("b_over")) === 0; })) setTimeout(function(){ sfx("pass"); }, 650);
+  else if (bd.some(function(b){ return b[1].indexOf(t("b_lost")) === 0; })) setTimeout(function(){ sfx("lose"); }, 650);
+  countUp($("day-big"), L.pro);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    [].forEach.call(el.querySelectorAll(".lane .tr i"), function(i){ i.style.width = i.dataset.w + "%"; }); }); });
+  // страховка для фоновой вкладки: числа и дорожки встают на место и без кадров
+  setTimeout(function(){ var bg = $("day-big"); if (bg) bg.textContent = money(L.pro, true);
+    [].forEach.call(el.querySelectorAll(".lane .tr i"), function(i){ i.style.width = i.dataset.w + "%"; }); }, 1000);
+  try { el.scrollIntoView({block: "nearest"}); } catch (e1) {}
+}
+
+function standHTML(rows){
+  return '<div class="stand">' + rows.map(function(r){
+    return '<span class="ch'+(r.me ? " me" : r.k === "extella" ? " ext" : "")+'">'+r.place+' '+esc(r.name)+' <b>'+money(r.score)+'</b></span>'; }).join("") + '</div>';
+}
+function whoHTML(withScore, keys){
+  return '<div class="who">' + [{k: "me", name: t("you"), desc: t("r_me_d")}].concat((keys || modelsHere()).map(function(k){
+    return {k: k, name: rivalName(k), desc: t("r_" + k + "_d"), d: rivalData(k)}; })).map(function(r){
+    return '<div class="r'+(r.k === "me" ? " me" : "")+'"><span class="n">'+esc(r.name)+'</span>' +
+      (withScore && r.d ? '<span class="s">'+money(r.d.score)+'</span>' : '<span class="s muted">'+(r.k === "me" ? "" : "")+'</span>') +
+      '<span class="d">'+esc(r.desc)+'</span></div>'; }).join("") + '</div>';
+}
+
+/* ---------- проигрыш дня: раскладка целиком из by_dp отчёта ---------- */
+var RP = null, RP_DUR = 12000;
+
+function rpPlan(rep){
+  var H = C.hours, span = H.close - H.open, toks = [], unit = Math.max(1, Math.round(rep.demand / 46)), si = 0, n2 = 0, D = [356, 158];
+  rep.by_dp.forEach(function(R, dp){
+    var hd = H.dayparts[dp], t0 = (hd[0] - H.open) / span, t1 = (hd[1] - H.open) / span;
+    var sold = 0; Object.keys(R.sold).forEach(function(k){ sold += R.sold[k]; });
+    var kinds = [["ok", sold], ["emp", Math.max(0, R.served - sold)], ["q", Math.max(0, R.demand - R.served)]];
+    var ns = kinds.map(function(x){ return Math.round(x[1] / unit); }), n = ns[0] + ns[1] + ns[2];
+    if (!n) return;
+    var left = ns.slice();
+    for (var i = 0; i < n; i++) {
+      var bi = -1, bv = -1;
+      for (var k2 = 0; k2 < 3; k2++) { if (!left[k2]) continue; var v = left[k2] / (n - i); if (v > bv) { bv = v; bi = k2; } }
+      left[bi]--;
+      var kind = kinds[bi][0], lane = ((toks.length * 37) % 5) - 2, Y = 231 + lane * 1.4, E = [338, Y], CP = [180, Y - 3], pts, fr, sit = [], dec, life;
+      if (kind === "ok") { var seat = SEATS[(si++) % SEATS.length];
+        // каждый третий после столика идёт к кассе второй раз: в модели это круассан к напитку
+        if (R.croissant > 0 && (n2++) % 3 === 0) { pts = [D, E, CP, CP, seat, seat, CP, CP, seat, seat, E, D]; fr = [0, .05, .26, .34, .42, .56, .64, .70, .78, .90, .96, 1]; sit = [[.42, .56], [.78, .90]]; dec = .34; life = 3900; }
+        else { pts = [D, E, CP, CP, seat, seat, E, D]; fr = [0, .07, .38, .50, .60, .84, .94, 1]; sit = [[.60, .84]]; dec = .50; life = 2700; } }
+      else if (kind === "emp") { pts = [D, E, CP, CP, E, D]; fr = [0, .08, .45, .58, .92, 1]; dec = .52; life = 2100; }
+      else { var QP = [262 + lane * 5, Y]; pts = [D, E, QP, QP, E, D]; fr = [0, .1, .40, .62, .9, 1]; dec = .62; life = 1900; }
+      toks.push({t: t0 + (i + 0.5) / n * (t1 - t0), kind: kind, dp: dp, g: kinds[bi][1] / Math.max(1, ns[bi]), life: life, pts: pts, fr: fr, sit: sit, dec: dec});
+    }
+  });
+  toks.sort(function(a, b){ return a.t - b.t; });
+  // курьеры: что заказано вчера вечером и доехало сегодня утром
+  var dl = lastDeliv && lastDeliv.day === rep.day ? lastDeliv : {ok: [], fail: []};
+  var cour = dl.ok.map(function(s, i){ var bx = 58 + i * 26; return {s: s, t: .004 + i * .032, life: 2500, bx: bx, pts: [D, [338, 235], [bx + 12, 236], [bx + 12, 236], [338, 235], D], fr: [0, .08, .5, .62, .94, 1]}; });
+  // танцор выходит в ту часть дня, где не ушёл ни один гость
+  var happy = rep.by_dp.map(function(R){ var sold = 0; Object.keys(R.sold).forEach(function(k){ sold += R.sold[k]; }); return R.demand > 0 && sold >= R.demand; });
+  var M = C.menu, lbg = C.suppliers.roaster.items.beans.grams, use = rep.by_dp.map(function(R){ var u = {milk: 0, beans: 0, cups: 0, cro: R.croissant || 0, sold: 0, dem: R.demand};
+    Object.keys(R.sold).forEach(function(k){ var n = R.sold[k]; u.milk += n * (M[k].milk_l || 0); u.beans += n * (M[k].beans_g || 0) / lbg; u.cups += n; u.sold += n; });
+    // круассаны кончаются раньше конца части дня, если их не хватило
+    u.croShare = (R.croissant_missing > 0 && R.croissant + R.croissant_missing > 0) ? R.croissant / (R.croissant + R.croissant_missing) : 1;
+    u.q = Math.max(0, R.demand - R.served); u.so = Math.max(0, R.served - u.sold) + (R.croissant_missing || 0); return u; });
+  var end = {milk: rep.stock.milk_l + (rep.milk_written_off_l || 0), beans: rep.stock.beans_lb, cups: rep.stock.cups, cro: rep.stock.croissant}, start = {}, soldAll = 0;
+  ["milk", "beans", "cups", "cro"].forEach(function(k){ start[k] = end[k] + use.reduce(function(a, u){ return a + u[k]; }, 0); });
+  use.forEach(function(u){ soldAll += u.sold; });
+  return {toks: toks, unit: unit, maxLife: 3900, cour: cour, fail: dl.fail, happy: happy, use: use, start: start, soldAll: soldAll};
+}
+
+function rpPose(tk, u){
+  var pts = tk.pts, fr = tk.fr, p = null;
+  for (var i = 1; i < pts.length; i++) if (u <= fr[i]) { var a = (u - fr[i-1]) / Math.max(1e-9, fr[i] - fr[i-1]);
+    p = {x: pts[i-1][0] + (pts[i][0] - pts[i-1][0]) * a, y: pts[i-1][1] + (pts[i][1] - pts[i-1][1]) * a}; break; }
+  if (!p) { var l = pts[pts.length - 1]; p = {x: l[0], y: l[1]}; }
+  (tk.sit || []).forEach(function(r){ if (u > r[0] && u <= r[1]) p.sit = true; });
+  if (u > .93) p.op = Math.max(0, 1 - (u - .93) * 12);
+  return p;
+}
+
+function boxArt(s){
+  if (s === "dairy") return '<rect x="-8" y="-13" width="16" height="13" rx="1.5" fill="var(--milk)" stroke="#7fa7c9" stroke-width="1"/><rect x="-8" y="-9" width="16" height="3" fill="#7fa7c9"/><path d="M0 -6.5 q2.4 3 0 4.6 q-2.4 -1.6 0 -4.6 z" fill="#7fa7c9"/>';
+  if (s === "roaster") return '<path d="M-7 0 q-2 -7 1 -13 h12 q3 6 1 13 z" fill="#b08a5a" stroke="#7a5a35" stroke-width="1"/><path d="M-5 -13 l2 -3 h6 l2 3" fill="none" stroke="#7a5a35" stroke-width="1"/><ellipse cx="0" cy="-6" rx="2.2" ry="3.2" fill="#5a3a22"/>';
+  return '<path d="M-9 -8 h18 l-2 8 h-14 z" fill="#d8b98a" stroke="#a5834f" stroke-width="1"/><path d="M-7 -8 q3.5 -6 7 0 z M0 -8 q3.5 -6 7 0 z" fill="#d9a05b" stroke="#b47a3a" stroke-width=".5"/>';
+}
+function rpScene(rep, pl){
+  PSEED = 3;
+  var COL = ["var(--guest)", "#b5764a", "#7d8f5c", "#8b6fa3", "#c58a3d", "#5f8ea3"];
+  var s = '<svg viewBox="0 0 400 240" role="img" aria-label="'+esc(t("rp_play"))+'" xmlns="http://www.w3.org/2000/svg">' + sceneBack(rep.weather) + sceneBoard(menuRows());
+  for (var dp = 0; dp < 3; dp++) s += '<g class="rpS" style="display:none">' + staffArt(rep, dp) + '</g>';
+  s += sceneCounter(rep.events.indexOf("no_espresso") >= 0) + sceneDoor() + sceneTables();
+  // поддон для поставки и то, что на него привезут
+  s += '<rect x="42" y="229" width="98" height="4" rx="1" fill="var(--wood2)"/><rect x="48" y="233" width="8" height="4" fill="var(--wood2)"/><rect x="86" y="233" width="8" height="4" fill="var(--wood2)"/><rect x="126" y="233" width="8" height="4" fill="var(--wood2)"/>';
+  pl.cour.forEach(function(c){ s += '<g class="rpB" style="display:none" transform="translate('+c.bx+',229)">'+boxArt(c.s)+'</g>'; });
+  if (pl.fail.length) s += '<text x="20" y="214" font-size="9" fill="var(--bad)" font-family="var(--sans)">'+esc(t("no_deliv_h"))+': '+pl.fail.map(function(x){ return esc(T[LANG].sup[x] || x); }).join(", ")+'</text>';
+  // танцор у двери
+  s += '<g class="rpD" style="display:none" transform="translate(382,232)"><g class="dance">'+person(0, 0, "#c58a3d", null)+'</g>' +
+    '<g class="nts" fill="var(--awning)" font-size="11" font-family="var(--sans)"><text x="-14" y="-46">\u266a</text><text x="8" y="-52">\u266b</text></g></g>';
+  s += '<g>' + pl.toks.map(function(tk, i){ var mk = tk.kind === "ok" ? '<g class="mk"><path d="M6 -19 l.8 -5.6 h4 l.8 5.6 z" fill="var(--milk)" stroke="var(--line)" stroke-width=".5"/></g>' :
+      '<text class="mk" x="0" y="-48" text-anchor="middle" font-size="12" font-weight="800" fill="'+(tk.kind === "q" ? "var(--bad)" : "var(--muted)")+'" font-family="var(--sans)">'+(tk.kind === "q" ? "!" : "?")+'</text>';
+    return '<g class="rpP" style="display:none">' + person(0, 0, tk.kind === "ok" ? COL[i % COL.length] : tk.kind === "q" ? "var(--bad)" : "var(--muted)", null) + mk + '</g>'; }).join("") + '</g>';
+  s += '<g>' + pl.cour.map(function(c){ return '<g class="rpC" style="display:none">' + person(0, 0, "#e07a2f", null) +
+    '<path d="M-6.2 -41.6 a6.2 5.2 0 0 1 12.4 0 h4 v1.6 h-16.4 z" fill="#b55a1c"/><g class="bx" transform="translate(0,-13)">'+boxArt(c.s)+'</g></g>'; }).join("") + '</g>';
+  s += '<text class="rpN" x="392" y="212" text-anchor="end" font-size="10" fill="var(--muted)" font-family="var(--sans)"></text>';
+  return s + '</svg>';
+}
+
+function rpBar(pl, bare){
+  var SK = [["milk", LANG==="ru"?"молоко, л":"milk, L"], ["beans", LANG==="ru"?"зерно, ф.":"beans, lb"], ["cups", LANG==="ru"?"стаканы":"cups"], ["cro", LANG==="ru"?"круассаны":"croissants"]];
+  return '<div class="rprog"><i></i></div><div class="hud"><div class="hudtop"><span class="clock">'+C.hours.open+':00</span>' +
+    '<span class="hm ok"><small>'+esc(t("revenue"))+'</small><b class="hrev">'+money(0)+'</b></span><span class="hm bad"><small>'+esc(t("hud_pen"))+'</small><b class="hpen">'+money(0)+'</b></span></div>' +
+    '<div class="hstock">'+SK.map(function(k){ return '<div class="hs" data-k="'+k[0]+'"><span class="k">'+esc(k[1])+'</span><span class="v">'+num(Math.round(pl.start[k[0]]))+'</span><span class="bar"><i style="width:100%"></i></span></div>'; }).join("")+'</div>' +
+    '<div class="hprob"></div></div><div class="rpbar">' +
+    '<span class="c">'+esc(t("came"))+' <b>0</b></span><span class="c">'+esc(t("served"))+' <b>0</b></span>' +
+    '<span class="c q">'+esc(t("queue"))+' <b>0</b></span><span class="c e">'+esc(t("stockout"))+' <b>0</b></span>' +
+    '<span class="sp"></span><span class="note">'+esc(t("rp_unit").replace("{n}", pl.unit))+'</span>' +
+    (bare ? '' : '<button type="button" id="rp-play" hidden>'+esc(t("rp_again"))+'</button>' +
+    '<button type="button" id="rp-close">'+esc(t("rp_stop"))+'</button>') + '</div>';
+}
+
+function rpStart(rep, box, onDone, bare){
+  rep = rep || (draft && draft.obs ? draft.obs.yesterday : null);
+  rpStop();
+  if (!rep || !rep.by_dp || !rep.by_dp.length) return;
+  box = box || document.querySelector(".windowbox");
+  if (!box) return;
+  var pl = rpPlan(rep);
+  box.innerHTML = rpScene(rep, pl) + rpBar(pl, bare);
+  RP = {rep: rep, pl: pl, t0: 0, dp: -1, c: [0, 0, 0, 0], onDone: onDone || null,
+    els: [].slice.call(box.querySelectorAll(".rpP")), staff: [].slice.call(box.querySelectorAll(".rpS")),
+    nums: [].slice.call(box.querySelectorAll(".rpbar .c b")), clock: box.querySelector(".clock"),
+    prog: box.querySelector(".rprog i"), dpn: box.querySelector(".rpN"),
+    rev: box.querySelector(".hrev"), pen: box.querySelector(".hpen"), prob: box.querySelector(".hprob"), probS: "",
+    hs: [].slice.call(box.querySelectorAll(".hs")),
+    cour: [].slice.call(box.querySelectorAll(".rpC")), boxes: [].slice.call(box.querySelectorAll(".rpB")), dancer: box.querySelector(".rpD")};
+  RP.snd = !!onDone && !FAST;
+  if (RP.snd) { sfx("bell"); ambOn(); }
+  // для проверки кадра без анимации: ?rpf=0.4 ставит сцену на 40 % дня и замирает
+  var dbg = /[?&]rpf=([0-9.]+)/.exec(location.search);
+  if (dbg) { RP.t0 = 1; rpFrame(1 + (+dbg[1]) * RP_DUR); if (RP && RP.raf) cancelAnimationFrame(RP.raf); return; }
+  RP.raf = requestAnimationFrame(rpFrame);
+  RP.timer = setTimeout(rpFinish, RP_DUR + pl.maxLife + 1500);   // страховка, если кадры не идут
+}
+
+function rpStop(){ ambOff(); if (RP) { if (RP.raf) cancelAnimationFrame(RP.raf); if (RP.timer) clearTimeout(RP.timer); } RP = null; }
+
+function rpFrame(ts){
+  if (!RP) return;
+  if (!RP.t0) RP.t0 = ts;
+  var el = (ts - RP.t0), p = Math.min(1, el / RP_DUR), pl = RP.pl, H = C.hours;
+  // часы и полоса
+  var hh = H.open + p * (H.close - H.open), mm = Math.floor((hh % 1) * 60);
+  RP.clock.textContent = Math.floor(hh) + ":" + (mm < 10 ? "0" : "") + mm;
+  RP.prog.style.width = (p * 100).toFixed(1) + "%";
+  // смена текущей части дня
+  var dp = Math.min(2, Math.floor(p * 3 - 1e-9));
+  if (dp < 0) dp = 0;
+  if (dp !== RP.dp) { RP.dp = dp;
+    RP.staff.forEach(function(g, i){ g.style.display = i === dp ? "" : "none"; });
+    RP.dpn.textContent = t(["morning", "midday", "evening_dp"][dp]);
+    if (RP.dancer) RP.dancer.style.display = pl.happy[dp] ? "" : "none";
+    if (RP.snd) sfx("steam"); }
+  // курьеры: приносят заказ утром и ставят на поддон
+  for (var ci = 0; ci < pl.cour.length; ci++) {
+    var ck = pl.cour[ci], cg = RP.cour[ci], cu = (el - ck.t * RP_DUR) / ck.life;
+    if (cu >= .56 && !ck.dn) { ck.dn = 1; RP.boxes[ci].style.display = ""; if (RP.snd) sfx("thud"); }
+    if (cu < 0 || cu > 1) { if (cg.style.display !== "none") cg.style.display = "none"; continue; }
+    var cp = rpPose(ck, cu);
+    cg.style.display = ""; cg.setAttribute("class", cu >= .56 ? "rpC drop" : "rpC");
+    cg.setAttribute("transform", "translate(" + cp.x.toFixed(1) + "," + cp.y.toFixed(1) + ")");
+    if (cp.op != null) cg.setAttribute("opacity", cp.op.toFixed(2)); else cg.removeAttribute("opacity");
+  }
+  // гости
+  for (var i = 0; i < pl.toks.length; i++) {
+    var tk = pl.toks[i], g = RP.els[i], u = (el - tk.t * RP_DUR) / tk.life;
+    if (u < 0 || u > 1) { if (g.style.display !== "none") g.style.display = "none"; continue; }
+    if (!tk.sp) { tk.sp = 1; RP.c[0] += tk.g; }
+    if (u >= tk.dec && !tk.dn) { tk.dn = 1; RP.c[tk.kind === "ok" ? 1 : tk.kind === "q" ? 2 : 3] += tk.g;
+      if (RP.snd) sfx(tk.kind === "ok" ? "serve" : tk.kind === "q" ? "queue" : "empty"); }
+    var ps = rpPose(tk, u);
+    g.style.display = "";
+    g.setAttribute("class", "rpP" + (ps.sit ? " sit" : "") + (tk.dn ? " dec" : ""));
+    g.setAttribute("transform", "translate(" + ps.x.toFixed(1) + "," + ps.y.toFixed(1) + ")");
+    if (ps.op != null) g.setAttribute("opacity", ps.op.toFixed(2)); else g.removeAttribute("opacity");
+  }
+  rpHud(p);
+  if (el < RP_DUR + pl.maxLife) { RP.raf = requestAnimationFrame(rpFrame); return; }
+  rpFinish();
+}
+/* панель под сценой на долю дня p. Итоги дня в ней точные (из отчёта шага), а ход внутри
+   части дня равномерный: поминутной раскладки в модели нет. */
+function rpHud(p){
+  var pl = RP.pl, rep = RP.rep, cum = {milk: 0, beans: 0, cups: 0, cro: 0, sold: 0, dem: 0}, chips = [], nm = ["morning", "midday", "evening_dp"], qAll = 0, soAll = 0;
+  pl.use.forEach(function(u, d){ var f = Math.max(0, Math.min(1, (p - d / 3) * 3)); if (f <= 0) return;
+    cum.dem += u.dem * f; cum.milk += u.milk * f; cum.beans += u.beans * f; cum.cups += u.cups * f; cum.sold += u.sold * f; cum.cro += u.cro * Math.min(1, f / Math.max(.05, u.croShare));
+    var q = Math.round(u.q * f), so = Math.round(u.so * f); qAll += q; soAll += so;
+    if (q) chips.push(['bad', t(nm[d]) + ": " + t("queue") + " " + q]);
+    if (so) chips.push(['warn', t(nm[d]) + ": " + t("stockout") + " " + so]); });
+  RP.rev.textContent = money(pl.soldAll ? rep.revenue * cum.sold / pl.soldAll : 0);
+  // нижняя строка из того же расчёта, что и панель: иначе одно и то же число расходится
+  [cum.dem, cum.sold, qAll, soAll].forEach(function(v, j){ RP.nums[j].textContent = num(Math.round(v)); });
+  RP.pen.textContent = money(-(qAll * C.penalty_queue + soAll * C.penalty_stockout));
+  RP.hs.forEach(function(el){ var k = el.dataset.k, st = pl.start[k], now = Math.max(0, st - cum[k]), fr = st > 0 ? now / st : 0;
+    el.className = "hs" + (now < .5 ? " out" : fr < .15 ? " low" : "");
+    el.querySelector(".v").textContent = now < .5 ? t("hud_out") : num(Math.round(now));
+    el.querySelector(".bar i").style.width = (fr * 100).toFixed(1) + "%"; });
+  pl.fail.forEach(function(x){ chips.unshift(['bad', t("no_deliv_h") + ": " + (T[LANG].sup[x] || x)]); });
+  if (rep.events.indexOf("no_espresso") >= 0) chips.unshift(['bad', LANG==="ru"?"машина не работает":"machine down"]);
+  var s = chips.length ? chips.map(function(c){ return '<span class="pill '+c[0]+'">'+esc(c[1])+'</span>'; }).join("") : '<span class="pill ok">'+esc(t("hud_ok"))+'</span>';
+  if (s !== RP.probS) { RP.probS = s; RP.prob.innerHTML = s; }
+}
+/* конец проигрыша. Вызывается и из кадра, и напрямую: в фоновой вкладке кадры не
+   приходят, и без прямого вызова день не закончился бы никогда. */
+function rpFinish(){
+  if (!RP || RP.fin) return;
+  RP.fin = true; ambOff();
+  if (RP.raf) cancelAnimationFrame(RP.raf);
+  if (RP.timer) clearTimeout(RP.timer);
+  var H = C.hours;
+  RP.clock.textContent = H.close + ":00"; RP.prog.style.width = "100%";
+  RP.staff.forEach(function(g, i){ g.style.display = i === 2 ? "" : "none"; });
+  RP.dpn.textContent = t("evening_dp");
+  rpHud(1);
+  RP.rev.textContent = money(RP.rep.revenue);
+  RP.pen.textContent = money(-(RP.rep.queue_guests * C.penalty_queue + RP.rep.stockout_guests * C.penalty_stockout));
+  RP.cour.forEach(function(g){ g.style.display = "none"; }); RP.boxes.forEach(function(g){ g.style.display = ""; });
+  if (RP.dancer) RP.dancer.style.display = RP.pl.happy[2] ? "" : "none";
+  if (!RP.rep.closed && RP.rep.queue_guests + RP.rep.stockout_guests === 0) RP.staff[2].setAttribute("class", "rpS hop");
+  // точные числа отчёта, а не сумма округлений
+  var rep = RP.rep, sold = 0;
+  rep.by_dp.forEach(function(R){ Object.keys(R.sold).forEach(function(k2){ sold += R.sold[k2]; }); });
+  [rep.demand, sold, rep.queue_guests, rep.stockout_guests].forEach(function(v, j){ RP.nums[j].textContent = num(v); });
+  RP.els.forEach(function(g){ g.style.display = "none"; });
+  RP.raf = 0;
+  var pb = document.getElementById("rp-play"), cb = document.getElementById("rp-close");
+  if (pb) pb.hidden = false;
+  if (cb) cb.textContent = t("rp_close");
+  if (RP.onDone) { var fn = RP.onDone; RP.onDone = null; fn(); }
+}
+
+/* ---------- экраны ---------- */
+function render(){
+  rpStop();
+  document.documentElement.lang = LANG;
+  $("app").className = "wrap" + (screen === "play" ? " wide" : "");
+  $("home").textContent = t("brand");
+  $("lang-ru").setAttribute("aria-pressed", LANG === "ru"); $("lang-en").setAttribute("aria-pressed", LANG === "en");
+  var th = document.documentElement.getAttribute("data-theme"); $("th-light").setAttribute("aria-pressed", th === "light"); $("th-dark").setAttribute("aria-pressed", th === "dark");
+  $("snd").textContent = t("snd"); $("snd").setAttribute("aria-pressed", SND.on);
+  var m = $("main");
+  if (screen === "start") m.innerHTML = startHTML();
+  else if (screen === "lesson") m.innerHTML = lessonHTML();
+  else if (screen === "play") m.innerHTML = playHTML();
+  else if (screen === "day") { m.innerHTML = dayHTML(); dayStart(); }
+  else if (screen === "end") m.innerHTML = endHTML();
+  else if (screen === "board") { m.innerHTML = '<div id="board"></div>'; renderBoard(); }
+  if (screen === "lesson") lessonAfter();
+}
+function optBtn(group, val, title, sub){ var on = pick[group] === val; return '<button type="button" class="'+(on?"on":"")+'" data-pick="'+group+':'+val+'" aria-pressed="'+on+'" style="text-align:left"><b>'+esc(title)+'</b>'+(sub?'<br><span class="note">'+esc(sub)+'</span>':'')+'</button>'; }
+function startHTML(){
+  var g = ghost(), obs0 = null;
+  try { obs0 = new S.Game(DATA.seed, pick.st, pick.mo, pick.sc, C).observe(); } catch (e) {}
+  return '<section class="hero fade"><div class="stack"><h1>'+esc(t("brand"))+'</h1>'+(SITE && window.EXTELLA_DEF ? '<p class="note" style="font-size:15px">'+esc(window.EXTELLA_DEF[LANG])+'</p>' : '')+'<p style="font-size:18px">'+esc(t("tag"))+'</p></div>' +
+    '<div class="windowbox">'+drawFacade()+'</div>' + '</section>' +
+  '<section class="panel"><div class="combo">' +
+    '<div class="opt"><span class="eyebrow">'+esc(t("street"))+'</span>'+["quiet","district","corridor"].map(function(v){ return optBtn("st", v, t("st_"+v), t("st_"+v+"_d")); }).join("")+'</div>' +
+    '<div class="opt"><span class="eyebrow">'+esc(t("scen"))+'</span>'+["calm","winter","competitor"].map(function(v){ return optBtn("sc", v, t("sc_"+v), t("sc_"+v+"_d")); }).join("")+'</div>' +
+    '<div class="opt"><span class="eyebrow">'+esc(t("money"))+'</span>'+["low","mid","high"].map(function(v){ return optBtn("mo", v, t("mo_"+v)); }).join("") +
+      '<div class="ghostbox small" style="margin-top:6px"><b>'+esc(t("ext_month"))+':</b> <span class="mono">'+money(g.score)+'</span></div></div>' +
+  '</div><div class="row"><button type="button" class="primary" id="go">'+esc(t("play"))+'</button><button type="button" id="go-lessons">'+esc(t("lessons"))+'</button>'+(SITE ? '' : '<button type="button" id="go-board">'+esc(t("board"))+'</button>')+'</div></section>' +
+  '<section class="grid2"><div class="panel"><h2>'+esc(t("how_h"))+'</h2><p>'+esc(t("how"))+'</p></div><div class="panel"><h2>'+esc(t("score_h"))+'</h2><p>'+esc(t("score"))+'</p></div></section>' +
+  '<section class="panel"><h2>'+esc(t("who_h"))+'</h2><p class="note" style="margin:0 0 10px">'+esc(t("who_note"))+'</p>'+whoHTML(true) +
+    '</section>' +
+  '<section class="ghostbox"><h3>'+esc(t("ghost_h"))+'</h3><p class="small">'+esc(t("ghost"))+'</p></section>';
+}
+function stepper(id, v, lo, hi){ return '<span class="step"><button type="button" data-st="'+id+':-1" aria-label="−"'+(v<=lo?' disabled':'')+'>−</button><span class="v" id="v-'+id+'">'+v+'</span><button type="button" data-st="'+id+':1" aria-label="+"'+(v>=hi?' disabled':'')+'>+</button></span>'; }
+function cardText(c){ var K = DATA.cards[c.kind]; if (!K) return {title: c.kind, text: ""}; var L = K[LANG]; return {title: L.title, text: L.text.split("{day2}").join(dayN(c.day + 1)).split("{day}").join(dayN(c.day))}; }
+function playHTML(){
+  var obs = draft.obs, tday = obs.day, rep = obs.yesterday, gh = ghost(), sc = G.score().score, gs = tday > 0 ? gh.daily[tday-1] : null;
+  var rejs = rejections(), h = "";
+  // шапка: счёт против Extella крупно, под ним месяц полосой
+  var you0 = tday ? sc : 0, ext0 = gs == null ? 0 : gs, dd = you0 - ext0;
+  var mg = 1000; hist.forEach(function(x){ mg = Math.max(mg, Math.abs(x[0] - x[1])); }); mg = Math.max(mg, Math.abs(dd));
+  var trk = ""; for (var ti = 0; ti < C.days; ti++) trk += '<i class="' + (ti === tday ? "now" : ti < hist.length ? (hist[ti][0] >= hist[ti][1] ? "win" : "lose") : "") + '"></i>';
+  h += '<section class="duel">' +
+    '<div><div class="k">'+esc(t("you"))+' · '+esc(t("sofar"))+'</div><div class="v">'+money(you0)+'</div></div>' +
+    '<div class="gap '+(dd > .5 ? "ok" : dd < -.5 ? "bad" : "mut")+'">'+esc(dd > .5 ? t("ahead") : dd < -.5 ? t("behind") : t("tie"))+(Math.abs(dd) > .5 ? ' '+money(Math.abs(dd)) : '')+'</div>' +
+    '<div class="r"><div class="k">'+esc(t("ext"))+' · '+esc(t("sofar"))+'</div><div class="v">'+money(ext0)+'</div></div>' +
+    '<div class="bar">'+(Math.abs(dd) > .5 ? '<i style="'+(dd > 0 ? 'left:50%;background:var(--ok)' : 'right:50%;background:var(--ghost)')+';width:'+(50 * Math.abs(dd) / mg).toFixed(1)+'%"></i>' : '')+'<b></b></div>' +
+    '<div class="track" aria-hidden="true">'+trk+'</div>' + (tday ? raceHTML(standings(tday, sc)) : "") + '</section>';
+  h += '<section class="statbar">' +
+    '<div class="stat"><div class="k">'+esc(t("evening"))+'</div><div class="v">'+dayN(tday)+' <span class="muted" style="font-size:13px">'+esc(t("of30"))+'</span></div></div>' +
+    '<div class="stat"><div class="k">'+esc(t("cash"))+'</div><div class="v">'+money(obs.cash)+'</div></div>' +
+    (obs.loan > 0 ? '<div class="stat"><div class="k">'+esc(t("loan"))+'</div><div class="v" style="color:var(--bad)">'+money(obs.loan)+'</div></div>' : '') +
+    '<div class="stat"><div class="k">'+esc(t("rep"))+'</div><div class="v">'+obs.reputation.toFixed(2)+(obs.grade==="B"?' <span class="pill bad">B</span>':'')+'</div></div>' +
+    '<div class="stat"><div class="k">'+esc(t("tomorrow"))+'</div><div class="v" style="font-size:15px">'+esc(T[LANG].wd[obs.forecast[0].wd])+' '+dayN(obs.forecast[0].day)+' · '+esc(T[LANG].wx[obs.forecast[0].weather])+'</div></div></section>';
+  // итог прошлого дня
+  if (lastDay) h += lastDay;
+  // окно: левая колонка на широком экране
+  h += '<div class="cols"><div class="colL">';
+  var mini = "";
+  if (rep) { mini = '<div class="mini">' + [[t("came"), num(rep.demand)], [t("served"), num(rep.served)], [t("queue"), num(rep.queue_guests), rep.queue_guests ? "var(--bad)" : null], [t("stockout"), num(rep.stockout_guests), rep.stockout_guests ? "var(--bad)" : null], [t("revenue"), money(rep.revenue)], [t("wages"), money(rep.wages)]]
+      .map(function(x){ return '<div><div class="k">'+esc(x[0])+'</div><div class="v"'+(x[2]?' style="color:'+x[2]+'"':'')+'>'+x[1]+'</div></div>'; }).join("") + '</div>' +
+      ((rep.milk_written_off_l || rep.croissant_written_off) ? '<p class="note" style="padding:0 12px 10px">'+esc(t("written"))+': '+num(rep.milk_written_off_l)+(LANG==="ru"?" л молока, ":" L milk, ")+rep.croissant_written_off+(LANG==="ru"?" круассанов":" croissants")+'</p>' : ''); }
+  h += '<section class="windowbox">' + drawWindow(rep, obs, dpView) + '<div class="windowbar"><span class="small"><b>'+esc(rep ? t("yday_h") + " " + dayN(rep.day) : t("first_h"))+'</b>' + (rep ? '' : ' · <span class="muted">'+esc(t("first"))+'</span>') + '</span>' +
+    (rep ? '<div class="row" style="gap:8px"><div class="seg" role="group">'+["morning","midday","evening_dp"].map(function(k,i){ return '<button type="button" data-dp="'+i+'" aria-pressed="'+(dpView===i)+'">'+esc(t(k))+'</button>'; }).join("")+'</div><button type="button" id="rp-play">'+esc(t("rp_play"))+'</button></div>' : '') + '</div>' + mini + '</section>';
+  if (rep) { var nd = rep.events.filter(function(e){ return e.indexOf("no_delivery_") === 0; }).map(function(e){ return e.slice(12); });
+    if (nd.length) h += '<div class="warnmsg">'+esc(t("no_deliv_h"))+': '+nd.map(function(sx){ return esc(T[LANG].sup[sx] || sx); }).join(", ")+'. '+esc(t("no_deliv_t"))+'</div>'; }
+  // решения вечера: правая колонка
+  h += '</div><div>';
+  var _c0 = h.length;
+  h += obs.cards.length ? '<div class="stack">' + obs.cards.map(function(c){ var tx = cardText(c), K = DATA.cards[c.kind];
+    return '<div class="card"><div class="row" style="justify-content:space-between"><h3>'+esc(tx.title)+'</h3>'+(c.decide_by_evening_of + 1 === obs.day ? '<span class="pill warn">'+esc(t("last_ev"))+'</span>' : '<span class="note">'+esc(t("decide_by"))+' '+dayN(c.decide_by_evening_of + 1)+'</span>')+'</div><p class="small">'+esc(tx.text)+'</p><div class="opts">' +
+      c.options.map(function(o){ var sel = draft.choices[c.id] === o; return '<button type="button" data-card="'+esc(c.id)+':'+o+'" aria-pressed="'+sel+'">'+esc(K.options[o][LANG])+'</button>'; }).join("") + '</div>' +
+      '<span class="note">'+(draft.choices[c.id] ? '' : esc(t("def"))+': '+esc(K.options[c.default][LANG]))+'</span>' + rejHTML(rejFor("choices." + c.id, rejs)) + '</div>'; }).join("") + '</div>' : '';
+  if (obs.cards.length) { var pend = obs.cards.filter(function(c){ return !draft.choices[c.id]; }).length;
+    h = h.slice(0, _c0) + ecard("ec-cards", t("cards_h"), esc(pend ? t("ec_pend").replace("{n}", pend) : t("ec_answered")), pend ? "warn" : "ok", pend ? t("ec_wait") : t("ec_ok"),
+      (ecOpen.cards == null ? pend > 0 : ecOpen.cards) || rejFor("choices", rejs).length > 0, h.slice(_c0)); }
+  else h += '<p class="note">'+esc(t("no_cards"))+'</p>';
+  // прогноз
+  h += '<section class="panel"><div class="row" style="justify-content:space-between"><h2>'+esc(t("fc_h"))+'</h2><span class="note">'+esc(t("fc_note"))+'</span></div><div class="fc">' +
+    obs.forecast.map(function(f, i){ var g = f.guests.reduce(function(a,b){return a+b;},0), lo = f.low.reduce(function(a,b){return a+b;},0), hi = f.high.reduce(function(a,b){return a+b;},0);
+      return '<div class="d'+(i===0?' tom':'')+'"><div class="hd small"><b>'+(i===0?esc(t("tomorrow"))+', ':'')+esc(T[LANG].wd[f.wd])+' '+dayN(f.day)+'</b> · '+esc(T[LANG].wx[f.weather])+'</div><div class="n mono">'+g+'</div><div class="rg note mono">'+lo+'–'+hi+' <span class="by">('+f.guests.join(' · ')+')</span></div>' +
+        ((f.notes.length || f.closed_if_chosen) ? '<div class="nt">'+(f.notes.length ? '<span class="note">'+f.notes.map(function(n){ return esc(T[LANG].notes[n]||n); }).join(", ")+'</span>' : '')+(f.closed_if_chosen ? '<span class="pill bad">'+esc(t("closed"))+'</span>' : '')+'</div>' : '') + '</div>'; }).join("") + '</div></section>';
+  // заказы
+  var _o0 = h.length;
+  h += '<p class="note" style="margin:0">'+esc(t("lv_note"))+'</p>';
+  var SUPN = {dairy: LANG==="ru"?"Молочный поставщик":"Dairy", roaster: LANG==="ru"?"Обжарщик":"Roaster", bakery: LANG==="ru"?"Пекарня":"Bakery"};
+  Object.keys(C.suppliers).forEach(function(s){ var S = obs.suppliers[s];
+    h += '<div class="supp'+(S.delivers_tomorrow ? '' : ' off')+'"><div><b>'+esc(SUPN[s])+'</b> <span class="note">'+(S.delivers_tomorrow ? (s==="bakery" ? (LANG==="ru"?"каждый день, круассаны не хранятся":"daily; croissants do not keep") : esc(t("covers"))+': '+coverDays(obs, s)+' '+esc(t("days"))) : esc(t("no_deliv"))+' '+S.days.map(function(x){ return T[LANG].wd[x]; }).join(", "))+(S.min_order?' · min $'+S.min_order:'')+(S.min_qty?' · min '+S.min_qty:'')+'</span></div>';
+    if (S.delivers_tomorrow) {
+      h += '<div class="seg" role="group" aria-label="'+esc(t("level"))+'">'+["lean","normal","safe"].map(function(lv){ return '<button type="button" data-lv="'+s+':'+lv+'" aria-pressed="'+(levels[s]===lv)+'">'+esc(t(lv))+'</button>'; }).join("")+'</div>' +
+        '<div class="qtys">';
+      Object.keys(C.suppliers[s].items).forEach(function(it){ var v = draft.qty[s][it] || 0, price = it === "milk" ? S.prices.milk : C.suppliers[s].items[it].price;
+        h += '<label for="q-'+s+'-'+it+'">'+esc(t(it))+' <input type="number" min="0" step="1" id="q-'+s+'-'+it+'" data-q="'+s+':'+it+'" value="'+v+'"></label><span class="note mono">'+money2(price)+'</span>' +
+          '<span class="nl" data-nl="'+s+':'+it+'">'+needHTML(obs, s, it, levels[s], v)+'</span>'; });
+      var tot = 0; Object.keys(draft.qty[s]).forEach(function(it){ tot += (draft.qty[s][it]||0) * (it === "milk" ? S.prices.milk : C.suppliers[s].items[it].price); });
+      h += '<span class="note">= <span class="mono" data-sub="'+s+'">'+money2(tot)+'</span></span></div>';
+    } else h += '<span></span>';
+    h += '<div style="grid-column:1/-1">'+rejHTML(rejFor("orders." + s, rejs))+'</div></div>'; });
+  var stk = obs.stock;
+  h += '<p class="note">'+esc(t("stock_now"))+': '+num(stk.milk_l.reduce(function(a,x){return a+x[0];},0))+(LANG==="ru"?" л молока (годно до дня ":" L milk (good until day ")+(stk.milk_l.length?dayN(Math.min.apply(null, stk.milk_l.map(function(x){return x[1];}))):"—")+'), '+num(stk.beans_lb)+(LANG==="ru"?" фунтов зерна, ":" lb beans, ")+num(stk.cups)+(LANG==="ru"?" стаканов":" cups")+'</p>';
+  var oS = ordStat(obs);
+  h = h.slice(0, _o0) + ecard("ec-orders", t("orders_h"), '<span class="mono" style="color:var(--fg);font-weight:600" data-ordtot>'+money2(orderTotal())+'</span> \u00b7 <span data-ordtxt>'+esc(oS.txt)+'</span>',
+    oS.cls, oS.pill, ecOpen.orders || rejFor("orders", rejs).length > 0, h.slice(_o0));
+  // смены
+  var hb = G.headcount("barista", 0, true) + draft.hire - draft.fire, dph = C.drinks_per_barista_hour + (G.has("machine2", obs.day) ? C.investments.machine2.extra_drinks_per_hour : 0);
+  var hw = draft.sched.reduce(function(a,b){return a+b;},0) * 4 * 7;
+  var _s0 = h.length;
+  h += '<p class="note" style="margin:0">'+esc(t("staff_note"))+'</p><div class="dp3"><span></span>' +
+    ["morning","midday","evening_dp"].map(function(k){ return '<span class="eyebrow">'+esc(t(k))+'</span>'; }).join("") +
+    '<span class="small">'+esc(t("baristas"))+'</span>' + [0,1,2].map(function(i){ return stepper("b"+i, draft.sched[i], 0, 6); }).join("") +
+    '<span class="small">'+esc(t("lead"))+'</span>' + [0,1,2].map(function(i){ return i === 0 ? '<span class="mono">1</span>' : stepper("l"+i, draft.leads[i], 0, 1); }).join("") +
+    '<span class="small">'+esc(t("fits"))+' / '+esc(t("fcst"))+'</span>' + [0,1,2].map(function(i){ var cap = Math.round((draft.sched[i] + C.lead_capacity_share*draft.leads[i]) * dph * 4), f = obs.forecast[0];
+      var col = cap < f.guests[i] ? "var(--bad)" : cap < f.high[i] ? "var(--warn)" : "var(--ok)", mx = Math.max(cap, f.high[i], 1);
+      return '<span class="cell"><span class="mono small" style="color:'+col+'">'+cap+' / '+f.guests[i]+'</span><span class="capbar"><i style="width:'+(100*cap/mx).toFixed(1)+'%;background:'+col+'"></i><u style="left:'+(100*f.guests[i]/mx).toFixed(1)+'%"></u></span></span>'; }).join("") + '</div>' +
+    '<div class="row"><span class="small">'+esc(t("hire"))+'</span>'+stepper("hire", draft.hire, 0, 3)+'<span class="small" style="margin-left:10px">'+esc(t("fire"))+'</span>'+stepper("fire", draft.fire, 0, Math.max(0, G.headcount("barista",0,true)))+'<span class="note">'+esc(t("headcount"))+': '+hb+'</span></div>' +
+    '<p class="note">'+esc(t("legend"))+'</p><p class="'+(hw > G.headcount("barista", obs.day)*40 ? 'warnmsg' : 'note')+'">'+esc(t("hours_week"))+': <span class="mono">'+hw+'</span>, '+esc(t("hours_cap"))+': <span class="mono">'+(G.headcount("barista", obs.day)*40)+'</span>. '+esc(t("overtime"))+'.</p>' +
+    rejHTML(rejFor("schedule", rejs).concat(rejFor("hire", rejs), rejFor("fire", rejs)));
+  var sS = staffStat(obs, dph);
+  h = h.slice(0, _s0) + ecard("ec-staff", t("staff_h"), esc(sS.txt), sS.cls, sS.pill,
+    ecOpen.staff || rejFor("schedule", rejs).concat(rejFor("hire", rejs), rejFor("fire", rejs)).length > 0, h.slice(_s0));
+  // цены, скидка, вложения
+  var openMore = moreOpen || rejFor("prices", rejs).length || rejFor("discounts", rejs).length || rejFor("buy", rejs).length || draft.buy.length;
+  h += ledgerHTML(logOpen);
+  h += '<section class="panel"><details'+(openMore?' open':'')+' id="more"><summary>'+esc(t("more_h"))+' <span class="note" style="font-weight:400">· '+esc(LANG==="ru"?"латте":"latte")+' '+money2(draft.prices.latte)+' · '+esc(LANG==="ru"?"скидка":"discount")+' '+(draft.disc ? draft.disc+" % "+draft.dparts.slice().sort().map(function(dp){ return t(["morning","midday","evening_dp"][dp]); }).join(", ") : esc(t("none")))+'</span></summary><div class="stack" style="margin-top:10px"><div class="tbl"><table><thead><tr><th></th><th class="n">'+esc(t("price"))+'</th><th class="n">'+esc(t("base"))+' / '+esc(t("cost"))+'</th></tr></thead><tbody>' +
+    ["latte","cold_brew","drip","tea","croissant"].map(function(k){ var NM = LANG==="ru"?{latte:"латте",cold_brew:"колд-брю",drip:"фильтр",tea:"чай",croissant:"круассан"}:{latte:"latte",cold_brew:"cold brew",drip:"drip",tea:"tea",croissant:"croissant"};
+      return '<tr><td>'+NM[k]+'</td><td class="n"><span class="step"><button type="button" data-pr="'+k+':-1">−</button><span class="v" style="min-width:3.4em">'+money2(draft.prices[k])+'</span><button type="button" data-pr="'+k+':1">+</button></span></td><td class="n mono small">'+money2(C.menu[k].price)+' / '+money2(obs.costs[k])+'</td></tr>'; }).join("") +
+    '</tbody></table></div>' + rejHTML(rejFor("prices", rejs)) +
+    '<div class="row"><span class="small">'+esc(t("ev_disc"))+'</span><div class="seg" role="group">'+[0,10,20].map(function(p){ return '<button type="button" data-disc="'+p+'" aria-pressed="'+(draft.disc===p)+'">'+(p?p+" %":esc(t("none")))+'</button>'; }).join("")+'</div>' +
+      (draft.disc ? '<span class="small muted">'+esc(t("disc_when"))+'</span><div class="seg" role="group">'+[0,1,2].map(function(dp){ return '<button type="button" data-dp2="'+dp+'" aria-pressed="'+(draft.dparts.indexOf(dp)>=0)+'">'+esc(t(["morning","midday","evening_dp"][dp]))+'</button>'; }).join("")+'</div>' : '') + '</div>' +
+    '<p class="note" style="margin:0">'+esc(t("disc_note"))+'</p>' + rejHTML(rejFor("discounts", rejs)) +
+    '<h3>'+esc(t("inv_h"))+'</h3>' + ["machine2","marketing"].map(function(k){ var I = obs.investments[k], b = I.bought_from_day, sel = draft.buy.indexOf(k) >= 0, avail = obs.cash - orderTotal() - draft.buy.filter(function(x){ return x !== k; }).reduce(function(a,x){ return a + obs.investments[x].cost; }, 0);
+      return '<div class="row" style="justify-content:space-between;align-items:flex-start"><div style="min-width:0;flex:1 1 240px"><b>'+esc(t(k))+'</b> <span class="mono">$'+num(I.cost)+'</span><br><span class="note">'+esc(t(k+"_d"))+'</span></div>' +
+        (b != null ? '<span class="pill ok">'+esc(t("bought"))+', '+esc(t("from_day"))+' '+dayN(b)+'</span>' : (!sel && I.cost > avail) ? '<span class="note">'+esc(t("no_cash"))+' <span class="mono">'+money(Math.max(0, avail))+'</span></span>' : '<button type="button" data-buy="'+k+'" aria-pressed="'+sel+'">'+esc(sel ? t("buy_on") : t("buy"))+'</button>') + '</div>'; }).join("") + rejHTML(rejFor("buy", rejs)) +
+    '</div></details></section>';
+  // закрыть вечер
+  h += '</div></div>';
+  var dec0 = buildDec(), nCh = obs.cards.filter(function(c){ return draft.choices[c.id]; }).length;
+  var summ = esc(t("sum_order"))+' <span class="mono">'+money2(orderTotal())+'</span> · '+esc(dec0.schedule || dec0.hire || dec0.fire ? t("sum_staff_new") : t("sum_staff_same"))+(obs.cards.length ? ' · '+esc(t("sum_cards"))+' '+nCh+' / '+obs.cards.length : '')+(draft.buy.length ? ' · '+esc(t("buy_on"))+': '+draft.buy.map(function(k){ return esc(t(k)); }).join(", ") : '');
+  h += '<div class="closebar"><div style="min-width:0;flex:1 1 260px" class="stack"><span class="small">'+summ+'</span>'+(rejs.length ? '<div class="rej"><b>'+esc(t("check_bad"))+'</b> '+rejs.length+' <button type="button" class="link" id="show-rej">'+esc(t("show"))+'</button></div>' : '<span class="note">'+esc(t("check_ok"))+'</span>')+'</div><button type="button" class="primary" id="close-ev">'+esc(t("close_n"))+'</button></div>';
+  return h;
+}
+function closeEvening(){
+  var dec = buildDec(), tday = G.t, T0 = Object.assign({}, G.totals);
+  G.decide(dec); DLOG.push([tday, dec]);
+  var rep = G.step(), sc = G.score().score, gh = ghost(), gs = gh.daily[tday], d = sc - gs;
+  hist.push([sc, gs]);
+  lastDeliv = {day: rep.day, ok: Object.keys(dec.orders || {}).filter(function(s){ return rep.events.indexOf("no_delivery_" + s) < 0; }),
+    fail: Object.keys(dec.orders || {}).filter(function(s){ return rep.events.indexOf("no_delivery_" + s) >= 0; })};
+  (function(){ var T1 = G.totals, dl = function(k){ return (T1[k] || 0) - (T0[k] || 0); };
+    var rev = dl("revenue"), buy = dl("purchases") - dl("refunds"), wag = dl("wages") + dl("agency"),
+        oth = dl("rent") + dl("fixed") + dl("card_fees") + dl("event_costs") + dl("investments");
+    ledger.push({day: tday, guests: rep.served, rev: rev, buy: buy, wag: wag, oth: oth,
+      pro: rev - buy - wag - oth, cash: rep.cash, loan: G.loan, score: sc, ext: gs}); })();
+  var why = gh["why_" + LANG][tday], pl = gh.plan[tday] || {};
+  var plTxt = []; if (pl.stock) plTxt.push((LANG==="ru"?"запас ":"stock ")+t(pl.stock)); if (pl.staff) plTxt.push((LANG==="ru"?"люди ":"staff ")+t(pl.staff)); if (pl.buy && pl.buy.length) plTxt.push((LANG==="ru"?"купить ":"buy ")+pl.buy.map(function(k){ return t(k); }).join(", "));
+  if (pl.choices) Object.keys(pl.choices).forEach(function(id){ var kind = id.replace(/_\d+$/, ""), K = DATA.cards[kind]; if (K && K.options[pl.choices[id]]) plTxt.push(K[LANG].title.toLowerCase().slice(0, 40) + ": " + K.options[pl.choices[id]][LANG]); });
+  var prevD = hist.length > 1 ? hist[hist.length-2][0] - hist[hist.length-2][1] : 0, dDay = d - prevD;
+  lastDay = '<section class="panel fade dayres" style="border-left-color:'+(dDay >= 0 ? 'var(--ok)' : 'var(--ghost)')+'"><div class="row" style="justify-content:space-between"><h2>'+esc(t("day_res"))+' '+dayN(tday)+'</h2><span class="pill '+(dDay >= 0 ? 'ok' : 'bad')+'">'+esc(LANG==="ru" ? "за день" : "on the day")+' '+money(dDay, true)+'</span></div>' +
+    (why || plTxt.length ? '<div class="ghostbox small"><b>'+esc(t("ext_why"))+':</b> '+esc(why)+(/(день|дня|дне|днём|day)\s*\d/i.test(why) ? ' <span class="note">'+esc(t("zero"))+'</span>' : '')+(plTxt.length ? '<br><span class="muted">'+esc(t("ext_plan"))+': '+esc(plTxt.join("; "))+'</span>' : '')+'</div>' : '') + '</section>';
+  dayCtx = {rep: rep, tday: tday, rows: standings(tday + 1, sc), seen: false,
+    prev: tday ? standings(tday, hist.length > 1 ? hist[hist.length - 2][0] : 0) : null};
+  lastDay = null; saveState = ""; ecOpen.cards = null;
+  if (G.t < C.days) { draft = newDraft(); dpView = 0; }
+  screen = "day"; render(); window.scrollTo(0, 0);
+}
+function chartSVG(lines){
+  var W = 640, H = 240, L = 58, R = 12, Tp = 12, B = 30, all = [], base = [];
+  lines.forEach(function(l){ all = all.concat(l.data); if (l.base) base = base.concat(l.data); });
+  // линия, которая уходит втрое ниже остальных, не задаёт масштаб: иначе остальные
+  // слипаются в одну черту. Такая линия упирается в нижний край и подписана числом.
+  var loAll = Math.min.apply(null, all.concat([0])), loBase = base.length ? Math.min.apply(null, base.concat([0])) : loAll;
+  var clip = base.length && loAll < loBase * 3 - 1;
+  if (clip) { all = base.concat(lines.filter(function(l){ return !l.base && Math.min.apply(null, l.data) >= loBase * 3 - 1; }).reduce(function(a, l){ return a.concat(l.data); }, [])); }
+  var lo = Math.min.apply(null, all.concat([0])), hi = Math.max.apply(null, all.concat([0])), step = niceStep((hi - lo) / 4);
+  lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+  var x = function(i){ return L + (W - L - R) * i / 29; }, y = function(v){ return Tp + (H - Tp - B) * (hi - v) / (hi - lo); };
+  var s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(t("chart_h"))+'">';
+  for (var v = lo; v <= hi + 1e-9; v += step) s += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--mono)">'+money(v)+'</text>';
+  s += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="var(--muted)" stroke-width="1"/>';
+  [1,10,20,30].forEach(function(d){ s += '<text x="'+x(d-1)+'" y="'+(H-10)+'" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--mono)">'+d+'</text>'; });
+  var yc = function(v){ return Math.max(Tp, Math.min(H - B, y(v))); };
+  lines.forEach(function(l){ var out = Math.min.apply(null, l.data) < lo - 1e-9;
+    s += '<polyline fill="none" stroke="'+l.color+'" stroke-width="'+(l.w||2)+'"'+(l.dash || out ? ' stroke-dasharray="4 4"' : '')+' points="'+l.data.map(function(v,i){ return x(i).toFixed(1)+','+yc(v).toFixed(1); }).join(" ")+'"/>' +
+      '<circle cx="'+x(l.data.length-1)+'" cy="'+yc(l.data[l.data.length-1])+'" r="3.5" fill="'+l.color+'"/>' +
+      (out ? '<text x="'+(x(l.data.length-1)-6)+'" y="'+(yc(l.data[l.data.length-1])-7)+'" text-anchor="end" font-size="11" font-family="var(--mono)" fill="'+l.color+'">'+money(l.data[l.data.length-1])+'</text>' : ''); });
+  return s + '</svg>';
+}
+function niceStep(r){ var p = Math.pow(10, Math.floor(Math.log10(Math.max(1, r)))), m = r / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+function endHTML(){
+  var sc = G.score(), gh = ghost();
+  var daily = []; // счёт по дням игрока: пересчёт тем же симулятором по журналу решений
+  var g2 = new S.Game(DATA.seed, pick.st, pick.mo, pick.sc, C), bd = {}; DLOG.forEach(function(x){ (bd[x[0]] = bd[x[0]] || []).push(x[1]); });
+  while (g2.t < C.days) { g2.observe(); (bd[g2.t] || []).forEach(function(d){ g2.decide(d); }); g2.step(); daily.push(g2.score().score); }
+  var d = sc.score - gh.score, verdict = Math.abs(d) < 0.5 ? t("tie") : d > 0 ? t("won") : t("lost");
+  var parts = Object.keys(sc.parts).map(function(k){ return {k: k, me: sc.parts[k], ex: gh.parts[k], d: sc.parts[k] - gh.parts[k]}; });
+  var top = parts.slice().sort(function(a,b){ return Math.abs(b.d) - Math.abs(a.d); }).slice(0, 3).map(function(p){ return p.k; });
+  var mgE = Math.max(1000, Math.abs(d));
+  var fin = standings(C.days, sc.score), myPl = fin.filter(function(r){ return r.me; })[0].place;
+  var gSum = ledger.reduce(function(a, x){ return a + x.guests; }, 0), lost = sc.counts.queue_guests + sc.counts.stockout_guests;
+  var rest = ledger.slice(1), bestD = rest.reduce(function(a, x){ return !a || x.pro > a.pro ? x : a; }, null), worstD = rest.reduce(function(a, x){ return !a || x.pro < a.pro ? x : a; }, null);
+  var h = '<section class="panel verdict fade"><span class="eyebrow">'+esc(t("end_h"))+' \u00b7 '+esc(t("sc_"+pick.sc))+' \u00b7 '+esc(t("st_"+pick.st))+' \u00b7 '+esc(t("mo_"+pick.mo))+'</span>' +
+    '<h1 class="big" style="color:'+(myPl === 1 ? 'var(--ok)' : 'var(--fg)')+'">'+esc(myPl === 1 ? t("end_win") : t("end_place").replace("{p}", myPl).replace("{n}", fin.length))+'</h1>' +
+    '<div class="windowbox" style="margin-top:4px">'+podiumSVG(fin)+'</div>' +
+    '<p style="margin:10px 0 0;font-weight:700;color:'+(d>.5?'var(--ok)':d<-.5?'var(--ghost)':'var(--fg)')+'">'+esc(verdict)+(Math.abs(d)>=.5?' '+esc(LANG==="ru"?"на":"by")+' '+money(Math.abs(d)):'')+'</p>' +
+    (daily[daily.length-1] !== sc.score ? '<div class="rej">'+esc(t("mismatch"))+'</div>' : '') + '</section>';
+  h += '<section class="statbar">' + [[t("m_guests"), num(gSum)], [t("m_lost"), num(lost), lost ? "var(--bad)" : null],
+      [t("m_best"), bestD ? money(bestD.pro, true) + ' <span class="muted" style="font-size:12px">' + esc(t("day_res").toLowerCase()) + " " + dayN(bestD.day) + '</span>' : "\u2014"],
+      [t("m_worst"), worstD ? money(worstD.pro, true) + ' <span class="muted" style="font-size:12px">' + esc(t("day_res").toLowerCase()) + " " + dayN(worstD.day) + '</span>' : "\u2014"],
+      [t("rep"), G.rep.toFixed(2)]].map(function(x){ return '<div class="stat"><div class="k">'+esc(x[0])+'</div><div class="v"'+(x[2] ? ' style="color:'+x[2]+'"' : '')+'>'+x[1]+'</div></div>'; }).join("") + '</section>';
+  var dd = hist.map(function(x, i2){ return {day: i2, v: (x[0] - x[1]) - (i2 ? hist[i2 - 1][0] - hist[i2 - 1][1] : 0)}; });
+  var kd = dd.slice().sort(function(a, b){ return a.v - b.v; }), keyD = kd.slice(0, 2).filter(function(x){ return x.v < -1; });
+  if (kd.length && kd[kd.length - 1].v > 1) keyD.push(kd[kd.length - 1]);
+  if (keyD.length) h += '<section class="panel"><h2>'+esc(t("kd_h"))+'</h2><p class="note" style="margin:0 0 10px">'+esc(t("kd_note"))+'</p><div class="says">' + keyD.map(function(x){ var w = gh["why_" + LANG][x.day] || "";
+      return '<div class="s" style="border-left-color:'+(x.v < 0 ? 'var(--ghost)' : 'var(--ok)')+'"><b>'+esc(t("day_res"))+' '+dayN(x.day)+': '+esc(x.v < 0 ? t("kd_lost") : t("kd_won"))+' '+money(Math.abs(x.v))+'</b>' +
+        (w ? '<span>'+esc(t("kd_she"))+' '+esc(w)+'</span>' : '')+'</div>'; }).join("") + '</div></section>';
+  h += '<section class="panel chart"><div class="row" style="justify-content:space-between"><h2>'+esc(t("chart_h"))+'</h2><span class="note">'+esc(t("chart_note"))+'</span></div>' +
+    chartSVG(modelsHere().map(function(k){ return {data: rivalData(k).daily, color: MCOLOR[k] || "var(--muted)", w: 1.8, base: k === "extella"}; }).concat([{data: daily, color: "var(--awning)", w: 2.6, base: true}])) +
+    '<div class="row small"><span style="color:var(--awning)">● '+esc(t("you"))+'</span>' +
+      modelsHere().map(function(k){ return '<span style="color:'+(MCOLOR[k] || "var(--muted)")+'">● '+esc(rivalName(k))+'</span>'; }).join("") + '</div></section>';
+  var mxP = parts.reduce(function(a, p){ return Math.max(a, Math.abs(p.d)); }, 1);
+  h += ledgerHTML(true);
+  h += '<section class="panel"><h2>'+esc(t("stand_h"))+'</h2><p class="note" style="margin:0 0 10px">'+esc(t("place_of").replace("{p}", myPl).replace("{n}", fin.length))+'</p>' +
+    '<div class="tbl"><table><thead><tr><th>#</th><th>'+esc(t("who_col"))+'</th><th class="n">'+esc(t("month_col"))+'</th><th class="n">'+esc(t("vs_you"))+'</th></tr></thead><tbody>' +
+    fin.map(function(r){ var dd = r.score - sc.score;
+      return '<tr'+(r.me ? ' style="font-weight:700"' : '')+'><td>'+r.place+'</td><td>'+esc(r.name)+'<div class="note" style="font-weight:400">'+esc(r.me ? t("r_me_d") : t("r_" + r.k + "_d"))+'</div></td><td class="n mono">'+money(r.score)+'</td>' +
+        '<td class="n mono" style="color:'+(r.me ? 'var(--muted)' : dd > .5 ? 'var(--bad)' : dd < -.5 ? 'var(--ok)' : 'var(--muted)')+'">'+(r.me ? '—' : money(dd, true))+'</td></tr>'; }).join("") +
+    '</tbody></table></div></section>';
+  h += '<section class="panel"><h2>'+esc(t("parts_h"))+'</h2><div class="tbl"><table><thead><tr><th>'+esc(t("part"))+'</th><th class="n">'+esc(t("you"))+'</th><th class="n">Extella</th><th class="n">'+esc(t("diff"))+'</th><th></th></tr></thead><tbody>' +
+    parts.map(function(p){ var hl = top.indexOf(p.k) >= 0 && Math.abs(p.d) >= 1, col = p.d>0.5?'var(--ok)':p.d<-0.5?'var(--bad)':'var(--muted)';
+      return '<tr'+(hl?' style="font-weight:700"':'')+'><td>'+esc(t("p_"+p.k))+'</td><td class="n mono">'+money(p.me)+'</td><td class="n mono">'+money(p.ex)+'</td><td class="n mono" style="color:'+col+'">'+money(p.d, true)+'</td>' +
+        '<td><span class="dbar"><b></b>'+(Math.abs(p.d) > 0.5 ? '<i style="'+(p.d > 0 ? 'left:50%' : 'right:50%')+';background:'+col+';width:'+(50*Math.abs(p.d)/mxP).toFixed(1)+'%"></i>' : '')+'</span></td></tr>'; }).join("") + '</tbody></table></div></section>';
+  h += '<section class="row"><button type="button" id="save" class="primary" hidden>'+esc(t("save"))+'</button><span id="savemsg" class="small">'+esc(saveState)+'</span><button type="button" id="again" class="primary">'+esc(t("again"))+'</button><button type="button" id="other">'+esc(t("other"))+'</button>'+(SITE ? '' : '<button type="button" id="go-board">'+esc(t("board"))+'</button>')+'</section>'+(SITE ? '' : '<p class="note">'+esc(t("verify"))+'</p>');
+  setTimeout(offerSave, 0);
+  return h;
+}
+
+/* ---------- уроки ---------- */
+var LS = DATA.lessons.settings, lessonState = {};
+function lessonGame(log){ var g = new S.Game(LS.seed, LS.street, LS.money, LS.scenario, C); log.forEach(function(x){ g.observe(); g.decide(x[1]); g.step(); }); return g; }
+function lessonHTML(){
+  var U = LANG === "ru", h = '<section class="stack"><span class="eyebrow">'+esc(t("lessons_h"))+' · '+(lessonN+1)+' / 3</span>';
+  if (lessonN === 0) {
+    h += '<h1>'+(U?"Заказ":"Ordering")+'</h1><p>'+(U?"Торговый район, спокойный октябрь, вечер перед днём 6. Завтра вторник. Закажи молоко на завтра.":"Shopping district, calm October, the evening before day 6. Tomorrow is Tuesday. Order milk for tomorrow.")+'</p>' +
+      '<div class="panel"><div class="row"><label for="l1q">'+esc(t("milk"))+'</label><input type="number" id="l1q" min="0" step="1" value="40"><button type="button" class="primary" id="l1go">'+(U?"Заказать на вторник":"Order for Tuesday")+'</button></div><div id="l1out"></div></div>';
+  } else if (lessonN === 1) {
+    h += '<h1>'+(U?"Смена":"Shifts")+'</h1><p>'+(U?"Первый день, четверг. Утром (7–11) приходит больше всего гостей. Один бариста делает 12 напитков в час, старший вполовину меньше. Выбери, сколько бариста поставить утром, и посмотри, что будет.":"Day one, a Thursday. The morning (7 to 11) brings the most guests. A barista makes 12 drinks an hour, the lead half that. Pick how many baristas go on in the morning and see what happens.")+'</p>' +
+      '<div class="panel"><div class="seg" role="group">'+[1,2,3,4].map(function(n){ return '<button type="button" data-l2="'+n+'" aria-pressed="'+(lessonState.l2===n)+'">'+n+'</button>'; }).join("")+'</div><div id="l2out"></div></div>';
+  } else {
+    var D = DATA.lessons;
+    h += '<h1>'+(U?"Карточка события":"An event card")+'</h1><p>'+(U?"Вечер перед днём "+(D.card_t+1)+". Завтра можно сделать генеральную уборку, послезавтра санитарная проверка. Реши.":"The evening before day "+(D.card_t+1)+". Tomorrow you can do a deep clean; the inspection is the day after. Decide.")+'</p>' +
+      '<div class="card"><h3>'+esc(DATA.cards.inspection[LANG].title)+'</h3><p class="small">'+esc(DATA.cards.inspection[LANG].text.split("{day}").join(D.card_t + 2))+'</p><div class="opts">' +
+      ["clean","none"].map(function(o){ return '<button type="button" data-l3="'+o+'" aria-pressed="'+(lessonState.l3===o)+'">'+esc(DATA.cards.inspection.options[o][LANG])+'</button>'; }).join("") + '</div></div><div id="l3out"></div>';
+  }
+  h += '<div class="row">'+(lessonN < 2 ? '<button type="button" id="l-next">'+esc(t("l_next"))+'</button>' : '')+'<button type="button" class="primary" id="l-play">'+esc(t("l_done"))+'</button></div></section>';
+  return h;
+}
+function lessonAfter(){
+  var U = LANG === "ru";
+  if (lessonN === 0 && lessonState.l1) $("l1out").innerHTML = lessonState.l1;
+  if (lessonN === 1 && lessonState.l2) {
+    var n = lessonState.l2, g = new S.Game(LS.seed, LS.street, LS.money, LS.scenario, C), sch = {}; for (var w = 0; w < 7; w++) sch[String(w)] = {barista: [n, 2, 1], lead: [1, 0, 0]};
+    g.observe(); g.decide({schedule: sch}); var r = g.step(), m = r.by_dp[0], q = m.demand - m.served, cost = n * 4 * C.staff.barista.wage * (1 + C.staff.burden);
+    $("l2out").innerHTML = '<div class="tbl"><table><tbody><tr><td>'+esc(t("came"))+'</td><td class="n mono">'+m.demand+'</td></tr><tr><td>'+(U?"вмещает смена":"the shift can serve")+'</td><td class="n mono">'+m.capacity+'</td></tr><tr><td>'+esc(t("served"))+'</td><td class="n mono">'+m.served+'</td></tr><tr><td>'+esc(t("queue"))+'</td><td class="n mono" style="color:'+(q?'var(--bad)':'var(--ok)')+'">'+q+'</td></tr><tr><td>'+(U?"зарплата бариста за утро":"barista wages for the morning")+'</td><td class="n mono">'+money(cost)+'</td></tr></tbody></table></div>' +
+      '<p class="small">'+(U?"Каждый ушедший из-за очереди стоит $5 штрафа и выручку с его заказа (в среднем около $6,80 вместе с круассаном). Лишний бариста на утро стоит ":"Each guest lost to the queue costs a $5 penalty plus their order (about $6.80 on average with a croissant). An extra morning barista costs ")+'<span class="mono">'+money(4 * C.staff.barista.wage * (1 + C.staff.burden))+'</span>'+(U?" с налогами. Посчитай, что дешевле.":" with payroll taxes. Work out which is cheaper.")+'</p>';
+  }
+  if (lessonN === 2 && lessonState.l3) {
+    var D = DATA.lessons, o = D.card_outcomes, mine = o[lessonState.l3], other = o[lessonState.l3 === "clean" ? "none" : "clean"];
+    $("l3out").innerHTML = '<div class="'+(mine.grade==="A"?'okmsg':'rej')+'">'+(U?"Оценка ":"Grade ")+'<b>'+mine.grade+'</b>. '+(U?"Месяц закончился бы на ":"The month would end at ")+'<span class="mono">'+money(mine.score)+'</span>, '+(U?"при другом выборе ":"with the other choice ")+'<span class="mono">'+money(other.score)+'</span> ('+(U?"оценка ":"grade ")+other.grade+').</div>' +
+      '<p class="small">'+(U?"Без уборки в этом мире выпала оценка B: минус 10 % гостей до конца месяца. Риск был один к трём, и заранее его никто не знал. В другом мире может выпасть A, но всегда B, если в день проверки очередь больше 10 %.":"Without the clean, this world gave a B: 10% fewer guests for the rest of the month. The risk was one in three and nobody knew the draw in advance. Another world could give an A, but a queue over 10% on inspection day always means a B.")+'</p>';
+  }
+}
+function lessonClick(e){
+  var U = LANG === "ru", b;
+  if (e.target.id === "l1go") {
+    var q = parseInt($("l1q").value, 10) || 0, g = lessonGame(DATA.lessons.order_log), r = g.check({orders: {dairy: {milk: q}}})[0];
+    var g4 = lessonGame(DATA.lessons.order_log.slice(0, 4)), r4 = g4.check({orders: {dairy: {milk: q}}})[0];
+    lessonState.l1 = (r.length ? rejHTML(r) : '<div class="okmsg">OK</div>') + '<p class="small">'+(U?"Поставщик молока возит по понедельникам, средам и пятницам. Заказ надо было сделать вечером раньше, перед днём 5, на понедельник. Тот же заказ в тот вечер:":"The dairy delivers Monday, Wednesday and Friday. The order had to go out one evening earlier, before day 5, for Monday. The same order that evening:")+'</p>' +
+      (r4.length ? rejHTML(r4) : '<div class="okmsg">'+(U?"Проверка пропускает: ":"The check accepts: ")+q+(U?" галлонов привезут в понедельник утром, молоко хранится 7 дней.":" gallons arrive Monday morning; milk keeps 7 days.")+'</div>') +
+      '<p class="note">'+(U?"Минимальный заказ молока $150, это 37 галлонов. Меньше Проверка тоже не пропустит.":"The dairy's minimum is $150, that is 37 gallons. The check refuses less.")+'</p>';
+    lessonAfter(); return true;
+  }
+  if ((b = e.target.closest("[data-l2]"))) { lessonState.l2 = +b.dataset.l2; render(); return true; }
+  if ((b = e.target.closest("[data-l3]"))) { lessonState.l3 = b.dataset.l3; render(); return true; }
+  return false;
+}
+
+/* ---------- таблица рекордов ---------- */
+var DB = null, USER = null, rows = null, dbState = "loading";
+setTimeout(function(){ if (dbState === "loading") { dbState = "off"; if (screen === "board") renderBoard(); } }, 10000);
+(async function(){
+  try { if (!window.claude || !window.claude.use) { dbState = "off"; return; } DB = await window.claude.use("db"); USER = await window.claude.use("user"); } catch (e) { DB = null; }
+  if (!DB) { dbState = "off"; if (screen === "board") renderBoard(); return; }
+  try { DB.collection("scores").onSnapshot(function(snap){ dbState = "on"; rows = snap.docs.map(function(d){ return {id: d.id, data: d.data()}; }); if (screen === "board") renderBoard(); }, function(){ dbState = "off"; if (screen === "board") renderBoard(); }); } catch (e) { dbState = "off"; }
+})();
+async function offerSave(){
+  if (!DB || !USER || screen !== "end") return;
+  var me; try { me = await USER.id(); } catch (e) { return; } if (!me) return;
+  var b = $("save"); if (!b) return; b.hidden = false;
+  var ag = $("again"); if (ag) ag.classList.remove("primary");
+  b.onclick = async function(){
+    b.disabled = true; var was = b.textContent; b.textContent = t("saving");
+    try {
+      var sc = G.score().score, gh = ghost().score, ref = DB.collection("scores").doc(me), cur = await ref.get(), data = cur.exists ? cur.data() : {best: {}};
+      var best = data.best || {}, prev = best[key()];
+      if (!prev || sc > prev.score) best[key()] = {score: sc, extella: gh, beat: sc > gh, seed: DATA.seed, at: new Date().toISOString(), log: DLOG};
+      await ref.set({best: best}); saveState = t("saved"); $("savemsg").textContent = saveState; b.hidden = true;
+    } catch (e) { $("savemsg").textContent = t("save_fail"); }
+    finally { b.disabled = false; b.textContent = was; }
+  };
+}
+async function renderBoard(){
+  var el = $("board"); if (!el) return;
+  var h = '<section class="stack"><h1>'+esc(t("board_h"))+'</h1>';
+  if (dbState === "loading") { el.innerHTML = h + '<p class="muted">'+esc(t("loading"))+'</p></section>'; return; }
+  if (!DB || dbState === "off" || !rows) { el.innerHTML = h + '<p class="muted">'+esc(t("board_off"))+'</p><button type="button" id="home2">'+esc(t("other"))+'</button></section>'; return; }
+  var prof = {}; try { if (rows.length && USER) prof = await USER.profiles(rows.map(function(r){ return r.id; })); } catch (e) {}
+  if (!rows.length) h += '<p class="muted">'+esc(t("board_empty"))+'</p>';
+  Object.keys(DATA.ghosts).forEach(function(k){
+    var list = rows.filter(function(r){ return r.data.best && r.data.best[k]; }).map(function(r){ return {id: r.id, b: r.data.best[k]}; }).sort(function(a,b){ return b.b.score - a.b.score; });
+    if (!list.length) return; var p = k.split("_");
+    h += '<h2>'+esc(t("sc_"+p[0]))+' · '+esc(t("st_"+p[1]))+' · '+esc(t("mo_"+p[2]))+'</h2><div class="tbl"><table><thead><tr><th>'+esc(t("name"))+'</th><th class="n">'+esc(t("best"))+'</th><th class="n">Extella</th><th>'+esc(t("vs"))+'</th></tr></thead><tbody>' +
+      list.map(function(r){ var nm = (prof[r.id] && prof[r.id].name) || t("someone"); return '<tr><td>'+esc(nm)+'</td><td class="n mono">'+money(r.b.score)+'</td><td class="n mono">'+money(r.b.extella)+'</td><td>'+(r.b.beat?'<span class="pill ok">'+esc(t("beat"))+'</span>':'<span class="muted">'+esc(t("nobeat"))+'</span>')+'</td></tr>'; }).join("") + '</tbody></table></div>';
+  });
+  el.innerHTML = h + '<p class="note">'+esc(t("verify"))+'</p><button type="button" id="home2">'+esc(t("other"))+'</button></section>';
+}
+
+/* ---------- события ---------- */
+function startGame(){ G = new S.Game(DATA.seed, pick.st, pick.mo, pick.sc, C); DLOG = []; hist = []; ledger = []; levels = {dairy:"normal", roaster:"normal", bakery:"normal"}; lastDay = null; dpView = 0; draft = newDraft(); screen = "play"; render(); window.scrollTo(0, 0); }
+document.addEventListener("click", function(e){
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.id === "snd") { SND.on = !SND.on; try { localStorage.setItem("cafe_snd", SND.on ? "1" : "0"); } catch (x0) {} if (SND.on) { sndInit(); sfx("click"); } else ambOff(); b.setAttribute("aria-pressed", SND.on); return; }
+  sndInit(); if (b.id !== "close-ev" && b.id !== "day-next") sfx("click");
+  if (b.id === "lang-ru" || b.id === "lang-en") { LANG = b.id.slice(5); try { localStorage.setItem(SITE ? "robot_lang" : "cafe_lang", LANG); } catch (x) {} render(); return; }
+  if (b.id === "th-light" || b.id === "th-dark") { var v = b.id.slice(3), cur = document.documentElement.getAttribute("data-theme"); if (cur === v) { document.documentElement.removeAttribute("data-theme"); v = ""; } else document.documentElement.setAttribute("data-theme", v); try { if (v) localStorage.setItem("cafe_theme", v); else localStorage.removeItem("cafe_theme"); } catch (x) {} render(); return; }
+  if (b.id === "home" || b.id === "other" || b.id === "home2") { screen = "start"; render(); return; }
+  if (b.id === "go" || b.id === "again") { startGame(); return; }
+  if (b.id === "go-lessons") { screen = "lesson"; lessonN = 0; lessonState = {}; render(); return; }
+  if (b.id === "go-board") { screen = "board"; render(); return; }
+  if (screen === "start" && b.dataset.pick) { var pp = b.dataset.pick.split(":"); pick[pp[0]] = pp[1]; try { localStorage.setItem("cafe_pick", JSON.stringify(pick)); } catch (x) {} render(); return; }
+  if (screen === "lesson") { if (b.id === "l-next") { lessonN++; render(); window.scrollTo(0,0); return; } if (b.id === "l-play") { startGame(); return; } lessonClick(e); return; }
+  if (screen === "day") {
+    if (b.id === "day-skip") { rpFinish(); return; }
+    if (b.id === "day-fast") { FAST = !FAST; try { localStorage.setItem("cafe_fast", FAST ? "1" : "0"); } catch (e2) {} b.setAttribute("aria-pressed", FAST); if (FAST) rpFinish(); return; }
+    if (b.id === "day-next") { screen = G.t >= C.days ? "end" : "play"; render(); window.scrollTo(0, 0);
+      if (screen === "end") sfx(standings(C.days, G.score().score)[0].me ? "win" : "end"); else sfx("click"); return; }
+    return;
+  }
+  if (screen !== "play") return;
+  if (b.id === "rp-play") { rpStart(); return; }
+  if (b.id === "rp-close") { var sy = window.scrollY; rpStop(); render(); window.scrollTo(0, sy); return; }
+  if (b.id === "close-ev") { closeEvening(); return; }
+  if (b.id === "show-rej") { var r0 = document.querySelector("#main section .rej"); if (r0) r0.scrollIntoView({block: "center"}); return; }
+  var y = window.scrollY;
+  if (b.dataset.dp) dpView = +b.dataset.dp;
+  else if (b.dataset.card) { var c = b.dataset.card, i = c.lastIndexOf(":"); draft.choices[c.slice(0, i)] = c.slice(i + 1); }
+  else if (b.dataset.lv) { var l = b.dataset.lv.split(":"); levels[l[0]] = l[1]; draft.qty[l[0]] = suggest(draft.obs, l[0], l[1]); }
+  else if (b.dataset.st) { var s = b.dataset.st.split(":"), k = s[0], dv = +s[1];
+    if (k[0] === "b" && k.length === 2) draft.sched[+k[1]] = Math.max(0, Math.min(6, draft.sched[+k[1]] + dv));
+    else if (k[0] === "l" && k.length === 2) draft.leads[+k[1]] = Math.max(0, Math.min(1, draft.leads[+k[1]] + dv));
+    else if (k === "hire") draft.hire = Math.max(0, Math.min(3, draft.hire + dv));
+    else if (k === "fire") draft.fire = Math.max(0, draft.fire + dv); }
+  else if (b.dataset.pr) { var q = b.dataset.pr.split(":"); draft.prices[q[0]] = Math.round((draft.prices[q[0]] + 0.25 * (+q[1])) * 100) / 100; }
+  else if (b.dataset.disc) { draft.disc = +b.dataset.disc; if (draft.disc && !draft.dparts.length) draft.dparts = [2]; }
+  else if (b.dataset.dp2) { var dpn = +b.dataset.dp2, ix2 = draft.dparts.indexOf(dpn);
+    if (ix2 >= 0) { if (draft.dparts.length > 1) draft.dparts.splice(ix2, 1); } else draft.dparts.push(dpn); }
+  else if (b.dataset.buy) { var kb = b.dataset.buy, ix = draft.buy.indexOf(kb); if (ix >= 0) draft.buy.splice(ix, 1); else draft.buy.push(kb); }
+  else return;
+  render(); window.scrollTo(0, y);
+});
+document.addEventListener("input", function(e){
+  var el = e.target; if (screen !== "play" || !el.dataset || !el.dataset.q || !draft) return;
+  var p0 = el.dataset.q.split(":"), v0 = parseInt(el.value, 10); draft.qty[p0[0]][p0[1]] = isNaN(v0) || v0 < 0 ? 0 : v0;
+  refreshNeeds();
+});
+document.addEventListener("change", function(e){
+  var el = e.target; if (screen !== "play" || !el.dataset || !el.dataset.q) return;
+  var p = el.dataset.q.split(":"), v = parseInt(el.value, 10); draft.qty[p[0]][p[1]] = isNaN(v) || v < 0 ? 0 : v;
+  var y = window.scrollY, id = el.id; render(); window.scrollTo(0, y); var n = $(id); if (n) n.focus();
+});
+document.addEventListener("toggle", function(e){ if (!e.target) return;
+  if (e.target.id === "more") moreOpen = e.target.open;
+  if (e.target.id === "daylog") logOpen = e.target.open;
+  if (e.target.id === "ec-cards") ecOpen.cards = e.target.open;
+  if (e.target.id === "ec-orders") ecOpen.orders = e.target.open;
+  if (e.target.id === "ec-staff") ecOpen.staff = e.target.open; }, true);
+render();
+})();
+</script>

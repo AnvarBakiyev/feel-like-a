@@ -1,0 +1,67 @@
+{
+ "id": "cafe",
+ "title": {
+  "en": "A Month at the Café",
+  "ru": "Месяц кофейни"
+ },
+ "summary": "Run a Brooklyn coffee shop for 30 days: order milk, beans and croissants, staff three shifts, set prices, answer event cards. Race Qwen 3.5 9B with Extella, Claude Opus 5 and Qwen 3.5 9B alone on the same month.",
+ "authors": [
+  "Extella"
+ ],
+ "license": {
+  "code": "MIT",
+  "data": "CC-BY-4.0"
+ },
+ "settings": {
+  "scenario": [
+   "calm",
+   "winter",
+   "competitor"
+  ],
+  "street": [
+   "quiet",
+   "district",
+   "corridor"
+  ],
+  "money": [
+   "low",
+   "mid",
+   "high"
+  ]
+ },
+ "open_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "tests": [
+  "python3 test_sim.py",
+  "python3 test_replay.py",
+  "python3 web/make_parity.py && node web/parity.mjs"
+ ],
+ "verify": [
+  "python3 verify.py"
+ ],
+ "contract": {
+  "settings": {
+   "street": "district",
+   "money": "mid",
+   "scenario": "winter"
+  },
+  "seeds": [
+   1,
+   2
+  ],
+  "driver": "drivers:careful",
+  "hidden_keys": [
+   "hidden",
+   "hidden_inv",
+   "noise",
+   "boost",
+   "recover",
+   "keep"
+  ]
+ }
+}

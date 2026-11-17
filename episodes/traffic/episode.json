@@ -1,0 +1,55 @@
+{
+ "id": "traffic",
+ "title": {
+  "en": "Rush hour",
+  "ru": "Час пик"
+ },
+ "summary": "A cartoon city stuck in traffic. Write the rules for its crossings in a tiny language called traffic (lights, main streets, stops, box junctions, ambulance first) and get everyone home. The handler checks the rules and runs rush hour car by car, the same in the browser and on an Extella device.",
+ "authors": [
+  "Extella"
+ ],
+ "license": {
+  "code": "MIT",
+  "data": "CC-BY-4.0"
+ },
+ "settings": {
+  "level": [
+   "district",
+   "ambulance",
+   "gridlock"
+  ]
+ },
+ "open_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "tests": [
+  "python3 test_sim.py"
+ ],
+ "verify": [
+  "python3 verify.py"
+ ],
+ "contract": {
+  "settings": {
+   "level": "district"
+  },
+  "seeds": [
+   41,
+   7
+  ],
+  "driver": "drivers:plan",
+  "hidden_keys": [
+   "seed",
+   "ducks",
+   "burst"
+  ]
+ }
+}

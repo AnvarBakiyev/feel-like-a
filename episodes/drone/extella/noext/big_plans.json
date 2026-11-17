@@ -1,0 +1,695 @@
+{
+ "almaty_s1": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "3": {
+    "max_kg": 10
+   },
+   "4": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "мороз даёт 79 % ёмкости: круг держится до 8,5 км, Медеу и Шымбулак недостижимы",
+  "why_en": "cold leaves 79% capacity: the round trip holds to 8.5 km, Medeu and Shymbulak are out of reach"
+ },
+ "almaty_s2": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "3": {
+    "skip": true
+   },
+   "4": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "минус девять: ёмкость 72 %, круг только до 7,6 км, горные точки отпадают",
+  "why_en": "minus nine: 72% capacity, round trip only to 7.6 km, the mountain points drop out"
+ },
+ "almaty_s3": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "тепло и штиль: круг до 10,3 км, доступны все точки кроме Медеу и Шымбулака",
+  "why_en": "warm and calm: round trip to 10.3 km, every point but Medeu and Shymbulak"
+ },
+ "almaty_s4": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 25,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "ветер 1,2 м/с: круг до 10,5 км даже с 25 кг",
+  "why_en": "wind 1.2 m/s: round trip to 10.5 km even with 25 kg"
+ },
+ "almaty_s5": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "жара 32 градуса, но батарея даёт 16 кВт: ограничивает дальность, не мощность",
+  "why_en": "32 degrees, yet the battery gives 16 kW: range limits, not power"
+ },
+ "almaty_s6": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "висение дороже на жаре: 8,9 кВт пустым, круг до 10,1 км",
+  "why_en": "hovering costs more in the heat: 8.9 kW empty, round trip to 10.1 km"
+ },
+ "almaty_s7": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "ветер 3,4 м/с с севера, круг до 10 км",
+  "why_en": "3.4 m/s from the north, round trip to 10 km"
+ },
+ "almaty_s8": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "3": {
+    "max_kg": 15
+   },
+   "4": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "западный ветер 6,6 м/с: на 30 м он слабее, круг до 9,6 км",
+  "why_en": "6.6 m/s from the west: weaker at 30 m, round trip to 9.6 km"
+ },
+ "almaty_s9": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 25,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "почти штиль, 13 градусов: круг до 9,9 км с 25 кг",
+  "why_en": "nearly calm, 13 degrees: round trip to 9.9 km with 25 kg"
+ },
+ "almaty_s10": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "3": {
+    "skip": true
+   },
+   "4": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   }
+  },
+  "why_ru": "мороз и ветер 3,5 м/с: ёмкость 80 %, круг до 8,4 км",
+  "why_en": "frost and 3.5 m/s: 80% capacity, round trip to 8.4 km"
+ },
+ "dubai_s1": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   }
+  },
+  "why_ru": "25 градусов, ветер 2,7 м/с: круг до 10,7 км, Марина и Аль-Карама дальше",
+  "why_en": "25 degrees, 2.7 m/s: round trip to 10.7 km, Marina and Al Karama are farther"
+ },
+ "dubai_s2": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "ветер 7,2 м/с с северо-запада, на 30 м слабее: круг до 9,2 км",
+  "why_en": "7.2 m/s from the north-west, weaker at 30 m: round trip to 9.2 km"
+ },
+ "dubai_s3": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "44 градуса: батарея даёт 14,1 кВт, с подъёмом это не больше 21 кг груза",
+  "why_en": "44 degrees: the battery gives 14.1 kW, with the climb that is at most 21 kg"
+ },
+ "dubai_s4": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 10,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "1": {
+    "skip": true
+   },
+   "2": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "ветер 13-15 м/с выше предела дрона: беру только ближние точки и лёгкий груз",
+  "why_en": "13-15 m/s is over the drone's limit: only the near points and light loads"
+ },
+ "dubai_s5": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "40 градусов, 15,9 кВт: мощность ещё хватает, круг до 9,7 км",
+  "why_en": "40 degrees, 15.9 kW: power still enough, round trip to 9.7 km"
+ },
+ "dubai_s6": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 18,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "44 градуса: 13,5 кВт на подъём дают предел груза 18 кг",
+  "why_en": "44 degrees: 13.5 kW on the climb caps the load at 18 kg"
+ },
+ "dubai_s7": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 16,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "46 градусов: 12,5 кВт, подъём стоит на 15 % больше, значит груз до 16 кг",
+  "why_en": "46 degrees: 12.5 kW and the climb costs 15% more, so loads up to 16 kg"
+ },
+ "dubai_s8": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 13,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   }
+  },
+  "why_ru": "47 градусов, 12 кВт: груз не больше 13 кг, зато ветра почти нет",
+  "why_en": "47 degrees, 12 kW: loads to 13 kg, but almost no wind"
+ },
+ "dubai_s9": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 16,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "47 градусов и восточный ветер 5,7 м/с: груз до 16 кг, круг до 9,8 км",
+  "why_en": "47 degrees and 5.7 m/s easterly: loads to 16 kg, round trip to 9.8 km"
+ },
+ "dubai_s10": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 25,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "0": {
+    "skip": true
+   },
+   "6": {
+    "skip": true
+   },
+   "7": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "42 градуса, 14,7 кВт: груз до 25 кг, круг до 9,9 км",
+  "why_en": "42 degrees, 14.7 kW: loads to 25 kg, round trip to 9.9 km"
+ },
+ "rotterdam_s1": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 10,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "2": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "8": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "ветер 17-21 м/с: взлёт запрещён, оставляю только ближние точки на случай затишья",
+  "why_en": "17-21 m/s: take-off is barred, I leave only near points in case it eases"
+ },
+ "rotterdam_s2": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "5 градусов, ветер 5,7 м/с: круг до 9,6 км; точка 5 внутри зоны аэропорта",
+  "why_en": "5 degrees, 5.7 m/s: round trip to 9.6 km; point 5 sits inside the airport zone"
+ },
+ "rotterdam_s3": {
+  "order": "near",
+  "default": {
+   "alt": 60,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "ноль градусов: ёмкость 86 %, но ветра нет, круг до 9,5 км",
+  "why_en": "zero degrees: 86% capacity, but no wind, round trip to 9.5 km"
+ },
+ "rotterdam_s4": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "восточный 8-9 м/с: на 30 м слабее, круг до 8,4 км",
+  "why_en": "8-9 m/s easterly: weaker at 30 m, round trip to 8.4 km"
+ },
+ "rotterdam_s5": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "западный 5,5 м/с, тепло: круг до 10,3 км, но Капелле всё равно дальше",
+  "why_en": "5.5 m/s westerly, warm: round trip to 10.3 km, Capelle is still farther"
+ },
+ "rotterdam_s6": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 20,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "ровный западный ветер 5 м/с: то же, что вчера, круг до 10 км",
+  "why_en": "steady 5 m/s westerly: round trip to 10 km"
+ },
+ "rotterdam_s7": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 10,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "2": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "8": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "13-16 м/с с юго-запада: выше предела дрона, держу только ближние точки",
+  "why_en": "13-16 m/s from the south-west: over the drone's limit, near points only"
+ },
+ "rotterdam_s8": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 25,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "юго-восточный 4,8 м/с: круг до 10,5 км даже с 25 кг",
+  "why_en": "4.8 m/s south-easterly: round trip to 10.5 km even with 25 kg"
+ },
+ "rotterdam_s9": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 10,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "2": {
+    "skip": true
+   },
+   "5": {
+    "skip": true
+   },
+   "8": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "западный 13-15 м/с: взлёт почти всё время запрещён",
+  "why_en": "13-15 m/s westerly: take-off barred almost all shift"
+ },
+ "rotterdam_s10": {
+  "order": "near",
+  "default": {
+   "alt": 30,
+   "speed": "fast",
+   "max_kg": 15,
+   "per_flight": 1,
+   "pad": null
+  },
+  "points": {
+   "5": {
+    "skip": true
+   },
+   "9": {
+    "skip": true
+   }
+  },
+  "why_ru": "3 градуса и южный 8,6 м/с: ёмкость 88 %, круг до 7,8 км",
+  "why_en": "3 degrees and 8.6 m/s southerly: 88% capacity, round trip to 7.8 km"
+ }
+}

@@ -1,0 +1,223 @@
+{
+ "_note": "Тексты карточек для игрока и для Extella. Одинаковые для обоих: только то, что владелец знает вечером. Скрытый исход (сколько даст блогер, какой силы метель) здесь не назван, назван только разброс.",
+ "blogger": {
+  "ru": {
+   "title": "Блогер просит бесплатный завтрак за обзор",
+   "text": "Съёмка утром в день {day}: завтрак стоит $60, утренняя стойка работает вполовину. Отзыв меняет поток на 5 дней после съёмки: от −10 % до +35 %, заранее неизвестно."
+  },
+  "en": {
+   "title": "A blogger asks for a free breakfast in exchange for a review",
+   "text": "Filming on the morning of day {day}: breakfast costs $60 and the morning bar runs at half speed. The review moves traffic for 5 days after: anywhere from −10% to +35%, unknown in advance."
+  },
+  "options": {
+   "accept": {
+    "ru": "согласиться",
+    "en": "accept"
+   },
+   "decline": {
+    "ru": "отказать",
+    "en": "decline"
+   }
+  }
+ },
+ "repair": {
+  "ru": {
+   "title": "Ремонт тротуара, леса над входом",
+   "text": "С дня {day} на 7 дней: −20 % гостей. Вывеска на тротуаре за $120 возвращает от 0 до 80 % потерянных гостей, заранее неизвестно."
+  },
+  "en": {
+   "title": "Sidewalk repair, scaffolding over the door",
+   "text": "From day {day} for 7 days: −20% guests. A sidewalk sign for $120 wins back 0 to 80% of the lost guests, unknown in advance."
+  },
+  "options": {
+   "sign": {
+    "ru": "поставить вывеску ($120)",
+    "en": "put up a sign ($120)"
+   },
+   "none": {
+    "ru": "ничего не делать",
+    "en": "do nothing"
+   }
+  }
+ },
+ "inspection": {
+  "ru": {
+   "title": "Санитарная проверка DOHMH",
+   "text": "Проверка в день {day}. Генеральная уборка накануне стоит $250 и снимает риск. Без неё оценка B примерно в каждом третьем случае, и всегда B, если в день проверки больше 10 % гостей ушли из-за очереди. Оценка B: −10 % гостей до конца месяца."
+  },
+  "en": {
+   "title": "DOHMH health inspection",
+   "text": "Inspection on day {day}. A deep clean the day before costs $250 and removes the risk. Without it, about one in three shops gets a B, and always a B if more than 10% of guests leave because of the queue that day. Grade B: −10% guests for the rest of the month."
+  },
+  "options": {
+   "clean": {
+    "ru": "генеральная уборка ($250)",
+    "en": "deep clean ($250)"
+   },
+   "none": {
+    "ru": "работать как обычно",
+    "en": "business as usual"
+   }
+  }
+ },
+ "breakdown": {
+  "ru": {
+   "title": "Сломалась эспрессо-машина",
+   "text": "Сегодня днём и вечером латте не было. Срочный мастер за $450 починит к утру дня {day}. Обычный за $200 придёт после обеда: утром и днём дня {day} без латте. Без латте половина таких гостей берёт фильтр, остальные уходят."
+  },
+  "en": {
+   "title": "The espresso machine broke",
+   "text": "No lattes this midday and evening. An emergency tech for $450 fixes it by the morning of day {day}. A regular one for $200 comes after lunch: no lattes on the morning and midday of day {day}. Without lattes half of those guests take drip, the rest leave."
+  },
+  "options": {
+   "fast": {
+    "ru": "срочный мастер ($450)",
+    "en": "emergency tech ($450)"
+   },
+   "slow": {
+    "ru": "обычный мастер ($200)",
+    "en": "regular tech ($200)"
+   }
+  }
+ },
+ "sick": {
+  "ru": {
+   "title": "Бариста заболел",
+   "text": "Один бариста не выйдет в дни {day} и {day2}. Агентство закроет пустые места по $35 в час. Без агентства смены пойдут с тем, кто есть."
+  },
+  "en": {
+   "title": "A barista called in sick",
+   "text": "One barista is out on days {day} and {day2}. An agency fills the gaps at $35 an hour. Without it, shifts run with whoever is left."
+  },
+  "options": {
+   "agency": {
+    "ru": "вызвать агентство",
+    "en": "call the agency"
+   },
+   "short": {
+    "ru": "работать без замены",
+    "en": "run short-staffed"
+   }
+  }
+ },
+ "dairy_up": {
+  "ru": {
+   "title": "Молочный поставщик поднимает цену",
+   "text": "С дня {day} молоко дороже на 8 %."
+  },
+  "en": {
+   "title": "The dairy is raising its price",
+   "text": "From day {day} milk costs 8% more."
+  },
+  "options": {
+   "ok": {
+    "ru": "понятно",
+    "en": "noted"
+   }
+  }
+ },
+ "catering": {
+  "ru": {
+   "title": "Офис заказывает кейтеринг",
+   "text": "Утром дня {day}: 60 латте по $4.50. Заказ делается первым из утренней смены и из молока; кому из гостей не хватит, уйдут из-за очереди."
+  },
+  "en": {
+   "title": "An office orders catering",
+   "text": "Morning of day {day}: 60 lattes at $4.50. The order is made first, from the morning shift and the milk; guests who don't fit leave because of the queue."
+  },
+  "options": {
+   "accept": {
+    "ru": "принять заказ",
+    "en": "accept"
+   },
+   "decline": {
+    "ru": "отказать",
+    "en": "decline"
+   }
+  }
+ },
+ "fair": {
+  "ru": {
+   "title": "Уличная ярмарка",
+   "text": "В субботу, день {day}, ярмарка на улице: гостей в полтора раза больше."
+  },
+  "en": {
+   "title": "Street fair",
+   "text": "Saturday, day {day}, a street fair: one and a half times the guests."
+  },
+  "options": {
+   "ok": {
+    "ru": "понятно",
+    "en": "noted"
+   }
+  }
+ },
+ "blizzard": {
+  "ru": {
+   "title": "Завтра метель",
+   "text": "В день {day} метель: придёт от 20 до 60 % обычных гостей, курьеры не поедут (заказы вернут деньгами). Можно закрыться: ни гостей, ни зарплаты за день."
+  },
+  "en": {
+   "title": "Blizzard tomorrow",
+   "text": "On day {day} a blizzard: 20 to 60% of the usual guests, no deliveries (orders refunded). You can close: no guests and no wages that day."
+  },
+  "options": {
+   "open": {
+    "ru": "открыться",
+    "en": "open"
+   },
+   "close": {
+    "ru": "закрыться на день",
+    "en": "close for the day"
+   }
+  }
+ },
+ "competitor": {
+  "ru": {
+   "title": "Рядом открывается конкурент",
+   "text": "С дня {day} заберёт от 12 до 28 % гостей до конца месяца; больше, если цены выше базовых, меньше при хорошей репутации. Карта гостя за $300 поднимает репутацию на 0,05. Акция открытия за $500 вдвое снижает потери на первые 7 дней."
+  },
+  "en": {
+   "title": "A competitor opens next door",
+   "text": "From day {day} it takes 12 to 28% of guests for the rest of the month; more if your prices are above base, less with a good reputation. A loyalty card for $300 lifts reputation by 0.05. An opening promo for $500 halves the loss for the first 7 days."
+  },
+  "options": {
+   "loyalty": {
+    "ru": "карта гостя ($300)",
+    "en": "loyalty card ($300)"
+   },
+   "promo": {
+    "ru": "акция ($500)",
+    "en": "promo ($500)"
+   },
+   "none": {
+    "ru": "ничего",
+    "en": "nothing"
+   }
+  }
+ },
+ "complaint": {
+  "ru": {
+   "title": "Жалоба на очередь в отзывах",
+   "text": "Гость пишет, что ждал слишком долго. Купоны на $40 поднимают репутацию на 0,03, ответ владельца на 0,01, молчание снижает на 0,01."
+  },
+  "en": {
+   "title": "A review complains about the queue",
+   "text": "A guest writes they waited too long. Coupons for $40 lift reputation by 0.03, an owner reply by 0.01, silence lowers it by 0.01."
+  },
+  "options": {
+   "coupons": {
+    "ru": "купоны ($40)",
+    "en": "coupons ($40)"
+   },
+   "reply": {
+    "ru": "ответить",
+    "en": "reply"
+   },
+   "ignore": {
+    "ru": "промолчать",
+    "en": "ignore"
+   }
+  }
+ }
+}

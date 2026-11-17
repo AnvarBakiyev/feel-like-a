@@ -1,0 +1,1653 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Курьер дронов</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#eef0f3; --panel:#ffffff; --fg:#151a21; --muted:#5a6472; --line:#d6dbe2;
+  --signal:#a86f00; --signal-soft:#faf0d8; --limit:#b8322f; --limit-soft:#f8e2e1; --track:#2f5d8a; --track-soft:#e1eaf4;
+  --ok:#1f7a4d; --ok-soft:#e1f2e8; --ghost:#7a4fb0; --ghost-soft:#efe7f8;
+  --d0:#2f5d8a; --d1:#a86f00; --d2:#1f7a4d; --map-lo:#d9dfcf; --map-hi:#a08a6a; --map-ink:#27303b;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1318; --panel:#181e26; --fg:#e4e8ee; --muted:#97a2b0; --line:#29323d;
+  --signal:#f2b33d; --signal-soft:#382b10; --limit:#f08783; --limit-soft:#3a1d1c; --track:#8ab4e0; --track-soft:#1c2a39;
+  --ok:#6fd09c; --ok-soft:#163224; --ghost:#b99ae6; --ghost-soft:#2a2238;
+  --d0:#8ab4e0; --d1:#f2b33d; --d2:#6fd09c; --map-lo:#1d2620; --map-hi:#4a3f31; --map-ink:#e4e8ee; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1318; --panel:#181e26; --fg:#e4e8ee; --muted:#97a2b0; --line:#29323d;
+  --signal:#f2b33d; --signal-soft:#382b10; --limit:#f08783; --limit-soft:#3a1d1c; --track:#8ab4e0; --track-soft:#1c2a39;
+  --ok:#6fd09c; --ok-soft:#163224; --ghost:#b99ae6; --ghost-soft:#2a2238;
+  --d0:#8ab4e0; --d1:#f2b33d; --d2:#6fd09c; --map-lo:#1d2620; --map-hi:#4a3f31; --map-ink:#e4e8ee; color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;justify-content:space-between}
+h1{font-family:var(--display);font-weight:700;font-size:38px;line-height:1;margin:0;letter-spacing:.01em}
+h2{font-family:var(--display);font-weight:600;font-size:25px;line-height:1.1;margin:0;letter-spacing:.01em;text-wrap:balance}
+h3{font-size:15px;margin:0;font-weight:600}
+p{margin:0;max-width:72ch}
+.muted{color:var(--muted)} .note{font-size:13px;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+select{max-width:100%;text-overflow:ellipsis}
+button,select{font:inherit;font-size:14px;padding:7px 12px;border-radius:5px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+button[aria-pressed="true"]{border-color:var(--signal);background:var(--signal-soft)}
+button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.card{display:flex;flex-direction:column;gap:4px;text-align:left;padding:12px 14px}
+.card b{font-family:var(--display);font-size:22px;font-weight:600}
+.card .flag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.code{font-family:var(--mono);font-size:13px;background:var(--track-soft);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;margin:0}
+.rej{border-left:3px solid var(--limit);background:var(--limit-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:14px}
+/* внутри пульта свои цвета: светлая плашка на тёмной панели делала текст нечитаемым */
+.console .rej{background:#3a1b1a;color:#ffd9d6;border-left-color:#f08783}
+.console .warn{background:#3a2e14;color:#ffe8bd;border-left-color:#f2b33d}
+.console #msg .rej{margin-top:8px;animation:rejIn .18s ease-out}
+@keyframes rejIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.console .order[disabled]{opacity:.45;cursor:not-allowed}
+/* длинные разделы свёрнуты: страница не простыня, раскрывает тот, кому надо */
+.fold summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary h2{margin:0}
+.fold summary::before{content:"+";font-weight:700;opacity:.65;width:14px;display:inline-block}
+.fold[open] summary::before{content:"\2212"}
+.fold summary:hover h2{text-decoration:underline}
+.foldHint{font-size:13px;opacity:.7}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:12px 0 16px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:10px 14px;border-radius:8px 8px 0 0;white-space:nowrap;color:var(--muted);font-weight:600;border-bottom:2px solid transparent}
+.tabs button:hover{color:var(--fg)}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--signal);background:none}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0 0 16px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.tile b{font-size:20px;font-variant-numeric:tabular-nums}
+.tile span{font-size:13px;color:var(--muted);line-height:1.35}
+.tile.plus b{color:var(--ok)} .tile.minus b{color:var(--limit)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:4px 16px;margin:0 0 12px;padding:0;list-style:none}
+.facts li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--line);padding:5px 0;font-size:14px}
+.facts li span{color:var(--muted);text-align:right}
+@media (max-width:560px){.facts li{flex-direction:column;gap:2px}.facts li span{text-align:left}}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:0 0 16px}
+.step{border:1px solid var(--line);border-radius:10px;padding:12px}
+.step .flag{display:block;margin-bottom:6px}
+.step b{display:block;margin-bottom:4px}
+.step p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.fold[open] .foldHint{display:none}
+.ok{border-left:3px solid var(--ok);background:var(--ok-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:14px}
+.warn{border-left:3px solid var(--signal);background:var(--signal-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:14px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px}
+td.n,th.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr.me td{background:var(--signal-soft);font-weight:600}
+tr.gh td:first-child{color:var(--ghost);font-weight:600}
+.big{font-family:var(--display);font-size:46px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.stars{font-family:var(--display);font-size:40px;letter-spacing:.08em;color:var(--signal);line-height:1}
+.stars .off{color:var(--line)}
+.big small{font-size:19px;color:var(--muted);font-weight:500}
+/* игра */
+.game{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);grid-template-areas:"map side" "info side";gap:14px;align-items:start}
+.gmap{grid-area:map}.side{grid-area:side}.ginfo{grid-area:info}
+@media (max-width:860px){.game{grid-template-columns:1fr;grid-template-areas:"map" "side" "info"}}
+.mapbox{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+#mapTip{position:absolute;pointer-events:none;max-width:260px;padding:8px 10px;border-radius:8px;font-size:13px;line-height:1.4;background:rgba(16,20,26,.94);color:#eef2f7;border:1px solid rgba(255,255,255,.14);box-shadow:0 4px 14px rgba(0,0,0,.35);z-index:3}
+#mapTip b{color:#fff}
+canvas.map{display:block;width:100%;height:auto;touch-action:manipulation}
+.topbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.clock{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12px;padding:2px 8px;border-radius:3px;background:var(--track-soft);color:var(--muted);white-space:nowrap}
+.chip.hot{background:var(--limit-soft);color:var(--limit);font-weight:600}
+.chip.gh{background:var(--ghost-soft);color:var(--ghost);font-weight:600}
+.chip.okc{background:var(--ok-soft);color:var(--ok);font-weight:600}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.drones{display:grid;grid-template-columns:1fr;gap:6px}
+.drone{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);text-align:left;width:100%}
+.drone.sel{border-color:var(--signal);background:var(--signal-soft)}
+.drone .num{width:26px;height:26px;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;grid-row:span 2}
+.drone .st{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drone .sub{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:8px;border-radius:4px;background:var(--track-soft);overflow:hidden;width:80px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.bar i.low{background:var(--limit)} .bar i.mid{background:var(--signal)}
+.orders{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow:auto}
+.order{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);text-align:left;width:100%;font-size:14px}
+.order.pick{border-color:var(--signal);background:var(--signal-soft)}
+.order .tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.order .due{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.order .due.late{color:var(--limit);font-weight:600}
+.order:disabled{opacity:1;cursor:default}
+.est{font-size:14px}
+.est b{font-family:var(--mono)}
+.log{font-family:var(--mono);font-size:12px;color:var(--muted);max-height:180px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.hint{font-size:14px;border:1px dashed var(--line);border-radius:6px;padding:8px 10px}
+details summary{cursor:pointer;font-weight:600}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:50%}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+
+/* ---------- Пульт диспетчера: экран смены выглядит как железо ---------- */
+.console{
+  --c-ink:#e3eaf2; --c-dim:#8d99a8; --screen:#0c1015; --led:#ffb13d; --led-g:#5ad28e; --led-r:#ff6f61;
+  background:linear-gradient(#222933,#171d25 55%,#121720);
+  border:1px solid #090c10; border-radius:12px; color:var(--c-ink);
+  box-shadow:inset 0 1px 0 #3b4552, 0 14px 30px rgba(0,0,0,.38); padding:14px; gap:12px;
+}
+.console{position:relative}
+.console::before, .console::after{content:""; position:absolute; width:7px; height:7px; border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #5d6876, #2a323c 60%, #141a21);
+  box-shadow:0 1px 0 #3f4a58, inset 0 -1px 1px rgba(0,0,0,.6); pointer-events:none}
+.console::before{left:7px; top:7px; box-shadow:0 1px 0 #3f4a58, inset 0 -1px 1px rgba(0,0,0,.6),
+  calc(100% + 14px) 0 0 #2a323c}
+.console::after{right:7px; bottom:7px; box-shadow:0 1px 0 #3f4a58, inset 0 -1px 1px rgba(0,0,0,.6),
+  calc(-100% - 14px) 0 0 #2a323c}
+.console h3, .console .eng{color:var(--c-dim); font-family:var(--display); font-size:12px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase}
+.console .note{color:var(--c-dim)}
+.console .topbar{align-items:center; border-bottom:1px solid #0a0e13; box-shadow:0 1px 0 #333d49; padding-bottom:10px}
+.console .clock{font-family:var(--mono); font-size:30px; font-weight:600; letter-spacing:.04em; color:#ffd79a;
+  text-shadow:0 0 14px rgba(255,177,61,.45); background:var(--screen); border:1px solid #000; border-radius:6px;
+  padding:3px 12px; box-shadow:inset 0 0 20px rgba(0,0,0,.85)}
+/* клавиши */
+.console button, .console select{font-family:var(--display); letter-spacing:.08em; text-transform:uppercase;
+  font-size:12px; font-weight:600; color:var(--c-ink); border:1px solid #090c10; border-radius:7px;
+  background:linear-gradient(#2c343f,#1e242c); box-shadow:inset 0 1px 0 #47525f, 0 2px 0 #090c10, 0 3px 7px rgba(0,0,0,.35);
+  padding:9px 13px}
+.console select{text-transform:none; font-family:var(--mono); letter-spacing:0; padding:7px 10px}
+.console button:hover{border-color:#5b6775}
+.console button:active{transform:translateY(1px); box-shadow:inset 0 2px 5px rgba(0,0,0,.55)}
+.console button[aria-pressed="true"], .console button[aria-checked="true"]{
+  background:linear-gradient(#3b2a11,#2a1d0b); border-color:#7a5416; color:#ffd79a;
+  box-shadow:inset 0 0 0 1px #8a5f1a, 0 0 14px rgba(255,177,61,.28), 0 2px 0 #090c10}
+.console button.primary{background:linear-gradient(#8e2b22,#6a1c16); border-color:#3d0f0b; color:#ffe6e2;
+  box-shadow:inset 0 1px 0 #c2574a, 0 2px 0 #2a0a07, 0 0 18px rgba(255,110,90,.25); font-size:13px; padding:11px 18px}
+.console button.primary:hover{background:linear-gradient(#a3342a,#7a241c)}
+.console button:disabled{opacity:.4}
+/* приборная рейка */
+.rail{display:flex; flex-wrap:wrap; gap:10px; align-items:stretch}
+.gauge{background:var(--screen); border:1px solid #000; border-radius:9px; padding:8px 10px;
+  box-shadow:inset 0 0 22px rgba(0,0,0,.8); display:flex; gap:9px; align-items:center; min-width:0}
+.gauge .lbl{display:block; color:var(--c-dim); font-family:var(--display); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; margin-bottom:1px}
+.gauge .val{display:block; font-family:var(--mono); font-size:19px; font-weight:600; color:#cfe3ff; line-height:1.15}
+.gauge .val .sub{display:inline; font-size:12px}
+.gauge .val.amber{color:#ffd79a} .gauge .val.green{color:#9ef0c0} .gauge .val.red{color:#ffb1a8}
+.gauge .sub{display:block; font-family:var(--mono); font-size:11px; color:var(--c-dim)}
+.gauge > div{min-width:0}
+.gauge svg{display:block; flex:none}
+.console .chips{display:none}
+/* отсеки дронов */
+.console .drone{background:linear-gradient(#262e38,#1b212a); border:1px solid #0a0e13; border-radius:9px;
+  box-shadow:inset 0 1px 0 #3f4a58, 0 2px 6px rgba(0,0,0,.3)}
+.console .drone.sel{border-color:#8a5f1a; box-shadow:inset 0 0 0 1px #8a5f1a, 0 0 16px rgba(255,177,61,.2)}
+.console .drone .num{position:relative; box-shadow:inset 0 0 0 1px rgba(255,255,255,.25); font-family:var(--display); letter-spacing:.04em}
+.console .drone[data-mode] .num::after{content:""; position:absolute; right:-3px; bottom:-3px; width:7px; height:7px;
+  border-radius:50%; border:1px solid #0a0e13}
+.console .drone[data-mode="dock"] .num::after{background:#5ad28e; box-shadow:0 0 7px #5ad28e}
+.console .drone[data-mode="air"] .num::after{background:#ffb13d; box-shadow:0 0 7px #ffb13d}
+.console .drone[data-mode="pad"] .num::after{background:#8ab4e0; box-shadow:0 0 7px #8ab4e0}
+.console .drone[data-mode="forced"] .num::after, .console .drone[data-mode="lost"] .num::after{background:#ff6f61; box-shadow:0 0 8px #ff6f61}
+.console .drone .st{font-family:var(--display); letter-spacing:.06em; text-transform:uppercase; font-size:12px}
+.console .drone .sub{font-family:var(--mono); font-size:11px; color:var(--c-dim)}
+.console .bar{background:#080b0e; border:1px solid #000; border-radius:3px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,.8)}
+.console .bar i{background:linear-gradient(90deg,#3fc47f,#9ef0c0);
+  -webkit-mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px);
+  mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px)}
+.console .bar i.mid{background:linear-gradient(90deg,#e09a2c,#ffd79a)}
+.console .bar i.low{background:linear-gradient(90deg,#d6564a,#ffb1a8)}
+/* рычаг высоты */
+.lever{background:var(--screen); border:1px solid #000; border-radius:9px; padding:6px; display:grid; gap:4px;
+  box-shadow:inset 0 0 22px rgba(0,0,0,.8)}
+.lever button{padding:7px 10px; font-family:var(--mono); letter-spacing:0; text-transform:none; font-size:13px;
+  text-align:left; display:flex; justify-content:space-between; gap:8px; align-items:center}
+.lever button::after{content:""; width:16px; height:4px; border-radius:2px; background:#2a323c; flex:none}
+.lever button[aria-checked="true"]::after{background:#ffb13d; box-shadow:0 0 8px rgba(255,177,61,.8)}
+/* сегментный переключатель площадок */
+.seg{display:flex; flex-wrap:wrap; gap:4px; background:var(--screen); border:1px solid #000; border-radius:9px;
+  padding:5px; box-shadow:inset 0 0 22px rgba(0,0,0,.8)}
+.seg button{padding:6px 9px; font-family:var(--mono); letter-spacing:0; text-transform:none; font-size:12px}
+.deskrow{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap}
+.deskcol{display:flex; flex-direction:column; gap:5px; min-width:0}
+/* экраны: карта, оценка, журнал */
+.console .mapbox{position:relative; border:1px solid #000; border-radius:10px; background:var(--screen); padding:6px;
+  box-shadow:inset 0 0 26px rgba(0,0,0,.75), 0 1px 0 #39424e}
+.console .mapbox::after{content:""; position:absolute; inset:6px; border-radius:6px; pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px);
+  box-shadow:inset 0 0 70px rgba(0,0,0,.5)}
+.console .map{filter:saturate(1.08) contrast(1.04)}
+.console .est, .console .log, .console .hint{background:var(--screen); border:1px solid #000; border-radius:9px;
+  box-shadow:inset 0 0 20px rgba(0,0,0,.75); color:var(--c-ink)}
+.console .est{font-family:var(--mono); padding:9px 11px}
+.console .hint{padding:9px 11px; font-size:13px; color:#c6d2e0}
+.console .log{padding:8px 10px}
+.console #sendBox{background:linear-gradient(#232b35,#1a2029); border:1px solid #0a0e13;
+  box-shadow:inset 0 1px 0 #3f4a58, 0 2px 8px rgba(0,0,0,.3); border-radius:10px}
+.console .order{background:linear-gradient(#262e38,#1b212a); border:1px solid #0a0e13; color:var(--c-ink);
+  text-transform:none; font-family:var(--sans); letter-spacing:0; font-weight:400}
+.console .order.pick{border-color:#8a5f1a; box-shadow:inset 0 0 0 1px #8a5f1a}
+.console .order .tag{color:var(--c-dim); font-family:var(--mono)}
+.console .legend{color:var(--c-dim)}
+@keyframes alarmPulse{0%{box-shadow:inset 0 0 0 2px rgba(255,111,97,.9), inset 0 0 60px rgba(255,111,97,.35), 0 14px 30px rgba(0,0,0,.38)}
+  100%{box-shadow:inset 0 1px 0 #3b4552, 0 14px 30px rgba(0,0,0,.38)}}
+.console.alarm{animation:alarmPulse .9s ease-out}
+@media (prefers-reduced-motion: reduce){.console.alarm{animation:none}}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+</style>
+
+<div class="wrap">
+<header>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div class="note mono" id="eyebrow"></div>
+    <h1 id="h1"></h1>
+    <p id="sitedef" class="note" hidden style="max-width:760px;margin:6px 0 0"></p>
+  </div>
+  <div class="row">
+    <button id="langBtn" type="button"></button>
+  </div>
+</header>
+
+<section class="panel" id="intro">
+  <p id="introP"></p>
+  <p class="note" id="introN"></p>
+</section>
+
+<details class="panel fold" id="drills" open>
+  <summary><h2 id="drH"></h2><span class="foldHint" id="drHint"></span></summary>
+  <p class="note" id="drN"></p>
+  <div class="grid3" id="drillCards"></div>
+</details>
+
+<!-- выбор смены -->
+<section class="panel" id="pick">
+  <h2 id="pickH"></h2>
+  <div class="grid3" id="cities"></div>
+  <div class="row">
+    <label class="note" for="daySel" id="dayL"></label>
+    <select id="daySel"></select>
+    <span class="note" id="dayInfo"></span>
+  </div>
+  <div class="warn" id="noflyNote" hidden></div>
+  <div class="tbl"><table id="rivalsT"></table></div>
+  <div class="row">
+    <button class="primary" id="startBtn" type="button"></button>
+    <button id="watchBtn" type="button"></button>
+  </div>
+</section>
+
+<!-- смена -->
+<section id="play" hidden>
+  <div class="panel console">
+    <div class="topbar">
+      <div class="row" style="gap:14px;align-items:baseline">
+        <div class="clock" id="clock">13:00:00</div>
+        <div class="note" id="where"></div>
+      </div>
+      <div class="row" id="speeds"></div>
+      <button type="button" id="sndBtn" aria-pressed="false"></button>
+    </div>
+    <div class="chips" id="stats"></div>
+    <div class="rail" id="rail"></div>
+    <div class="warn" id="drillGoal" hidden></div>
+    <div class="game">
+      <div class="gmap" style="display:flex;flex-direction:column;gap:8px;min-width:0">
+        <div class="mapbox"><canvas class="map" id="map" width="900" height="700"></canvas><div id="mapTip" hidden></div></div>
+        <div class="legend" id="legend"></div>
+        <div class="row">
+          <label class="note" for="ghostSel" id="ghostL"></label>
+          <select id="ghostSel"></select>
+          <span class="chip gh" id="ghostInfo" hidden></span>
+        </div>
+      </div>
+      <div class="side">
+        <div class="hint" id="hint"></div>
+        <div>
+          <h3 id="dronesH"></h3>
+          <div class="drones" id="drones"></div>
+        </div>
+        <div>
+          <h3 id="ordersH"></h3>
+          <div class="orders" id="orders"></div>
+        </div>
+        <div class="panel" id="sendBox" style="padding:12px">
+          <div class="deskrow">
+            <div class="deskcol">
+              <span class="eng" id="altL"></span>
+              <div class="lever" id="altLever" role="radiogroup" aria-labelledby="altL"></div>
+              <label class="sr-only" for="altSel" id="altLsr"></label>
+              <select id="altSel" class="sr-only"><option>30</option><option selected>60</option><option>100</option><option>120</option></select>
+            </div>
+            <div class="deskcol">
+              <span class="eng" id="speedL"></span>
+              <div class="row">
+                <button type="button" id="ecoBtn" aria-pressed="true"></button>
+                <button type="button" id="fastBtn" aria-pressed="false"></button>
+              </div>
+              <span class="eng" id="padL0"></span>
+              <div class="seg" id="padSeg0" role="radiogroup" aria-labelledby="padL0"></div>
+              <label class="sr-only" for="padSel0" id="padL0sr"></label>
+              <select id="padSel0" class="sr-only"></select>
+              <span class="eng" id="padL"></span>
+              <div class="seg" id="padSeg" role="radiogroup" aria-labelledby="padL"></div>
+              <label class="sr-only" for="padSel" id="padLsr"></label>
+              <select id="padSel" class="sr-only"></select>
+            </div>
+          </div>
+          <div class="est" id="est"></div>
+          <div class="row">
+            <button class="primary" type="button" id="sendBtn"></button>
+            <button type="button" id="clearBtn"></button>
+          </div>
+          <div id="msg"></div>
+        </div>
+      </div>
+      <div class="ginfo" style="display:flex;flex-direction:column;gap:8px;min-width:0">
+        <details open>
+          <summary id="fcH"></summary>
+          <div class="tbl"><table id="fcT"></table></div>
+        </details>
+        <h3 id="logH"></h3>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- итог -->
+<section class="panel" id="drillRes" hidden>
+  <h2 id="drResH"></h2>
+  <div class="stars" id="drStars"></div>
+  <p id="drResT"></p>
+  <div id="drResA"></div>
+  <div class="row">
+    <button type="button" id="drAgain"></button>
+    <button class="primary" type="button" id="drNext"></button>
+    <button type="button" id="drToShift"></button>
+  </div>
+</section>
+
+<section class="panel" id="result" hidden>
+  <h2 id="resH"></h2>
+  <div class="big" id="resScore"></div>
+  <div class="tbl"><table id="resParts"></table></div>
+  <h3 id="resCmpH"></h3>
+  <div class="tbl"><table id="resCmp"></table></div>
+  <div id="resWhy"></div>
+  <div class="row">
+    <button class="primary" type="button" id="againBtn"></button>
+    <button type="button" id="otherBtn"></button>
+  </div>
+</section>
+
+<section class="panel" id="ref">
+  <h2 id="refH"></h2>
+  <p class="note" id="refN"></p>
+  <div class="tabs" role="tablist" id="refTabs">
+    <button type="button" role="tab" data-t="rules" id="tabRules" aria-selected="true"></button>
+    <button type="button" role="tab" data-t="how" id="tabHow" aria-selected="false"></button>
+    <button type="button" role="tab" data-t="src" id="tabSrc" aria-selected="false"></button>
+  </div>
+  <div class="pane" id="rulesB" role="tabpanel"></div>
+  <div class="pane" id="howB" role="tabpanel" hidden></div>
+  <div class="pane note" id="srcB" role="tabpanel" hidden></div>
+</section>
+</div>
+
+<script>/*SIM*/</script>
+<script>/*AUDIO*/</script>
+<script>var DATA = /*DATA*/;</script>
+<script>
+(function () {
+"use strict";
+var S = window.DroneSim, SITE = !!window.DRONE_SITE;
+var LANG = "ru";
+try { var lq = new URLSearchParams(location.search).get("lang"); if (lq === "en" || lq === "ru") LANG = lq;
+      else if (SITE) LANG = localStorage.getItem("robot_lang") === "ru" ? "ru" : "en"; } catch (e) {}
+var TEST = /[?&]test/.test(location.search);
+function tr(ru, en) { return LANG === "ru" ? ru : en; }
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function nf(x, d) { var s = (d ? x.toFixed(d) : Math.round(x).toString()); return LANG === "ru" ? s.replace(".", ",").replace("-", "−") : s.replace("-", "−"); }
+function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+var CITY = {
+  almaty: { ru: "Алматы", en: "Almaty", hard_ru: "Горы и мороз. Склад на 814 м, Шымбулак на 2 300 м в 21 км. На морозе батарея отдаёт меньше, в разреженном воздухе висеть дороже.",
+            hard_en: "Mountains and frost. Depot at 814 m, Shymbulak at 2,300 m 21 km away. Cold batteries give less, thin air makes hovering costlier." },
+  dubai: { ru: "Дубай", en: "Dubai", hard_ru: "Жара. Выше +40 °C батарея ограничивает мощность, и тяжёлый груз дрон не поднимет. Две зоны аэропортов закрыты.",
+           hard_en: "Heat. Above +40 °C the battery limits power, and the drone cannot lift a heavy load. Two airport zones are closed." },
+  rotterdam: { ru: "Роттердам", en: "Rotterdam", hard_ru: "Морской ветер. Туда с попутным, обратно против: встречный ветер съедает заряд на обратном пути.",
+               hard_en: "Sea wind. Out with a tailwind, back into a headwind: the headwind eats the charge on the way home." }
+};
+var WHO = {
+  you: { ru: "Ты", en: "You" },
+  extella: { ru: "Qwen 3.5 9B с Extella, на ноутбуке", en: "Qwen 3.5 9B with Extella, on a laptop" },
+  big: { ru: "Claude Opus 5 без Extella (замысел заранее)", en: "Claude Opus 5 without Extella (plan written in advance)" },
+  careful: { ru: "Расчётливая программа (не ИИ)", en: "Careful program (not AI)" },
+  simple: { ru: "Простая программа (не ИИ)", en: "Simple program (not AI)" },
+  small: { ru: "Qwen 3.5 9B без Extella", en: "Qwen 3.5 9B without Extella" }
+};
+var RIVALS = ["extella", "big", "careful", "simple", "small"];
+
+/* ---------- состояние ---------- */
+var city = "rotterdam", seed = 2;
+var G = null, GH = null, ghostWho = "extella", watch = null;
+// След дронов: раз в 10 секунд смены записываем точку с зарядом и ветром на высоте полёта.
+// Цвет следа говорит, где заряд уходил, а метки показывают, где ветер развернулся.
+var trail = [[], [], []], trailT = -1;
+var steps = 0, decLog = [], ghI = 0, wI = 0;
+var speed = 30, paused = true, lastTs = 0, acc = 0, pauseOnNew = true, seenOrders = 0;
+var selDrone = 0, picked = [], spd = "eco";
+var logLines = [], lastEv = 0;
+var terrainImg = {}, view = null;
+var drill = null, retSoc = {};
+
+function world(key) {
+  var W = JSON.parse(JSON.stringify(DATA.worlds[key]));
+  W.map.terrain = DATA.terrain[W.city];
+  return W;
+}
+function key() { return city + "_" + seed; }
+function gameWorld() {
+  var W = world(key());
+  if (drill) W.orders = drill.orders.map(function (o, i) { return { t: 0, point: o[0], kg: o[1], due: o[2] || 3600, id: i }; });
+  return W;
+}
+
+/* ---------- тексты ---------- */
+function staticText() {
+  document.documentElement.lang = LANG;
+  $("eyebrow").textContent = tr("Почувствуй себя… · эпизод 4", "Feel like a… · episode 4");
+  $("h1").textContent = tr("Курьер дронов", "Drone courier");
+  $("langBtn").textContent = LANG === "ru" ? "English" : "Русский";
+  if (SITE) {
+    $("sitedef").hidden = false;
+    $("sitedef").textContent = window.EXTELLA_DEF ? window.EXTELLA_DEF[LANG] : "";
+  }
+  $("introP").textContent = tr(
+    "Ты диспетчер доставки: на складе три грузовых дрона, за двухчасовую смену приходят 12–16 заказов. Ты решаешь, какой дрон летит, с каким грузом, на какой высоте и с какой скоростью. Летит автопилот. Твоя задача: доставить вовремя и вернуть дрон домой. Ветер настоящий, по часам реального дня 2025 года, но ты видишь только прогноз.",
+    "You run a delivery shift: three cargo drones at the depot, 12 to 16 orders over two hours. You decide which drone flies, with what load, at what altitude and speed. The autopilot flies. Your job: deliver on time and bring the drone home. The wind is real, hour by hour from a real 2025 day, but you only see the forecast.");
+  $("introN").textContent = tr(
+    "Новичку лучше начать с тренировок ниже, а смену с Роттердама, день 2: равнина и умеренный ветер. Соперники летали в тех же сменах: Qwen 3.5 9B с Extella и без неё, Claude Opus 5 без Extella и две программы без ИИ.",
+    "New here? Start with the training below, then a shift in Rotterdam, day 2: flat land and moderate wind. Rivals flew the same shifts: Qwen 3.5 9B with and without Extella, Claude Opus 5 without Extella and two programs without AI.");
+  $("pickH").textContent = tr("Выбери смену", "Pick a shift");
+  $("dayL").textContent = tr("День", "Day");
+  $("startBtn").textContent = tr("Начать смену", "Start the shift");
+  $("watchBtn").textContent = tr("Посмотреть, как летит Qwen 3.5 9B с Extella", "Watch Qwen 3.5 9B with Extella fly it");
+  $("ghostL").textContent = tr("Рядом летит", "Flying alongside");
+  $("dronesH").textContent = tr("Дроны", "Drones");
+  $("ordersH").textContent = tr("Заказы", "Orders");
+  $("altL").textContent = tr("Высота, м", "Altitude, m");
+  $("altLsr").textContent = tr("Высота, м", "Altitude, m");
+  sndText();
+  $("padL0sr").textContent = tr("Зарядка до заказа", "Charge before the order");
+  $("padLsr").textContent = tr("Зарядка после заказа", "Charge after the order");
+  $("speedL").textContent = tr("Скорость", "Speed");
+  $("ecoBtn").textContent = tr("эконом 12 м/с", "eco 12 m/s");
+  $("fastBtn").textContent = tr("быстро 18 м/с", "fast 18 m/s");
+  $("padL0").textContent = tr("Зарядка до заказа", "Charge before the order");
+  $("padL").textContent = tr("Зарядка после заказа", "Charge after the order");
+  $("drH").textContent = tr("Тренировки", "Training");
+  if ($("drHint")) $("drHint").textContent = tr("пять полётов по минуте", "five one-minute flights");
+  $("drN").textContent = tr("Пять коротких полётов по минуте, каждый учит одному навыку диспетчера. Можно начать с них или сразу идти в смену.", "Five short flights of about a minute, each teaching one dispatcher skill. Start here or go straight to a shift.");
+  $("drAgain").textContent = tr("Ещё раз", "Try again");
+  $("drNext").textContent = tr("Дальше", "Next");
+  $("drToShift").textContent = tr("К смене", "To a shift");
+  $("clearBtn").textContent = tr("Сбросить", "Clear");
+  $("fcH").textContent = tr("Прогноз ветра: м/с по высотам и откуда дует", "Wind forecast: m/s by altitude and where it blows from");
+  $("logH").textContent = tr("Журнал смены", "Shift log");
+  $("resCmpH").textContent = tr("Та же смена у соперников", "The same shift for the rivals");
+  $("againBtn").textContent = tr("Ещё раз эту смену", "Fly this shift again");
+  $("otherBtn").textContent = tr("Другая смена", "Another shift");
+  $("srcB").innerHTML = tr(
+    "Модели: Qwen 3.5 9B через Ollama на ноутбуке (temperature 0, seed 7) у Extella и у малой модели без Extella; Claude Opus 5 у большой модели без Extella. Прогоны записаны в ноябре 2026 года, по 10 смен на город, и показаны как есть. Ветер, порывы и температура по часам: реанализ ERA5 (Copernicus), через Open-Meteo, 10 дней 2025 года на каждый город. Рельеф: Copernicus DEM GLO-30. Дрон: характеристики DJI FlyCart 30 с официальной страницы; симулятор сверен с ними: висение 29 и 18 мин, дальность 26 и 16 км против 29 / 18 мин и 28 / 16 км у DJI. Потеря ёмкости на морозе и предел мощности в жару: оценка, рецензируемого числа не нашли. Точки и запретные круги выбраны по карте.",
+    "Models: Qwen 3.5 9B via Ollama on a laptop (temperature 0, seed 7) for Extella and for the small model without Extella; Claude Opus 5 for the large model without Extella. The runs were recorded in November 2026, 10 shifts per city, and are shown as they came out. Hourly wind, gusts and temperature: ERA5 reanalysis (Copernicus) via Open-Meteo, 10 days of 2025 per city. Terrain: Copernicus DEM GLO-30. Drone: DJI FlyCart 30 figures from the official spec page; the simulator matches them: hover 29 and 18 min, range 26 and 16 km against DJI's 29 / 18 min and 28 / 16 km. Cold capacity loss and the heat power limit are estimates; no peer-reviewed number found. Points and no-fly circles were placed by map.");
+  rulesText(); howText();
+  $("legend").innerHTML = '<span><i class="sw" style="background:var(--d0)"></i>' + tr("дрон 1", "drone 1") + '</span><span><i class="sw" style="background:var(--d1)"></i>' + tr("дрон 2", "drone 2") +
+    '</span><span><i class="sw" style="background:var(--d2)"></i>' + tr("дрон 3", "drone 3") + '</span><span><i class="sw" style="border:2px solid var(--ghost)"></i>' + tr("соперник", "rival") +
+    '</span><span><i class="sw" style="background:var(--limit);opacity:.35"></i>' + tr("запретная зона", "no-fly zone") + '</span><span>P ' + tr("площадка зарядки", "charging pad") +
+    '</span><span><i class="sw" style="background:linear-gradient(90deg,var(--ok),var(--signal),var(--limit))"></i>' +
+    tr("след: цвет по заряду", "trail: colour by charge") + '</span><span><i class="sw" style="background:none;border:2px solid var(--signal);border-radius:50%"></i>' +
+    tr("кружок: ветер сменился или заряд ниже 20 %, наведи и прочитай", "ring: the wind changed or the charge fell under 20%, hover to read") + '</span>';
+}
+
+function rulesText() {
+  var SC = S.SC;
+  $("refH").textContent = tr("Справка", "Reference");
+  $("refN").textContent = tr("Открывается по вкладке: что считается очками, как играет Extella и откуда взяты цифры.",
+                             "Open a tab: how the score works, how Extella plays, where the numbers come from.");
+  $("tabRules").textContent = tr("Правила и счёт", "Rules and scoring");
+  $("tabHow").textContent = tr("Как играет Extella", "How Extella plays");
+  $("tabSrc").textContent = tr("Откуда цифры", "Where the numbers come from");
+  // очки плитками: глазу нужен порядок величин, а не строка таблицы на каждую мелочь
+  var tiles = [
+    ["plus", "+" + SC.base, tr("старт смены", "shift start")],
+    ["plus", "+" + SC.delivered, tr("за доставленный заказ", "per delivered order")],
+    ["minus", "−" + SC.undelivered, tr("за недоставленный к 15:00", "per order left undelivered at 15:00")],
+    ["minus", "−" + SC.forced, tr("посадка вне площадки", "landing off a pad")],
+    ["minus", "−" + SC.lost, tr("потерянный дрон", "lost drone")],
+    ["minus", "−" + SC.pad, tr("посадка на зарядку", "landing on a charging pad")],
+    ["", tr("−1 / 10 с", "−1 / 10 s"), tr("опоздание к сроку заказа", "lateness against the order deadline")],
+    ["", "±2", tr("за процент энергии к эталону, от −200 до +100", "per percent of energy against the reference, −200 to +100")]
+  ];
+  var h = '<div class="tiles">';
+  tiles.forEach(function (t) { h += '<div class="tile ' + t[0] + '"><b>' + t[1] + "</b><span>" + t[2] + "</span></div>"; });
+  h += "</div>";
+  h += "<p>" + tr(
+    "Эталон энергии: сколько ушло бы на доставленные заказы по прямой в штиль на 12 м/с, туда с грузом и обратно пустым. Смена длится два часа; дроны, ещё не вернувшиеся к 15:00, долетают, но новых заказов нет.",
+    "The energy reference is what the delivered orders would take in a straight line in calm air at 12 m/s, out loaded and back empty. The shift lasts two hours; drones still out at 15:00 finish their flight, but no new orders come.") + "</p>";
+  h += "<h3>" + tr("Отправить не получится, если", "A flight will not go if") + "</h3>";
+  h += '<ul class="facts" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">' +
+    "<li>" + tr("груз больше 40 кг", "the load is over 40 kg") + "<span>" + tr("или масса больше 95 кг", "or the mass is over 95 kg") + "</span></li>" +
+    "<li>" + tr("маршрут идёт через зону аэропорта", "the route crosses an airport zone") + "<span>" + tr("высота не помогает", "altitude does not help") + "</span></li>" +
+    "<li>" + tr("ветер у склада выше 12 м/с", "the wind at the depot is over 12 m/s") + "<span>" + tr("предел дрона", "the drone limit") + "</span></li>" +
+    "<li>" + tr("в жару не хватает мощности", "in the heat there is not enough power") + "<span>" + tr("батарея слабеет выше +40 °C", "the battery weakens above 40 °C") + "</span></li></ul>";
+  h += "<h3>" + tr("Дрон", "The drone") + "</h3>";
+  h += '<ul class="facts">' +
+    "<li>" + tr("пустой", "empty") + "<span>65 " + tr("кг", "kg") + "</span></li>" +
+    "<li>" + tr("груз", "load") + "<span>" + tr("до 40 кг", "up to 40 kg") + "</span></li>" +
+    "<li>" + tr("батарея", "battery") + "<span>3 969 " + tr("Вт·ч", "Wh") + "</span></li>" +
+    "<li>" + tr("висит", "hovers") + "<span>29 " + tr("мин пустым, 18 с 30 кг", "min empty, 18 with 30 kg") + "</span></li>" +
+    "<li>" + tr("скорость", "speed") + "<span>12 " + tr("или", "or") + " 18 " + tr("м/с", "m/s") + "</span></li>" +
+    "<li>" + tr("замена батареи", "battery swap") + "<span>90 " + tr("с на складе, 120 на площадке", "s at the depot, 120 at a pad") + "</span></li></ul>";
+  h += "<p>" + tr(
+    "Полёт вперёд стоит почти столько же, сколько висение, поэтому «быстро» часто выгоднее: в воздухе меньше времени. Против ветра 10 м/с на скорости 12 м/с дрон идёт над землёй 2 м/с и тратит в 6 раз больше энергии на километр. Ниже 8 % заряда автопилот садит дрон где придётся, а над площадкой — на площадку.",
+    "Flying forward costs about as much as hovering, so fast is often cheaper: less time in the air. Into a 10 m/s headwind at 12 m/s the drone makes 2 m/s over ground and spends 6 times the energy per km. Below 8% charge the autopilot lands wherever it is, or on a pad if it is over one.") + "</p>";
+  $("rulesB").innerHTML = h;
+}
+
+function avgs() {
+  var A = {};
+  Object.keys(DATA.rivals).forEach(function (k) {
+    var c = k.split("_")[0], R = DATA.rivals[k];
+    RIVALS.forEach(function (w) { A[w] = A[w] || {}; (A[w][c] = A[w][c] || []).push(R[w].score); });
+  });
+  return A;
+}
+
+var PANE = { rules: "rulesB", how: "howB", src: "srcB" };
+function refTab(name) {
+  Object.keys(PANE).forEach(function (k) {
+    $(PANE[k]).hidden = k !== name;
+    var b = $("tab" + k[0].toUpperCase() + k.slice(1));
+    if (b) b.setAttribute("aria-selected", String(k === name));
+  });
+}
+if ($("refTabs")) {
+  Array.prototype.forEach.call($("refTabs").querySelectorAll("[data-t]"), function (b) {
+    b.onclick = function () { refTab(b.getAttribute("data-t")); };
+  });
+}
+
+function howText() {
+  var A = avgs(), h = "";
+  // кто есть кто: модели названы поимённо, иначе «большая модель» ничего не говорит
+  h += "<h3>" + tr("Кто играет", "Who plays") + "</h3>";
+  h += '<ul class="facts" style="grid-template-columns:1fr">' +
+    "<li>Extella<span>" + tr("Qwen 3.5 9B через Ollama на ноутбуке (temperature 0) плюс эксперт drone_plan на Extella",
+                             "Qwen 3.5 9B via Ollama on a laptop (temperature 0) plus the drone_plan expert on Extella") + "</span></li>" +
+    "<li>" + tr("Большая модель без Extella", "Large model without Extella") + "<span>" +
+      tr("Claude Opus 5: читает тот же брифинг и пишет правила смены руками, один раз до смены",
+         "Claude Opus 5: reads the same briefing and writes the shift rules by hand, once before the shift") + "</span></li>" +
+    "<li>" + tr("Малая модель без Extella", "Small model without Extella") + "<span>" +
+      tr("та же Qwen 3.5 9B: её замысел исполняется буквально, без обработчика и Проверки",
+         "the same Qwen 3.5 9B: its plan is run literally, without the handler and the check") + "</span></li>" +
+    "<li>" + tr("Программы без ИИ", "Programs without AI") + "<span>" +
+      tr("простая и расчётливая: решают каждую секунду по правилам, написанным человеком",
+         "simple and careful: they decide every second by rules written by a human") + "</span></li></ul>";
+  // три шага вместо абзаца на двенадцать строк: человек видит, кто что делает, за пять секунд
+  h += '<div class="steps">' +
+    '<div class="step"><span class="flag">' + tr("шаг 1 · до смены", "step 1 · before the shift") + "</span><b>" +
+      tr("Qwen 3.5 9B пишет замысел", "Qwen 3.5 9B writes the plan") + "</b><p>" +
+      tr("Модель на ноутбуке читает брифинг: точки, прогноз ветра по часам, температуру. Отвечает несколькими строками на языке полёта: высота, скорость, предел груза, площадка зарядки.",
+         "Running on a laptop, it reads the briefing: points, hourly wind forecast, temperature. It answers with a few lines of the flight language: altitude, speed, load limit, charging pad.") + "</p></div>" +
+    '<div class="step"><span class="flag">' + tr("шаг 2 · до смены", "step 2 · before the shift") + "</span><b>" +
+      tr("Проверка считает по прогнозу", "The check runs it on the forecast") + "</b><p>" +
+      tr("Замысел прогоняется на прогнозе и на худшем крае прогноза. Проверка называет цепочку до трёх строк, каждая из которых улучшает счёт на обоих краях, и модель переписывает замысел один раз.",
+         "The plan is run on the forecast and on its worst edge. The check names a chain of up to three lines, each improving the score on both edges, and the model rewrites the plan once.") + "</p></div>" +
+    '<div class="step"><span class="flag">' + tr("шаг 3 · в смену", "step 3 · during the shift") + "</span><b>" +
+      tr("Обработчик ведёт смену", "The handler runs the shift") + "</b><p>" +
+      tr("Он решает, кому и когда лететь, и перед каждым взлётом считает круг по прогнозу с запасом на его ошибку. Рейс без запаса не начинается; в день, когда прогноз ветра выходит за предел дрона, не летает совсем.",
+         "It decides who flies and when, and before every take-off works out the round trip on the forecast with a margin for its error. A flight without a margin does not start; on a day whose forecast wind crosses the drone limit it does not fly at all.") + "</p></div></div>";
+  h += '<div class="tbl"><table><tr><th>' + tr("кто", "who") + "</th><th>" + tr("что видит", "sees") + "</th><th>" + tr("когда решает", "decides") + "</th><th>" + tr("кто ведёт", "flies") + "</th></tr>" +
+    "<tr><td>" + tr("ты", "you") + "</td><td>" + tr("карту, заказы, прогноз, заряд", "map, orders, forecast, charge") + "</td><td>" + tr("по ходу смены", "during the shift") + "</td><td>" + tr("ты", "you") + "</td></tr>" +
+    "<tr><td>" + tr("Qwen 3.5 9B с Extella", "Qwen 3.5 9B with Extella") + "</td><td>" + tr("брифинг", "the briefing") + "</td><td>" + tr("до смены, 1–2 вызова модели", "before the shift, 1–2 model calls") + "</td><td>" + tr("обработчик", "the handler") + "</td></tr>" +
+    "<tr><td>" + tr("Claude Opus 5 без Extella", "Claude Opus 5 without Extella") + "</td><td>" + tr("брифинг", "the briefing") + "</td><td>" + tr("один раз до смены", "once before the shift") + "</td><td>" + tr("замысел исполняется буквально", "the plan is run literally") + "</td></tr>" +
+    "<tr><td>" + tr("Qwen 3.5 9B без Extella", "Qwen 3.5 9B without Extella") + "</td><td>" + tr("брифинг", "the briefing") + "</td><td>" + tr("один раз до смены", "once before the shift") + "</td><td>" + tr("замысел исполняется буквально", "the plan is run literally") + "</td></tr>" +
+    "<tr><td>" + tr("программы без ИИ", "programs without AI") + "</td><td>" + tr("то же, что ты", "what you see") + "</td><td>" + tr("каждую секунду", "every second") + "</td><td>" + tr("сами", "themselves") + "</td></tr></table></div>";
+  h += '<h3 style="margin-top:6px">' + tr("Средний счёт за 10 смен в каждом городе", "Average score over 10 shifts per city") + "</h3>";
+  h += '<div class="tbl"><table><tr><th>' + tr("кто", "who") + '</th><th class="n">' + tr("Алматы", "Almaty") + '</th><th class="n">' + tr("Дубай", "Dubai") + '</th><th class="n">' + tr("Роттердам", "Rotterdam") + "</th></tr>";
+  RIVALS.slice().sort(function (a, b) { return mean(A[b]) - mean(A[a]); }).forEach(function (w) {
+    h += "<tr><td>" + WHO[w][LANG] + "</td>" + ["almaty", "dubai", "rotterdam"].map(function (c) { return '<td class="n">' + nf(avg(A[w][c])) + "</td>"; }).join("") + "</tr>";
+  });
+  h += "</table></div>";
+  var dif = {}, F = { extella: 0, small: 0 }, gap = 0, S1 = {}, S2 = {}, S3 = {};
+  ["almaty", "dubai", "rotterdam"].forEach(function (c) { dif[c] = avg(A.extella[c]) - avg(A.small[c]); gap += avg(A.big[c]) - avg(A.extella[c]); });
+  Object.keys(DATA.rivals).forEach(function (k) {
+    F.extella += DATA.rivals[k].extella.counts.forced; F.small += DATA.rivals[k].small.counts.forced;
+    var c = k.split("_")[0];
+    (S1[c] = S1[c] || []).push(DATA.stage1[k]); (S2[c] = S2[c] || []).push(DATA.stage2[k]); (S3[c] = S3[c] || []).push(DATA.stage3[k]);
+  });
+  var s1 = ["almaty", "dubai", "rotterdam"].map(function (c) { return nf(avg(S1[c])); }).join(" / ");
+  var s2 = ["almaty", "dubai", "rotterdam"].map(function (c) { return nf(avg(S2[c])); }).join(" / ");
+  var s3 = ["almaty", "dubai", "rotterdam"].map(function (c) { return nf(avg(S3[c])); }).join(" / ");
+  var s4 = ["almaty", "dubai", "rotterdam"].map(function (c) { return nf(avg(A.extella[c])); }).join(" / ");
+  // кто где впереди, считаем по данным: вписанное руками устаревает со следующей ступенью
+  var CITY_RU = { almaty: "Алматы", dubai: "Дубае", rotterdam: "Роттердаме" }, CITY_EN = { almaty: "Almaty", dubai: "Dubai", rotterdam: "Rotterdam" };
+  var bigAhead = ["almaty", "dubai", "rotterdam"].filter(function (c) { return avg(A.big[c]) > avg(A.extella[c]); });
+  var exAhead = ["almaty", "dubai", "rotterdam"].filter(function (c) { return avg(A.big[c]) <= avg(A.extella[c]); });
+  function names(list, map, last) {
+    var ns = list.map(function (c) { return map[c]; });
+    return ns.length < 2 ? (ns[0] || "") : ns.slice(0, -1).join(", ") + " " + last + " " + ns[ns.length - 1];
+  }
+  var whoAheadRu = (bigAhead.length === 0 ? "уже не впереди ни в одном городе"
+                    : "впереди в " + names(bigAhead, CITY_RU, "и")) +
+                   (exAhead.length ? ", Qwen 3.5 9B с Extella впереди в " + names(exAhead, CITY_RU, "и") : "");
+  var whoAheadEn2 = (bigAhead.length === 0 ? "is no longer ahead in any city"
+                    : "is ahead in " + names(bigAhead, CITY_EN, "and")) +
+                   (exAhead.length ? ", Qwen 3.5 9B with Extella is ahead in " + names(exAhead, CITY_EN, "and") : "");
+  var whoAheadRu2 = LANG === "ru" ? whoAheadRu : whoAheadEn2;
+  h += "<h3>" + tr("Что видно честно", "What the numbers honestly say") + "</h3>";
+  h += '<ul class="facts" style="grid-template-columns:1fr">' +
+    "<li>" + tr("Qwen 3.5 9B с Extella и без неё", "Qwen 3.5 9B with and without Extella") + "<span>" +
+      tr("Алматы +", "Almaty +") + nf(dif.almaty) + tr(", Дубай +", ", Dubai +") + nf(dif.dubai) + tr(", Роттердам +", ", Rotterdam +") + nf(dif.rotterdam) +
+      tr("; посадок вне площадки ", "; landings off a pad ") + F.extella + tr(" против ", " against ") + F.small + "</span></li>" +
+    "<li>" + tr("Claude Opus 5 без Extella, пределы посчитаны им вручную", "Claude Opus 5 without Extella, working the limits out by hand") + "<span>" +
+      whoAheadRu2 + tr("; разрыв по сумме трёх городов ", "; over the three cities the gap is ") + nf(gap) + "</span></li>" +
+    "<li>" + tr("Четыре ступени языка", "Four stages of the language") + "<span>" + s1 + " → " + s2 + " → " + s3 + " → " + s4 + "</span></li>" +
+    "</ul>";
+  h += "<p>" + tr(
+    "На второй ступени совет один раз навредил: Дубай, 7 мая, порывы выше 15 м/с прервали три рейса. С третьей ступени такой день обработчик не летает, и вынужденных посадок на 30 сменах нет совсем. Пределы груза по точкам, которые язык получил на четвёртой ступени, выигрыша не дали: те же замыслы без этих строк дают на 20 очков больше. Соперника «Claude Opus 5, который решает по ходу смены» ещё нет.",
+    "At stage two the advice hurt once: Dubai, 7 May, gusts over 15 m/s cut three flights short. From stage three the handler does not fly such a day, and there are no forced landings at all across the 30 shifts. The per-point load limits the language gained at stage four brought no gain: the same plans without those lines score 20 points more. A rival 'Claude Opus 5 deciding during the shift' is not there yet.") + "</p>";
+  h += '<h3 style="margin-top:6px">' + tr("Отказ обработчика до взлёта (записанный пример)", "A handler refusal before take-off (recorded example)") + "</h3>";
+  h += '<pre class="code">' + esc(tr(
+    "строка 1: на обратном плече встречный ветер 10,4 м/с, заряда хватит до 1,2 км от склада (Центр в 4,9 км, груз 6,9 кг): подними предел груза, лети ниже или садись на зарядку на площадке 1. Иначе по прогнозу доставлено 1 из 15 против 3 без этой строки, счёт 99,8 против 265,2.",
+    "line 1: headwind 10.4 m/s on the way back, the charge lasts to 1.2 km from the depot (Centrum at 4.9 km, load 6.9 kg): raise the load limit, fly lower or charge at pad 1. Otherwise the forecast delivers 1 of 15 against 3 without this line, score 99.8 against 265.2.")) + "</pre>";
+  h += '<div id="howPlan"></div>';
+  $("howB").innerHTML = h;
+  howPlan();
+}
+function howPlan() {
+  var R = DATA.rivals[key()], e = R.extella;
+  var h = '<h3 style="margin-top:6px">' + tr("Замысел Qwen 3.5 9B с Extella на выбранную смену", "The plan of Qwen 3.5 9B with Extella for the selected shift") + " (" + CITY[city][LANG] + ", " + tr("день ", "day ") + seed + ")</h3>";
+  if (e.first_plan) {
+    h += '<p class="note">' + tr("Первый замысел Qwen 3.5 9B:", "Qwen 3.5 9B's first plan:") + '</p><pre class="code">' + esc(e.first_plan) + "</pre>";
+    if (e.advice_ru) h += '<div class="warn">' + tr("Проверка: ", "Check: ") + esc(LANG === "ru" ? e.advice_ru : e.advice_en) + "</div>";
+    h += '<p class="note">' + (e.took_advice ? tr("Модель переписала замысел, по нему и летела смена:", "The model rewrote the plan, and the shift flew this one:") : tr("Модель не взяла подсказанную строку, смена летела по этому замыслу:", "The model did not take the suggested line; the shift flew this plan:")) + "</p>";
+  }
+  h += '<pre class="code">' + esc(e.plan) + "</pre>" + (LANG === "en" ? '<p class="note">The model wrote the plan in Russian; the language takes both.</p>' : "");
+  var why = LANG === "ru" ? e.why_ru : e.why_en;
+  if (why) h += '<p class="note">' + tr("Qwen 3.5 9B о своём замысле: ", "Qwen 3.5 9B on its plan: ") + esc(why) + "</p>";
+  if (e.refusals && e.refusals.length) {
+    var r = e.refusals[0], o = DATA.worlds[key()].orders[r[1]], p = DATA.worlds[key()].map.points[o.point];
+    h += '<p class="note">' + tr("Отказов лететь за смену: ", "Flights refused during the shift: ") + e.refusals.length + tr(". Первый: ", ". First: ") + S.clock(r[0]) + ", " +
+      tr("заказ ", "order ") + r[1] + " (" + esc(LANG === "ru" ? p.ru : p.en) + ", " + nf(o.kg, 1) + tr(" кг", " kg") + "): " + whyText(r[2]) + ".</p>";
+  }
+  $("howPlan").innerHTML = h;
+}
+function whyText(w) {
+  return ({ charge: tr("заряда не хватит на круг по прогнозу с запасом", "not enough charge for the round trip on the forecast with a margin"),
+            power: tr("батарея не даст мощности с этим грузом", "the battery will not give the power with this load"),
+            far: tr("дальше предела из замысла", "farther than the plan's limit"),
+            load: tr("тяжелее предела из замысла", "heavier than the plan's limit"),
+            nofly: tr("путь проходит через запретную зону", "the route crosses a no-fly zone"),
+            wind: tr("ветер у склада выше предела дрона", "the wind at the depot is above the drone's limit"),
+            heat: tr("в жару батарея не даст мощности", "the battery cannot give the power in this heat") })[w] || w;
+}
+function mean(o) { var s = 0, n = 0; for (var c in o) { s += avg(o[c]); n++; } return s / n; }
+function avg(a) { var s = 0; a.forEach(function (x) { s += x; }); return s / a.length; }
+
+/* ---------- выбор смены ---------- */
+function pickUI() {
+  var h = "";
+  ["rotterdam", "almaty", "dubai"].forEach(function (c) {
+    h += '<button type="button" class="card" data-c="' + c + '" aria-pressed="' + (c === city) + '"><b>' + CITY[c][LANG] + '</b><span class="note">' + CITY[c]["hard_" + LANG] + "</span></button>";
+  });
+  $("cities").innerHTML = h;
+  Array.prototype.forEach.call($("cities").querySelectorAll("button"), function (b) {
+    b.onclick = function () { city = b.getAttribute("data-c"); pickUI(); };
+  });
+  var o = "";
+  for (var s = 1; s <= 10; s++) {
+    var W = DATA.worlds[city + "_" + s];
+    o += '<option value="' + s + '"' + (s === seed ? " selected" : "") + ">" + s + " · " + W.day + (noFly(city + "_" + s) ? tr(" · нелётный", " · no-fly") : "") + "</option>";
+  }
+  $("daySel").innerHTML = o;
+  var W0 = DATA.worlds[key()], hr = W0.hours[1];
+  var w = hr.fc[60], ws = Math.sqrt(w[0] * w[0] + w[1] * w[1]);
+  $("dayInfo").textContent = tr("в 13:00 по прогнозу ", "forecast at 13:00: ") + nf(hr.t_fc) + " °C, " + tr("ветер ", "wind ") + nf(ws, 1) + tr(" м/с ", " m/s ") + compass(w[0], w[1]) + ", " + W0.orders.length + tr(" заказов", " orders");
+  var R = DATA.rivals[key()], best = bestGet();
+  var rows = RIVALS.map(function (w) { return [w, R[w].score, R[w].counts]; });
+  if (best) rows.push(["you", best.score, best.counts]);
+  rows.sort(function (a, b) { return b[1] - a[1]; });
+  var t = "<tr><th>" + tr("кто летал эту смену", "who flew this shift") + '</th><th class="n">' + tr("счёт", "score") + '</th><th class="n">' + tr("доставлено", "delivered") + '</th><th class="n">' + tr("посадок вне площадки", "forced landings") + "</th></tr>";
+  rows.forEach(function (r) {
+    t += "<tr" + (r[0] === "you" ? ' class="me"' : "") + "><td>" + (r[0] === "you" ? tr("Твой лучший", "Your best") : WHO[r[0]][LANG]) + '</td><td class="n">' + nf(r[1], 1) + '</td><td class="n">' + r[2].delivered + " / " + r[2].orders + '</td><td class="n">' + r[2].forced + "</td></tr>";
+  });
+  $("rivalsT").innerHTML = t;
+  $("noflyNote").hidden = !noFly(key());
+  $("noflyNote").textContent = tr("Нелётный день: ветер у склада всю смену выше 12 м/с, и никто из соперников не взлетел. Можешь попробовать, но Проверка игры не выпустит дрон, пока ветер не стихнет.",
+    "No-fly day: the wind at the depot stays above 12 m/s all shift and no rival took off. You can try, but the game will not release a drone until the wind drops.");
+  if ($("howPlan")) howPlan();
+}
+$("daySel").onchange = function () { seed = parseInt(this.value, 10); pickUI(); };
+
+function noFly(k) { var R = DATA.rivals[k]; return RIVALS.every(function (w) { return R[w].counts.delivered === 0; }); }
+function bestGet() { try { var v = localStorage.getItem("drone_best_" + key()); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function bestSet(sc) { try { var b = bestGet(); if (!b || sc.score > b.score) localStorage.setItem("drone_best_" + key(), JSON.stringify({ score: sc.score, counts: sc.counts })); } catch (e) {} }
+
+/* ---------- начало смены ---------- */
+function start(mode, d) {
+  finished = false;
+  drill = d || null; retSoc = {};
+  if (drill) { city = drill.key.split("_")[0]; seed = +drill.key.split("_")[1]; }
+  watch = mode === "watch" ? "extella" : null;
+  G = new S.Game(gameWorld());
+  ghostWho = watch || drill ? "" : (ghostWho || "extella");
+  GH = null; ghI = 0; wI = 0; steps = 0; decLog = []; picked = []; selDrone = 0; logLines = []; lastEv = 0;
+  trail = [[], [], []]; trailT = -1; tip = null; seenOrders = drill ? drill.orders.length : 0;
+  setGhost(watch || drill ? "" : ghostWho);
+  $("ghostSel").parentNode.hidden = !!drill;
+  $("drillGoal").hidden = !drill;
+  if (drill) $("drillGoal").innerHTML = "<b>" + esc(drill[LANG].title) + ".</b> " + esc(drill[LANG].goal);
+  $("pick").hidden = true; $("intro").hidden = true; $("drills").hidden = true; $("result").hidden = true; $("drillRes").hidden = true; $("play").hidden = false;
+  $("sendBox").hidden = !!watch;
+  $("where").textContent = CITY[city][LANG] + " · " + DATA.worlds[key()].day + (watch ? " · " + tr("смену ведёт Qwen 3.5 9B с Extella", "Qwen 3.5 9B with Extella runs the shift") : drill ? " · " + tr("тренировка", "training") : "");
+  prepMap();
+  speedUI();
+  paused = !watch; speed = watch ? 60 : 30;
+  speedUI();
+  fcTable();
+  if (drill) addLog(tr("Тренировка: ", "Training: ") + drill[LANG].title); else addLog(tr("Смена началась. Заказы появляются в ленте; выбери дрон, нажми заказ и отправь.", "The shift has started. Orders appear in the list; pick a drone, tap an order and send it."));
+  render();
+  window.scrollTo({ top: $("play").offsetTop - 8 });
+}
+$("startBtn").onclick = function () { start("play"); };
+$("watchBtn").onclick = function () { start("watch"); };
+
+function setGhost(w) {
+  ghostWho = w; GH = null; ghI = 0;
+  if (w) {
+    GH = new S.Game(world(key()));
+    var R = DATA.rivals[key()][w];
+    while (GH.t < G.t) ghStep(R);
+  }
+  var o = '<option value="">' + tr("никто", "nobody") + "</option>";
+  RIVALS.forEach(function (x) { o += '<option value="' + x + '"' + (x === ghostWho ? " selected" : "") + ">" + WHO[x][LANG] + "</option>"; });
+  $("ghostSel").innerHTML = o;
+  $("ghostSel").disabled = !!watch;
+}
+$("ghostSel").onchange = function () { setGhost(this.value); render(); };
+function ghStep(R) {
+  var n = Math.round(GH.t);
+  while (ghI < R.decisions.length && R.decisions[ghI][0] <= n) { GH.decide(R.decisions[ghI][1]); ghI++; }
+  if (!GH.done()) GH.step();
+}
+
+function speedUI() {
+  var h = '<button type="button" id="pauseBtn">' + (paused ? tr("Пуск", "Play") : tr("Пауза", "Pause")) + "</button>";
+  [10, 30, 60, 120].forEach(function (s) { h += '<button type="button" data-s="' + s + '" aria-pressed="' + (s === speed) + '">×' + s + "</button>"; });
+  if (!watch && !drill) h += '<button type="button" id="pnBtn" aria-pressed="' + pauseOnNew + '">' + tr("пауза на новом заказе", "pause on new order") + "</button>";
+  $("speeds").innerHTML = h;
+  $("pauseBtn").onclick = function () { paused = !paused; speedUI(); };
+  Array.prototype.forEach.call($("speeds").querySelectorAll("[data-s]"), function (b) {
+    b.onclick = function () { speed = parseInt(b.getAttribute("data-s"), 10); paused = false; speedUI(); };
+  });
+  if ($("pnBtn")) $("pnBtn").onclick = function () { pauseOnNew = !pauseOnNew; speedUI(); };
+}
+
+/* ---------- след дрона ---------- */
+function trailStep() {
+  if (G.t - trailT < 10 && trailT >= 0) return;      // точка раз в 10 секунд смены
+  trailT = G.t;
+  for (var k = 0; k < G.drones.length; k++) {
+    var d = G.drones[k];
+    if (d.mode !== "air") continue;
+    var w = G.wind(d.alt), prev = trail[k][trail[k].length - 1];
+    var sp = Math.sqrt(w[0] * w[0] + w[1] * w[1]);
+    // Сам ветер за смену почти не поворачивает (в данных ERA5 это 4 смены из 30, и на слабом ветре),
+    // а меняется он относительно курса: туда попутный, обратно встречный. Метку ставим на это.
+    var same = prev && prev.t > G.t - 60;
+    var dx = same ? d.x - prev.x : 0, dy = same ? d.y - prev.y : 0, dist = Math.sqrt(dx * dx + dy * dy);
+    var along = dist > 1 ? (w[0] * dx + w[1] * dy) / dist : 0;   // + попутный, - встречный
+    // сравниваем с последним ненулевым: на выгрузке дрон висит, и там along = 0
+    var last = same ? (Math.abs(along) > 0.8 ? prev.lastAlong : prev.lastAlong) : 0;
+    var mark = "";
+    if (same && last > 0.8 && along < -0.8) mark = "head";        // попутный сменился встречным
+    else if (same && last < -0.8 && along > 0.8) mark = "tail";   // и наоборот
+    else if (same && prev.soc >= 0.2 && d.soc < 0.2) mark = "low";      // заряд перешёл 20 %
+    trail[k].push({ x: d.x, y: d.y, soc: d.soc, t: G.t, u: w[0], v: w[1], sp: sp,
+                    along: along, lastAlong: Math.abs(along) > 0.8 ? along : (same ? prev.lastAlong : 0),
+                    gs: d.gs || 0, turn: mark !== "", mark: mark });
+    if (trail[k].length > 900) trail[k].shift();
+  }
+}
+
+/* ---------- шаг ---------- */
+function oneStep() {
+  if (watch) {
+    var R = DATA.rivals[key()][watch];
+    while (wI < R.decisions.length && R.decisions[wI][0] <= steps) { G.decide(R.decisions[wI][1]); wI++; }
+  }
+  G.step(); steps++;
+  trailStep();
+  if (GH) ghStep(DATA.rivals[key()][ghostWho]);
+  var ev = G.events;
+  for (; lastEv < ev.length; lastEv++) evLog(ev[lastEv]);
+  var vis = 0;
+  for (var i = 0; i < G.orders.length; i++) if (G.orders[i].t <= G.t) vis++;
+  if (vis > seenOrders) {
+    for (var j = seenOrders; j < vis; j++) {
+      var o = G.orders[j], p = G.pts[o.point];
+      addLog(S.clock(G.t) + " " + tr("новый заказ ", "new order ") + o.id + ": " + (LANG === "ru" ? p.ru : p.en) + ", " + nf(o.kg, 1) + tr(" кг", " kg"));
+    }
+    seenOrders = vis;
+    if (pauseOnNew && !watch) { paused = true; speedUI(); return false; }
+  }
+  return true;
+}
+function evLog(e) {
+  var t = S.clock(e[0]), d = tr("дрон ", "drone ") + (e[2] + 1), s = "";
+  if (e[1] === "takeoff") s = d + tr(" взлетел", " took off");
+  else if (e[1] === "deliver") s = d + tr(" доставил заказ ", " delivered order ") + e[3];
+  else if (e[1] === "pad") s = d + tr(" сел на площадку ", " landed on pad ") + ptName(e[3]);
+  else if (e[1] === "dock") { s = d + tr(" вернулся на склад с зарядом ", " is back at the depot with ") + nf(G.drones[e[2]].soc * 100) + " %"; retSoc[e[2]] = G.drones[e[2]].soc; }
+  else if (e[1] === "forced") s = d + tr(": вынужденная посадка, −250", ": forced landing, −250");
+  else if (e[1] === "lost") s = d + tr(": потерян, −600", ": lost, −600");
+  addLog(t + " " + s, e[1] === "forced" || e[1] === "lost");
+}
+function ptName(id) { var p = G.pts[id]; return LANG === "ru" ? p.ru : p.en; }
+function addLog(s, bad) { logLines.unshift([s, bad]); if (logLines.length > 60) logLines.pop(); }
+
+function loop(ts) {
+  if (!lastTs) lastTs = ts;
+  var dt = Math.min(0.1, (ts - lastTs) / 1000); lastTs = ts;
+  if (G && !paused && !$("play").hidden) {
+    acc += dt * speed;
+    var n = 0;
+    while (acc >= 1 && n < 400) {
+      acc -= 1; n++;
+      if (isDone()) break;
+      if (!oneStep()) { acc = 0; break; }
+    }
+    if (isDone()) { finish(); }
+    render();
+  } else acc = 0;
+  requestAnimationFrame(loop);
+}
+
+/* ---------- оценка рейса по прогнозу ---------- */
+function estimate(route, alt, sp) {
+  var D = S.D, hr = G.hour(), cap = D.battery_wh * hr.cap, va = S.SPEEDS[sp];
+  var wv = G.wind(alt, false), out = [];
+  [1.0, 1.18].forEach(function (k) {
+    var u = wv[0] * k, v = wv[1] * k, soc = 1.0, minSoc = 1.0, tsec = 0, load = route.filter(function (t) { return t[0] === "o"; }).map(function (t) { return G.orders[+t.slice(1)].kg; });
+    var kg = load.reduce(function (a, b) { return a + b; }, 0), stuck = false, padSoc = [];
+    var pts = [G.M.depot].concat(route.map(function (t) { return G.target(t); })).concat([G.M.depot]);
+    function ph(z) { var m = D.empty_kg + kg; return D.hover_c * m * Math.sqrt(Math.sqrt(m)) * G.dens(z); }
+    function use(P, s) { soc -= P * s / 3600 / cap; tsec += s; }
+    use(ph(G.M.depot.z + alt / 2) * D.climb_k, alt / D.climb_ms);
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1], dx = b.x - a.x, dy = b.y - a.y, dist = Math.sqrt(dx * dx + dy * dy);
+      var ex = dist ? dx / dist : 0, ey = dist ? dy / dist : 0, wa = u * ex + v * ey, wc = -u * ey + v * ex;
+      var gs = wc * wc < va * va ? Math.sqrt(va * va - wc * wc) + wa : wa;
+      var z = (a.z + b.z) / 2 + alt, uu = va / 15;
+      if (gs <= 0.3) { stuck = true; break; }
+      use(ph(z) * (1 + S.CRUISE_A * uu + S.CRUISE_B * uu * uu), dist / gs);
+      var tok = i + 1 < pts.length - 1 ? route[i] : "depot";
+      if (tok === "depot" || tok[0] === "p") {
+        use(ph(b.z + alt / 2) * D.descend_k, alt / D.climb_ms);
+        minSoc = Math.min(minSoc, soc);
+        if (tok[0] === "p") { padSoc.push(soc); soc = 1.0; use(ph(b.z + alt / 2) * D.climb_k, alt / D.climb_ms); tsec += D.swap_pad_s; }
+      } else {
+        var dd = alt - 20;
+        use(ph(b.z + 20 + dd / 2) * D.descend_k, dd / D.climb_ms);
+        use(ph(b.z + 20), D.service_s);
+        kg -= G.orders[+tok.slice(1)].kg;
+        use(ph(b.z + 20 + dd / 2) * D.climb_k, dd / D.climb_ms);
+        minSoc = Math.min(minSoc, soc);
+      }
+    }
+    out.push({ soc: Math.min(minSoc, soc), stuck: stuck, min: tsec / 60 });
+  });
+  return out;
+}
+
+/* ---------- отправка ---------- */
+function freeDrone(i) { var d = G.drones[i]; return d.mode === "dock" && d.busy <= 0; }
+var noflyCache = {};
+function noflyHint() {
+  // подсказка про запретную зону: обходы проверяем Проверкой игры, а не советуем наугад
+  var key = picked.join(",") + "|" + $("altSel").value + "|" + spd + "|" + $("padSel0").value + "|" + $("padSel").value;
+  if (noflyCache.key === key) return noflyCache.txt;
+  var stops = [];
+  G.M.points.forEach(function (p) { if (p.pad) stops.push(["p" + p.id, LANG === "ru" ? "площадку " + p.ru : "pad " + p.en]); });
+  G.observe().orders.forEach(function (o) {
+    if (o.status === "wait" && picked.indexOf(o.id) < 0 && stops.length < 10)
+      stops.push(["o" + o.id, (LANG === "ru" ? "заказ " : "order ") + "#" + o.id]);
+  });
+  var base = routeNow(), alt = parseInt($("altSel").value, 10), ok = null;
+  for (var i = 0; i < stops.length && !ok; i++) {
+    var tries = [[stops[i][0]].concat(base), base.concat([stops[i][0]])];
+    for (var k = 0; k < tries.length && !ok; k++) {
+      if (tries[k].length > 5) continue;
+      var r = G.check({ drone: selDrone, route: tries[k], alt: alt, speed: spd });
+      if (!r.some(function (x) { return x.code === "nofly"; })) ok = stops[i][1];
+    }
+  }
+  var txt = ok
+    ? tr("Зона не кончается с высотой, но её можно обогнуть: добавь в рейс ", "The zone does not end with altitude, but it can be flown around: add ") + ok +
+      tr(" как остановку.", " to the flight as a stop.")
+    : tr("Зона не кончается с высотой, и обойти её в этом рейсе нечем: к этой точке сегодня не долететь. Заказ останется недоставленным (−60), как и у соперников.",
+         "The zone does not end with altitude and there is nothing to fly around it with: this point cannot be reached today. The order stays undelivered (-60), as it does for the rivals.");
+  noflyCache = { key: key, txt: txt };
+  return txt;
+}
+
+function routeNow() {
+  var r = picked.map(function (o) { return "o" + o; }), pad = $("padSel").value, pad0 = $("padSel0").value;
+  if (pad0 !== "") r.unshift("p" + pad0);
+  if (pad !== "") r.push("p" + pad);
+  return r;
+}
+$("ecoBtn").onclick = function () { spd = "eco"; $("ecoBtn").setAttribute("aria-pressed", "true"); $("fastBtn").setAttribute("aria-pressed", "false"); render(); };
+$("fastBtn").onclick = function () { spd = "fast"; $("fastBtn").setAttribute("aria-pressed", "true"); $("ecoBtn").setAttribute("aria-pressed", "false"); render(); };
+$("altSel").onchange = function () { render(); };
+$("padSel").onchange = function () { render(); };
+$("padSel0").onchange = function () { render(); };
+$("clearBtn").onclick = function () { picked = []; $("padSel").value = ""; $("padSel0").value = ""; $("msg").innerHTML = ""; render(); };
+$("sendBtn").onclick = function () {
+  if (!picked.length) return;
+  var dec = { drone: selDrone, route: routeNow(), alt: parseInt($("altSel").value, 10), speed: spd };
+  var rj = G.decide(dec);
+  if (rj.length) {
+    $("msg").innerHTML = rj.map(function (r) { return '<div class="rej">' + esc(r[LANG]) + "</div>"; }).join("");
+  } else {
+    decLog.push([steps, dec]);
+    $("msg").innerHTML = "";
+    picked = []; $("padSel").value = ""; $("padSel0").value = "";
+    for (var i = 0; i < 3; i++) if (freeDrone(i)) { selDrone = i; break; }
+    if (paused) { paused = false; speedUI(); }
+  }
+  render();
+};
+function recall(i) {
+  var dec = { drone: i, recall: true }, rj = G.decide(dec);
+  if (!rj.length) { decLog.push([steps, dec]); addLog(S.clock(G.t) + " " + tr("дрон ", "drone ") + (i + 1) + tr(" возвращается", " is coming back")); }
+  render();
+}
+
+/* ---------- отрисовка панели ---------- */
+var DC = ["--d0", "--d1", "--d2"];
+function droneState(d) {
+  if (d.mode === "dock") return d.busy > 0 ? tr("меняет батарею, ", "battery swap, ") + Math.ceil(d.busy) + tr(" с", " s") : tr("на складе, готов", "at the depot, ready");
+  if (d.mode === "pad") return tr("на площадке, зарядка ", "on the pad, charging ") + Math.ceil(d.busy) + tr(" с", " s");
+  if (d.mode === "forced") return tr("вынужденная посадка", "forced landing");
+  if (d.mode === "lost") return tr("потерян", "lost");
+  var tok = d.route[d.wp], to = tok === "depot" ? tr("на склад", "to the depot") : (tok[0] === "p" ? tr("на площадку ", "to pad ") + ptName(+tok.slice(1)) : tr("к заказу ", "to order ") + tok.slice(1) + " (" + ptName(G.orders[+tok.slice(1)].point) + ")");
+  if (d.phase === "climb") return tr("набирает высоту, ", "climbing, ") + to;
+  if (d.phase === "cruise") return tr("летит ", "flying ") + to;
+  if (d.phase === "descend") return tr("снижается, ", "descending, ") + to;
+  if (d.phase === "service") return tr("отдаёт груз", "dropping the parcel");
+  return d.mode;
+}
+function cshort(u, v) {
+  if (Math.sqrt(u * u + v * v) < 0.5) return "";
+  var a = Math.atan2(-u, -v) * 180 / Math.PI; if (a < 0) a += 360;
+  return (LANG === "ru" ? ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"] : ["N", "NE", "E", "SE", "S", "SW", "W", "NW"])[Math.round(a / 45) % 8];
+}
+function compass(u, v) {
+  if (Math.sqrt(u * u + v * v) < 0.5) return tr("штиль", "calm");
+  var a = Math.atan2(-u, -v) * 180 / Math.PI; if (a < 0) a += 360;
+  var R = LANG === "ru" ? ["с севера", "с северо-востока", "с востока", "с юго-востока", "с юга", "с юго-запада", "с запада", "с северо-запада"] : ["from N", "from NE", "from E", "from SE", "from S", "from SW", "from W", "from NW"];
+  return R[Math.round(a / 45) % 8];
+}
+
+function render() {
+  if (!G) return;
+  var ob = G.observe();
+  $("clock").textContent = ob.clock;
+  var c = G.counts, wait = 0, i;
+  for (i = 0; i < ob.orders.length; i++) if (ob.orders[i].status === "wait") wait++;
+  var dw = ob.depot_wind, dws = Math.sqrt(dw[0] * dw[0] + dw[1] * dw[1]);
+  var st = '<span class="chip okc">' + tr("доставлено ", "delivered ") + c.delivered + "</span>" +
+    '<span class="chip">' + tr("ждут ", "waiting ") + wait + "</span>" +
+    (c.forced ? '<span class="chip hot">' + tr("вынужденных посадок ", "forced landings ") + c.forced + "</span>" : "") +
+    (c.lost ? '<span class="chip hot">' + tr("потеряно ", "lost ") + c.lost + "</span>" : "") +
+    '<span class="chip">' + tr("у склада ", "at the depot ") + nf(dws, 1) + tr(" м/с ", " m/s ") + compass(dw[0], dw[1]) + "</span>" +
+    '<span class="chip' + (ob.temp_now >= 40 || ob.temp_now <= 0 ? " hot" : "") + '">' + nf(ob.temp_now) + " °C" + (ob.cap_now < 0.999 ? tr(", ёмкость ", ", capacity ") + nf(ob.cap_now * 100) + " %" : "") + "</span>";
+  if (GH) {
+    $("ghostInfo").hidden = false;
+    $("ghostInfo").textContent = tr("у соперника доставлено ", "rival delivered ") + GH.counts.delivered + (GH.counts.forced ? tr(", посадок ", ", forced ") + GH.counts.forced : "");
+  } else $("ghostInfo").hidden = true;
+  $("stats").innerHTML = st;
+
+  // подсказка
+  var hint;
+  if (watch) hint = tr("Смену ведёт обработчик Extella по замыслу Qwen 3.5 9B. Замысел этой смены: ", "Extella's handler runs the shift by Qwen 3.5 9B's plan. This shift's plan: ") + "<br><span class='mono note'>" + esc(DATA.rivals[key()].extella.plan).replace(/\n/g, " · ") + "</span>";
+  else if (!ob.orders.length) hint = tr("Заказов пока нет. Нажми «Пуск»: первый придёт через несколько минут.", "No orders yet. Press Play: the first one comes in a few minutes.");
+  else if (!freeDrone(selDrone)) hint = tr("Этот дрон занят. Выбери дрон со статусом «на складе, готов».", "This drone is busy. Pick one that says 'at the depot, ready'.");
+  else if (!picked.length) hint = tr("Нажми заказ в ленте, чтобы взять его в рейс. Можно взять два подряд, если хватит заряда.", "Tap an order to put it on the flight. You can take two in a row if the charge allows.");
+  else hint = tr("Посмотри оценку заряда ниже и отправляй. Если по прогнозу дрон вернётся меньше чем с 15 %, возьми площадку по пути или лети быстрее и ниже.", "Check the charge estimate below and send. If the forecast brings it back under 15%, add a pad on the way or fly faster and lower.");
+  $("hint").innerHTML = hint;
+
+  // дроны
+  var h = "";
+  G.drones.forEach(function (d, k) {
+    var soc = Math.max(0, d.soc * 100), cls = soc < 20 ? "low" : soc < 40 ? "mid" : "";
+    var od = ob.drones[k], wh = od.wind_here ? Math.sqrt(od.wind_here[0] * od.wind_here[0] + od.wind_here[1] * od.wind_here[1]) : null;
+    h += '<div class="drone' + (k === selDrone && !watch ? " sel" : "") + '" data-d="' + k + '" role="button" tabindex="0">' +
+      '<span class="num" style="background:var(' + DC[k] + ')">' + (k + 1) + "</span>" +
+      '<span class="st">' + esc(droneState(d)) + "</span>" +
+      '<span class="bar"><i class="' + cls + '" style="width:' + soc.toFixed(0) + '%"></i></span>' +
+      '<span class="sub">' + nf(soc) + " %" + (od.load_kg > 0 ? " · " + nf(od.load_kg, 1) + tr(" кг", " kg") : "") + (d.mode === "air" ? " · " + nf(d.gs, 1) + tr(" м/с над землёй", " m/s ground") : "") + (wh !== null ? " · " + tr("ветер ", "wind ") + nf(wh, 1) : "") + "</span>" +
+      (d.mode === "air" && !watch && d.route[d.route.length - 1] === "depot" && d.route.length - d.wp > 1 ? '<button type="button" data-r="' + k + '">' + tr("Вернуть", "Recall") + "</button>" : "<span></span>") +
+      "</div>";
+  });
+  $("drones").innerHTML = h;
+  Array.prototype.forEach.call($("drones").querySelectorAll(".drone"), function (el) {
+    el.onclick = function (e) {
+      if (e.target.getAttribute("data-r") !== null) { recall(+e.target.getAttribute("data-r")); return; }
+      if (watch) return; selDrone = +el.getAttribute("data-d"); render();
+    };
+  });
+
+  // заказы
+  h = "";
+  var list = ob.orders.slice().sort(function (a, b) { return (a.status === "wait" ? 0 : 1) - (b.status === "wait" ? 0 : 1) || a.due - b.due; });
+  list.forEach(function (o) {
+    var p = G.pts[o.point], km = Math.sqrt(p.x * p.x + p.y * p.y) / 1000, left = o.due - G.t;
+    var stx = o.status === "wait" ? (left >= 0 ? tr("срок ", "due ") + S.clock(o.due).slice(0, 5) + " · " + Math.floor(left / 60) + tr(" мин", " min") : tr("опаздывает", "late"))
+      : o.status === "air" ? tr("в пути", "on its way") : o.status === "done" ? tr("доставлен", "delivered") : tr("застрял", "stuck");
+    h += '<button type="button" class="order' + (picked.indexOf(o.id) >= 0 ? " pick" : "") + '" data-o="' + o.id + '"' + (o.status !== "wait" || watch ? " disabled" : "") + ">" +
+      '<span class="tag">#' + o.id + "</span><span>" + esc(LANG === "ru" ? p.ru : p.en) + (p.pad ? " · P" : "") + ' <span class="tag">' + nf(km, 1) + tr(" км · ", " km · ") + nf(o.kg, 1) + tr(" кг", " kg") + "</span></span>" +
+      '<span class="due' + (o.status === "wait" && left < 0 ? " late" : "") + '">' + (picked.indexOf(o.id) >= 0 ? (picked.indexOf(o.id) + 1) + ". " : "") + stx + "</span></button>";
+  });
+  var busyN = ob.orders.filter(function (o) { return o.status !== "wait"; }).length;
+  if (h && busyN) h += '<p class="note" style="margin:6px 2px 0">' + tr("Заказы «в пути» и «доставлен» выбрать нельзя: они уже у дрона.",
+                                                                       "Orders 'on its way' and 'delivered' cannot be picked: a drone has them.") + "</p>";
+  $("orders").innerHTML = h || '<p class="note">' + tr("Заказов пока нет.", "No orders yet.") + "</p>";
+  Array.prototype.forEach.call($("orders").querySelectorAll("[data-o]"), function (b) {
+    b.onclick = function () {
+      var id = +b.getAttribute("data-o"), at = picked.indexOf(id);
+      if (at >= 0) picked.splice(at, 1); else if (picked.length < 3) picked.push(id);
+      $("msg").innerHTML = ""; render();
+    };
+  });
+
+  // форма
+  if (!watch) {
+    var pads = '<option value="">' + tr("без площадки", "no pad") + "</option>";
+    G.M.points.forEach(function (p) { if (p.pad) pads += '<option value="' + p.id + '">' + tr("площадка ", "pad ") + esc(LANG === "ru" ? p.ru : p.en) + "</option>"; });
+    ["padSel", "padSel0"].forEach(function (id) {
+      var el = $(id), pv = el.value;
+      if (el.getAttribute("data-city") !== city + LANG) { el.innerHTML = pads; el.setAttribute("data-city", city + LANG); }
+      el.value = pv;
+    });
+    var free = freeDrone(selDrone);
+    $("sendBtn").textContent = tr("Отправить дрон ", "Send drone ") + (selDrone + 1);
+    $("sendBtn").disabled = !picked.length || !free;
+    // отказ Проверки игры показываем до нажатия: раньше он появлялся только после отправки, и было похоже на зависание
+    var bad = [];
+    if (picked.length && free) {
+      try { bad = G.check({ drone: selDrone, route: routeNow(), alt: parseInt($("altSel").value, 10), speed: spd }) || []; } catch (err) { bad = []; }
+    }
+    if (bad.length) {
+      var hint = "";
+      if (bad.some(function (r) { return r.code === "nofly"; })) hint = noflyHint();
+      else if (bad.some(function (r) { return r.code === "mass"; }))
+        hint = tr("Убери из рейса самый тяжёлый заказ.", "Drop the heaviest order from this flight.");
+      else if (bad.some(function (r) { return r.code === "heat"; }))
+        hint = tr("В такую жару бери меньше груза или по одному заказу за рейс.", "In this heat take less load or one order per flight.");
+      $("msg").innerHTML = bad.map(function (r) { return '<div class="rej">' + esc(r[LANG]) + "</div>"; }).join("") +
+        (hint ? '<div class="warn" style="margin-top:6px">' + esc(hint) + "</div>" : "");
+      $("sendBtn").disabled = true;
+      $("sendBtn").textContent = tr("Так лететь нельзя", "This flight is not allowed");
+    } else if ($("msg").getAttribute("data-pre") === "1") {
+      $("msg").innerHTML = "";
+    }
+    $("msg").setAttribute("data-pre", bad.length ? "1" : "0");
+    if (picked.length) {
+      var e = estimate(routeNow(), parseInt($("altSel").value, 10), spd), a = e[0], b = e[1];
+      var kg = picked.reduce(function (s, id) { return s + G.orders[id].kg; }, 0);
+      var line = tr("Груз ", "Load ") + "<b>" + nf(kg, 1) + tr(" кг", " kg") + "</b>. ";
+      if (a.stuck) line += '<span style="color:var(--limit)">' + tr("Против ветра по прогнозу дрон не продвинется вперёд.", "Into this forecast wind the drone will not make headway.") + "</span>";
+      else {
+        var cl = a.soc < 0.08 ? "var(--limit)" : a.soc < 0.15 ? "var(--signal)" : "var(--ok)";
+        if (a.soc < 0.08) line += '<span style="color:var(--limit)">' + tr("По прогнозу не вернётся: заряд упадёт ниже 8 % в пути, и автопилот посадит дрон где придётся (−250). ", "On the forecast it will not make it back: the charge drops under 8% on the way and the autopilot lands wherever it is (−250). ") + "</span>" + tr("Попробуй «быстро», меньше груза или площадку по пути. В воздухе ~", "Try fast, less load or a pad on the way. Airborne ~") + nf(a.min) + tr(" мин.", " min.");
+        else line += tr("По прогнозу в самой низкой точке останется ", "On the forecast the lowest charge will be ") + '<b style="color:' + cl + '">' + nf(Math.max(0, a.soc * 100)) + " %</b>" +
+          (b.stuck ? tr("; если ветер на 18 % сильнее, против него не пробиться", "; with 18% more wind it cannot get through") : tr(", если ветер на 18 % сильнее: ", ", with 18% more wind: ") + "<b>" + nf(Math.max(0, b.soc * 100)) + " %</b>") +
+          tr(". В воздухе ~", ". Airborne ~") + nf(a.min) + tr(" мин. Ниже 8 % автопилот садит дрон.", " min. Below 8% the autopilot lands.");
+      }
+      $("est").innerHTML = line;
+    } else $("est").innerHTML = '<span class="note">' + tr("Выбери заказ, и здесь появится оценка заряда по прогнозу.", "Pick an order to see the charge estimate on the forecast.") + "</span>";
+  }
+
+  var lg = "";
+  logLines.slice(0, 40).forEach(function (l) { lg += "<div" + (l[1] ? ' style="color:var(--limit)"' : "") + ">" + esc(l[0]) + "</div>"; });
+  $("log").innerHTML = lg;
+  drawMap(ob);
+}
+
+function fcTable() {
+  var ob = G.observe(), h = "<tr><th>" + tr("час", "hour") + '</th><th class="n">°C</th>';
+  [30, 60, 100, 120].forEach(function (a) { h += '<th class="n">' + a + tr(" м", " m") + "</th>"; });
+  h += "</tr>";
+  ob.forecast.forEach(function (f) {
+    if (f.hour < 13) return;
+    h += "<tr><td>" + f.hour + ':00</td><td class="n">' + nf(f.t) + "</td>";
+    [30, 60, 100, 120].forEach(function (a) { var w = f.wind[a]; h += '<td class="n">' + nf(Math.sqrt(w[0] * w[0] + w[1] * w[1]), 1) + " " + cshort(w[0], w[1]) + "</td>"; });
+    h += "</tr>";
+  });
+  $("fcT").innerHTML = h;
+}
+
+/* ---------- карта ---------- */
+function prepMap() {
+  var T = DATA.terrain[city], M = DATA.worlds[key()].map;
+  var xs = [0], ys = [0];
+  M.points.forEach(function (p) { xs.push(p.x); ys.push(p.y); });
+  var pad = 2500, x0 = Math.min.apply(null, xs) - pad, x1 = Math.max.apply(null, xs) + pad, y0 = Math.min.apply(null, ys) - pad, y1 = Math.max.apply(null, ys) + pad;
+  var cv = $("map"), W = cv.width, H = cv.height, s = Math.min(W / (x1 - x0), H / (y1 - y0));
+  view = { s: s, ox: W / 2 - s * (x0 + x1) / 2, oy: H / 2 + s * (y0 + y1) / 2 };
+  var k = city + (document.documentElement.getAttribute("data-theme") || "") + (matchMedia("(prefers-color-scheme: dark)").matches ? "d" : "l");
+  if (terrainImg[k]) { view.img = terrainImg[k]; return; }
+  var off = document.createElement("canvas"); off.width = W; off.height = H;
+  var cx = off.getContext("2d"), img = cx.createImageData(W, H);
+  var lo = hex(css("--map-lo")), hi = hex(css("--map-hi"));
+  var zmin = 1e9, zmax = -1e9; T.z.forEach(function (z) { if (z < zmin) zmin = z; if (z > zmax) zmax = z; });
+  var rng = Math.max(60, zmax - zmin);
+  function zat(x, y) {
+    var fx = (x - T.x0) / T.step, fy = (y - T.y0) / T.step, i = Math.max(0, Math.min(T.nx - 2, Math.floor(fx))), j = Math.max(0, Math.min(T.ny - 2, Math.floor(fy)));
+    var ax = Math.max(0, Math.min(1, fx - i)), ay = Math.max(0, Math.min(1, fy - j)), z = T.z, n = T.nx;
+    return z[j * n + i] * (1 - ax) * (1 - ay) + z[j * n + i + 1] * ax * (1 - ay) + z[(j + 1) * n + i] * (1 - ax) * ay + z[(j + 1) * n + i + 1] * ax * ay;
+  }
+  for (var py = 0; py < H; py += 2) for (var px = 0; px < W; px += 2) {
+    var x = (px - view.ox) / s, y = (view.oy - py) / s, z = zat(x, y), zx = zat(x + 60, y) - zat(x - 60, y), zy = zat(x, y + 60) - zat(x, y - 60);
+    var inside = x > T.x0 + 60 && y > T.y0 + 60 && x < T.x0 + (T.nx - 1) * T.step - 60 && y < T.y0 + (T.ny - 1) * T.step - 60;
+    var shade = inside ? Math.max(-0.35, Math.min(0.35, (-zx + zy) / 240)) : 0, t = Math.pow(Math.max(0, (z - zmin) / rng), 0.7);
+    for (var c = 0; c < 3; c++) {
+      var v = (lo[c] * (1 - t) + hi[c] * t) * (1 + shade);
+      for (var dy = 0; dy < 2; dy++) for (var dx = 0; dx < 2; dx++) { var q = ((py + dy) * W + px + dx) * 4; img.data[q + c] = v; img.data[q + 3] = 255; }
+    }
+  }
+  cx.putImageData(img, 0, 0);
+  terrainImg[k] = off; view.img = off;
+}
+function hex(h) { h = h.replace("#", ""); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; }
+function P(x, y) { return [view.ox + x * view.s, view.oy - y * view.s]; }
+
+function drawMap(ob) {
+  var cv = $("map"), cx = cv.getContext("2d"), W = cv.width, H = cv.height, M = G.M;
+  var K = Math.max(1, Math.min(2.2, cv.width / Math.max(1, cv.clientWidth) * 0.55));
+  function F(w, n, f) { return w + " " + Math.round(n * K) + "px " + (f || "sans-serif"); }
+  cx.drawImage(view.img, 0, 0);
+  var ink = css("--map-ink"), lim = css("--limit"), gh = css("--ghost"), sig = css("--signal");
+  // масштаб
+  cx.font = "600 20px " + css("--mono").split(",")[0]; cx.textBaseline = "middle";
+  // запретные зоны
+  M.nofly.forEach(function (n) {
+    var c = P(n.x, n.y); cx.beginPath(); cx.arc(c[0], c[1], n.r * view.s, 0, 7);
+    cx.fillStyle = lim; cx.globalAlpha = 0.18; cx.fill(); cx.globalAlpha = 0.8; cx.strokeStyle = lim; cx.lineWidth = 2; cx.stroke(); cx.globalAlpha = 1;
+    cx.fillStyle = lim; cx.font = F("500", 17); cx.textAlign = "center"; cx.fillText(LANG === "ru" ? n.ru : n.en, c[0], Math.max(14, Math.min(H - 14, c[1])));
+  });
+  // маршрут, который собирает игрок
+  if (picked.length && !watch) {
+    var rt = [M.depot].concat(routeNow().map(function (t) { return G.target(t); })).concat([M.depot]);
+    cx.setLineDash([10, 8]); cx.strokeStyle = sig; cx.lineWidth = 3; cx.beginPath();
+    rt.forEach(function (p, i) { var q = P(p.x, p.y); if (i) cx.lineTo(q[0], q[1]); else cx.moveTo(q[0], q[1]); }); cx.stroke(); cx.setLineDash([]);
+  }
+  // след: цвет по заряду в той точке, метка там, где ветер развернулся
+  for (var tk = 0; tk < trail.length; tk++) {
+    var tr0 = trail[tk];
+    for (var ti = 1; ti < tr0.length; ti++) {
+      var a0 = tr0[ti - 1], b0 = tr0[ti];
+      if (Math.abs(b0.t - a0.t) > 60) continue;              // разрыв между рейсами не соединяем
+      var qa = P(a0.x, a0.y), qb = P(b0.x, b0.y);
+      cx.strokeStyle = b0.soc < 0.15 ? lim : b0.soc < 0.35 ? sig : css("--ok");
+      cx.globalAlpha = 0.75; cx.lineWidth = 3; cx.lineCap = "round";
+      cx.beginPath(); cx.moveTo(qa[0], qa[1]); cx.lineTo(qb[0], qb[1]); cx.stroke();
+      cx.globalAlpha = 1;
+      if (b0.turn) {
+        cx.beginPath(); cx.arc(qb[0], qb[1], 5 * K, 0, 7);
+        cx.fillStyle = css("--panel"); cx.fill();
+        cx.strokeStyle = b0.mark === "low" ? lim : b0.mark === "head" ? sig : css("--ok");
+        cx.lineWidth = 3; cx.stroke();
+      }
+    }
+  }
+  // маршруты дронов в воздухе
+  G.drones.forEach(function (d, k) {
+    if (d.mode !== "air") return;
+    cx.strokeStyle = css(DC[k]); cx.lineWidth = 2; cx.globalAlpha = 0.6; cx.setLineDash([4, 6]); cx.beginPath();
+    var q = P(d.x, d.y); cx.moveTo(q[0], q[1]);
+    for (var i = d.wp; i < d.route.length; i++) { var t = G.target(d.route[i]), r = P(t.x, t.y); cx.lineTo(r[0], r[1]); }
+    cx.stroke(); cx.setLineDash([]); cx.globalAlpha = 1;
+  });
+  // точки
+  var waitAt = {};
+  ob.orders.forEach(function (o) { if (o.status === "wait") waitAt[o.point] = (waitAt[o.point] || 0) + 1; });
+  M.points.forEach(function (p) {
+    var q = P(p.x, p.y);
+    cx.beginPath(); cx.arc(q[0], q[1], (p.pad ? 11 : 7) * K, 0, 7);
+    cx.fillStyle = waitAt[p.id] ? sig : css("--panel"); cx.fill(); cx.strokeStyle = ink; cx.lineWidth = 2; cx.stroke();
+    if (p.pad) { cx.fillStyle = waitAt[p.id] ? "#fff" : ink; cx.font = F("700", 14); cx.textAlign = "center"; cx.fillText("P", q[0], q[1] + 1); }
+    cx.font = F("500", 17); cx.textAlign = q[0] > W - 160 * K ? "right" : "left"; cx.fillStyle = ink;
+    var lbl = (LANG === "ru" ? p.ru : p.en) + (waitAt[p.id] ? " · " + waitAt[p.id] : "");
+    var lx = q[0] + (cx.textAlign === "right" ? -14 : 14) * K;
+    cx.lineWidth = 4; cx.strokeStyle = css("--panel"); cx.globalAlpha = 0.8; cx.strokeText(lbl, lx, q[1]); cx.globalAlpha = 1; cx.fillText(lbl, lx, q[1]);
+  });
+  // склад
+  var dq = P(0, 0);
+  cx.fillStyle = ink; cx.fillRect(dq[0] - 11 * K, dq[1] - 11 * K, 22 * K, 22 * K);
+  cx.fillStyle = css("--panel"); cx.font = F("700", 13); cx.textAlign = "center"; cx.fillText(tr("С", "D"), dq[0], dq[1] + 1);
+  // ветер у склада
+  var dw = ob.depot_wind, ws = Math.sqrt(dw[0] * dw[0] + dw[1] * dw[1]);
+  if (ws > 0.3) {
+    var L = 18 + ws * 6, ex = dw[0] / ws, ey = -dw[1] / ws, sx = 40, sy = 40;
+    cx.strokeStyle = ink; cx.fillStyle = ink; cx.lineWidth = 3;
+    cx.beginPath(); cx.moveTo(sx + 30 - ex * L / 2, sy + 10 - ey * L / 2); cx.lineTo(sx + 30 + ex * L / 2, sy + 10 + ey * L / 2); cx.stroke();
+    var hx = sx + 30 + ex * L / 2, hy = sy + 10 + ey * L / 2;
+    cx.beginPath(); cx.moveTo(hx, hy); cx.lineTo(hx - ex * 10 - ey * 6, hy - ey * 10 + ex * 6); cx.lineTo(hx - ex * 10 + ey * 6, hy - ey * 10 - ex * 6); cx.fill();
+    cx.font = F("600", 16); cx.textAlign = "left"; cx.fillText(nf(ws, 1) + tr(" м/с", " m/s"), sx + 62, sy + 10);
+  }
+  // соперник
+  if (GH) GH.drones.forEach(function (d) {
+    if (d.mode === "dock") return;
+    var q = P(d.x, d.y); cx.beginPath(); cx.arc(q[0], q[1], 10 * K, 0, 7); cx.strokeStyle = gh; cx.lineWidth = 3; cx.stroke();
+    if (d.mode === "forced" || d.mode === "lost") { cx.beginPath(); cx.moveTo(q[0] - 7, q[1] - 7); cx.lineTo(q[0] + 7, q[1] + 7); cx.moveTo(q[0] + 7, q[1] - 7); cx.lineTo(q[0] - 7, q[1] + 7); cx.stroke(); }
+  });
+  // дроны
+  G.drones.forEach(function (d, k) {
+    if (d.mode === "dock") return;
+    var q = P(d.x, d.y);
+    cx.beginPath(); cx.arc(q[0], q[1], 13 * K, 0, 7); cx.fillStyle = css(DC[k]); cx.fill();
+    cx.strokeStyle = d.mode === "forced" || d.mode === "lost" ? lim : css("--panel"); cx.lineWidth = 3; cx.stroke();
+    cx.fillStyle = "#fff"; cx.font = F("700", 14); cx.textAlign = "center"; cx.fillText(String(k + 1), q[0], q[1] + 1);
+  });
+  // масштабная линейка
+  var km5 = 5000 * view.s; cx.strokeStyle = ink; cx.lineWidth = 3; cx.beginPath(); cx.moveTo(W - 30 - km5, H - 24); cx.lineTo(W - 30, H - 24); cx.stroke();
+  cx.fillStyle = ink; cx.font = F("500", 15); cx.textAlign = "right"; cx.fillText(tr("5 км", "5 km"), W - 30, H - 42);
+}
+// подсказка по следу: что было в этой точке и не развернулся ли тут ветер
+var tip = null;
+function roseWord(u, v) {
+  var sp = Math.sqrt(u * u + v * v);
+  if (sp < 0.5) return tr("штиль", "calm");
+  var a = Math.atan2(-u, -v) * 180 / Math.PI; if (a < 0) a += 360;
+  var w = (LANG === "ru" ? ROSE_RU : ROSE_EN)[Math.round(a / 45) % 8];
+  return (LANG === "ru" ? "с " : "from ") + w + " " + nf(sp, 1) + tr(" м/с", " m/s");
+}
+function mapPoint(e) {
+  var cv = $("map"), r = cv.getBoundingClientRect();
+  return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height, r];
+}
+$("map").onmousemove = function (e) {
+  if (!G) return;
+  var m = mapPoint(e), mx = m[0], my = m[1], r = m[2], best = null, bd = 26 * 26;
+  for (var k = 0; k < trail.length; k++) {
+    for (var i = 0; i < trail[k].length; i++) {
+      var p0 = trail[k][i], q = P(p0.x, p0.y), dd = (q[0] - mx) * (q[0] - mx) + (q[1] - my) * (q[1] - my);
+      if (dd < bd || (p0.turn && dd < 44 * 44 && dd < bd * 3)) { bd = Math.min(bd, dd); best = { p: p0, k: k, q: q }; }
+    }
+  }
+  var el = $("mapTip");
+  if (!best) { el.hidden = true; tip = null; return; }
+  var p = best.p;
+  var h = "<b>" + tr("дрон ", "drone ") + (best.k + 1) + " · " + S.clock(p.t).slice(0, 5) + "</b><br>" +
+    tr("заряд ", "charge ") + nf(p.soc * 100) + " %, " + tr("ветер ", "wind ") + roseWord(p.u, p.v) + "<br>" +
+    (p.along > 0.5 ? tr("попутный ", "tailwind ") + nf(p.along, 1) + tr(" м/с", " m/s")
+     : p.along < -0.5 ? tr("встречный ", "headwind ") + nf(-p.along, 1) + tr(" м/с", " m/s")
+     : tr("ветер поперёк курса", "wind across the course")) +
+    tr(", над землёй ", ", over ground ") + nf(p.gs, 1) + tr(" м/с", " m/s");
+  if (p.mark === "head") h += "<br><b>" + tr("здесь ветер стал встречным", "the wind turned against the drone here") + "</b>";
+  else if (p.mark === "tail") h += "<br><b>" + tr("здесь ветер стал попутным", "the wind turned in the drone's favour here") + "</b>";
+  else if (p.mark === "low") h += "<br><b>" + tr("здесь заряд упал ниже 20 %", "the charge dropped under 20% here") + "</b>";
+  el.innerHTML = h; el.hidden = false;
+  var sx = best.q[0] * r.width / $("map").width, sy = best.q[1] * r.height / $("map").height;
+  el.style.left = Math.max(4, Math.min(r.width - el.offsetWidth - 4, sx + 12)) + "px";
+  el.style.top = Math.max(4, sy - el.offsetHeight - 10) + "px";
+  tip = p;
+};
+$("map").onmouseleave = function () { $("mapTip").hidden = true; tip = null; };
+
+$("map").onclick = function (e) {
+  if (watch || !G) return;
+  var r = this.getBoundingClientRect(), mx = (e.clientX - r.left) * this.width / r.width, my = (e.clientY - r.top) * this.height / r.height, best = null, bd = 30 * 30;
+  G.orders.forEach(function (o) {
+    if (o.t > G.t || o.status !== "wait") return;
+    var p = G.pts[o.point], q = P(p.x, p.y), d = (q[0] - mx) * (q[0] - mx) + (q[1] - my) * (q[1] - my);
+    if (d < bd) { bd = d; best = o.id; }
+  });
+  if (best !== null) { var at = picked.indexOf(best); if (at >= 0) picked.splice(at, 1); else if (picked.length < 3) picked.push(best); render(); }
+};
+
+/* ---------- тренировки ---------- */
+// Сценарии и пороги подобраны прогоном sim.js: у каждой тренировки есть решение на три звезды (README, «Тренировки»).
+function stepStars(c) { var s = 0; for (var i = 0; i < c.length; i++) { if (!c[i]) break; s++; } return s; }
+var DRILLS = [
+  { id: "first", key: "rotterdam_8", orders: [[0, 6, 1200]],
+    ru: { title: "Первый рейс", intro: "Диспетчер выбирает дрон, заказ и режим полёта, дальше летит автопилот. Перед отправкой смотри оценку заряда: она считает круг по прогнозу ветра.",
+          goal: "Доставь заказ в Центр и верни дрон. ★ заказ доставлен, ★★ дрон дома, ★★★ энергии ушло не больше 2,0 кВт·ч." },
+    en: { title: "First flight", intro: "The dispatcher picks the drone, the order and the flight mode; the autopilot flies. Before sending, check the charge estimate: it works out the round trip on the wind forecast.",
+          goal: "Deliver the order to Centrum and bring the drone back. ★ delivered, ★★ drone home, ★★★ no more than 2.0 kWh used." },
+    stars: function (r) { return stepStars([r.del >= 1, r.home, r.kwh <= 2.0]); },
+    advice: function (r) {
+      if (!r.home) return tr("Дрон не вернулся. Перед отправкой посмотри оценку заряда: если она ниже 15 %, меняй режим.", "The drone did not come back. Check the charge estimate before sending: under 15%, change the mode.");
+      return tr("Попробуй «быстро»: мощность в полёте вперёд почти как на висении, а в воздухе вдвое меньше времени, поэтому энергии уходит меньше.", "Try fast: forward flight costs about as much as hovering, but the drone is airborne half as long, so it uses less energy.");
+    } },
+  { id: "wind", key: "rotterdam_10", orders: [[0, 10]],
+    ru: { title: "Встречный ветер", intro: "Туда дрон летит с попутным ветром и тратит мало, обратно идёт против ветра. В жизни это главная причина, почему дрон не дотягивает до базы. Сегодня ветер около 10 м/с.",
+          goal: "★ заказ доставлен, ★★ дрон вернулся без вынужденной посадки, ★★★ вернулся с зарядом от 40 %." },
+    en: { title: "Headwind", intro: "Out with a tailwind the drone spends little, back it flies into the wind. In real life this is the main reason drones fail to make it home. Today the wind is about 10 m/s.",
+          goal: "★ delivered, ★★ back without a forced landing, ★★★ back with at least 40% charge." },
+    stars: function (r) { return stepStars([r.del >= 1, r.home, r.ret >= 0.40]); },
+    advice: function (r) {
+      if (!r.home) return tr("На эконом-скорости 12 м/с против ветра 10 м/с дрон над землёй почти стоит. Лети быстро: 18 м/с.", "At eco speed 12 m/s into a 10 m/s headwind the drone barely moves over the ground. Fly fast: 18 m/s.");
+      return tr("У земли ветер слабее: попробуй высоту 30 м.", "The wind is weaker near the ground: try 30 m.");
+    } },
+  { id: "pad", key: "almaty_3", orders: [[5, 5]],
+    ru: { title: "Площадка в горах", intro: "Медеу на 1 700 м, склад на 814 м. В разреженном воздухе висеть дороже, а путь в гору длинный. Площадки на Кок-Тобе и Горном Гиганте меняют батарею за 2 минуты.",
+          goal: "Доставь посылку в Медеу. ★ доставлена, ★★ дрон дома без вынужденной посадки, ★★★ и всё за 45 минут." },
+    en: { title: "A pad in the mountains", intro: "Medeu is at 1,700 m, the depot at 814 m. Thin air makes hovering costlier and the way uphill is long. The pads at Kok-Tobe and Gorny Gigant swap the battery in 2 minutes.",
+          goal: "Deliver the parcel to Medeu. ★ delivered, ★★ drone home without a forced landing, ★★★ all within 45 minutes." },
+    stars: function (r) { return stepStars([r.del >= 1, r.home, r.t <= 2700]); },
+    advice: function (r) {
+      if (!r.home && r.pads > 0) return tr("Площадки стоят, но на экономе подъём в гору всё равно съедает заряд. Лети быстро.", "The pads are set, but at eco the climb still eats the charge. Fly fast.");
+      if (!r.home) return tr("Напрямую туда и обратно заряда не хватит. Поставь площадку и в «Зарядка до заказа», и в «Зарядка после заказа».", "There and back on one battery is not enough. Set a pad both in 'Charge before the order' and 'Charge after the order'.");
+      return tr("Лети быстро: в горах время в воздухе стоит дороже всего.", "Fly fast: in the mountains airborne time is what costs most.");
+    } },
+  { id: "heat", key: "dubai_7", orders: [[1, 12], [1, 12]],
+    ru: { title: "Жара", intro: "При 45 °C батарея ограничивает мощность. Тяжёлый груз дрон не поднимет: Проверка игры откажет ещё до взлёта и скажет, сколько мощности нужно и сколько есть.",
+          goal: "Два заказа по 12 кг в Даунтаун. ★ один доставлен, ★★ оба, ★★★ оба за 20 минут без вынужденных посадок." },
+    en: { title: "Heat", intro: "At 45 °C the battery limits power. The drone cannot lift a heavy load: the game refuses before take-off and says how much power is needed and how much there is.",
+          goal: "Two 12 kg orders to Downtown. ★ one delivered, ★★ both, ★★★ both within 20 minutes with no forced landing." },
+    stars: function (r) { return stepStars([r.del >= 1, r.del >= 2, r.del >= 2 && r.home && r.t <= 1200]); },
+    advice: function (r) {
+      if (r.del < 2) return tr("Вместе 24 кг батарея в жару не поднимет. Отправь заказы на двух дронах по 12 кг.", "Together 24 kg is too much for the battery in this heat. Send the orders on two drones, 12 kg each.");
+      return tr("Отправляй оба дрона сразу и быстро: ждать в жару незачем.", "Send both drones at once and fast: there is no point waiting in the heat.");
+    } },
+  { id: "two", key: "rotterdam_8", orders: [[1, 6], [6, 6]],
+    ru: { title: "Два заказа за рейс", intro: "Каждый взлёт, посадка и обратный путь пустым стоят энергии. Если два заказа рядом, выгодно везти их одним рейсом.",
+          goal: "Два заказа: Коп-ван-Зёйд и Фейеноорд. ★ оба доставлены, ★★ энергии не больше 3,0 кВт·ч, ★★★ не больше 2,3 кВт·ч." },
+    en: { title: "Two orders per flight", intro: "Every take-off, landing and empty trip home costs energy. If two orders are close, it pays to carry them on one flight.",
+          goal: "Two orders: Kop van Zuid and Feijenoord. ★ both delivered, ★★ no more than 3.0 kWh, ★★★ no more than 2.3 kWh." },
+    stars: function (r) { return stepStars([r.del >= 2 && r.home, r.kwh <= 3.0, r.kwh <= 2.3]); },
+    advice: function (r) {
+      if (r.kwh > 3.0) return tr("Нажми оба заказа, прежде чем отправлять: дрон повезёт их одним рейсом.", "Tap both orders before sending: the drone carries them on one flight.");
+      return tr("Одним рейсом и быстро: так меньше всего времени в воздухе.", "One flight and fast: that is the least time in the air.");
+    } }
+];
+function drillBest(id) { try { return +(localStorage.getItem("drone_drill_" + id) || 0); } catch (e) { return 0; } }
+function drillSave(id, st) { try { if (st > drillBest(id)) localStorage.setItem("drone_drill_" + id, String(st)); } catch (e) {} }
+function starStr(n) { var h = ""; for (var i = 0; i < 3; i++) h += i < n ? "★" : '<span class="off">★</span>'; return h; }
+function drillCards() {
+  var h = "";
+  DRILLS.forEach(function (d, i) {
+    h += '<button type="button" class="card" data-i="' + i + '"><span class="flag">' + (i + 1) + " · " + CITY[d.key.split("_")[0]][LANG] + "</span><b>" + esc(d[LANG].title) +
+      '</b><span class="note">' + esc(d[LANG].intro) + '</span><span class="stars" style="font-size:22px">' + starStr(drillBest(d.id)) + "</span></button>";
+  });
+  $("drillCards").innerHTML = h;
+  Array.prototype.forEach.call($("drillCards").querySelectorAll("[data-i]"), function (b) {
+    b.onclick = function () { start("play", DRILLS[+b.getAttribute("data-i")]); };
+  });
+}
+function drillFinish() {
+  if (finished) return; finished = true; paused = true; speedUI();
+  var c = G.counts, rs = Object.keys(retSoc).map(function (k) { return retSoc[k]; });
+  var flying = G.drones.some(function (d) { return d.mode === "air" || d.mode === "pad"; });
+  var r = { del: c.delivered, kwh: c.wh / 1000, t: G.t, home: c.forced + c.lost === 0 && rs.length > 0 && !flying,
+            ret: rs.length ? Math.min.apply(null, rs) : 0, pads: c.pads };
+  var st = drill.stars(r), i = DRILLS.indexOf(drill);
+  drillSave(drill.id, st);
+  $("drillRes").hidden = false;
+  $("drResH").textContent = drill[LANG].title;
+  $("drStars").innerHTML = starStr(st);
+  $("drResT").textContent = tr("Доставлено ", "Delivered ") + r.del + " / " + G.orders.length + tr(", энергия ", ", energy ") + nf(r.kwh, 2) + tr(" кВт·ч, время ", " kWh, time ") + nf(r.t / 60) + tr(" мин", " min") +
+    (rs.length ? tr(", заряд при возвращении ", ", charge on return ") + nf(r.ret * 100) + " %" : "") + (c.forced ? tr(", вынужденных посадок ", ", forced landings ") + c.forced : "") + ".";
+  $("drResA").innerHTML = st < 3 ? '<div class="warn">' + esc(drill.advice(r)) + "</div>" : '<div class="ok">' + esc(tr("Три звезды.", "Three stars.")) + (i === DRILLS.length - 1 ? " " + esc(tr("Тренировки пройдены: пора в смену.", "Training done: time for a shift.")) : "") + "</div>";
+  $("drNext").hidden = i === DRILLS.length - 1;
+  $("drToShift").className = i === DRILLS.length - 1 ? "primary" : "";
+  if (TEST) window.__droneDrill = { stars: st, r: r };
+  window.scrollTo({ top: $("drillRes").offsetTop - 8 });
+}
+$("drAgain").onclick = function () { start("play", drill); };
+$("drNext").onclick = function () { start("play", DRILLS[DRILLS.indexOf(drill) + 1]); };
+$("drToShift").onclick = function () { drill = null; G = null; $("play").hidden = true; $("drillRes").hidden = true; $("pick").hidden = false; $("intro").hidden = false; $("drills").hidden = false; city = "rotterdam"; seed = 2; pickUI(); drillCards(); window.scrollTo({ top: $("pick").offsetTop - 8 }); };
+
+/* ---------- итог ---------- */
+var finished = false;
+function isDone() {
+  if (!drill) return G.done();
+  var flying = G.drones.some(function (d) { return d.mode === "air" || d.mode === "pad"; });
+  if (flying) return G.t >= 5400;
+  var allFinal = G.orders.every(function (o) { return o.status === "done" || o.status === "stuck" || o.status === "lost"; });
+  return allFinal || G.counts.forced + G.counts.lost > 0 || G.t >= 3600;
+}
+function finish() {
+  if (drill) return drillFinish();
+  if (finished) return; finished = true; paused = true;
+  if (GH) while (!GH.done()) ghStep(DATA.rivals[key()][ghostWho]);
+  var sc = G.score();
+  $("result").hidden = false;
+  refTab("how");        // после смены открываем вкладку про Extella: итог отсылает к ней
+  $("resH").textContent = watch ? tr("Смена Qwen 3.5 9B с Extella окончена", "The shift of Qwen 3.5 9B with Extella is over") : tr("Смена окончена", "The shift is over");
+  $("resScore").innerHTML = nf(sc.score, 1) + " <small>" + tr("очков", "points") + "</small>";
+  var NM = { delivered: tr("доставлено", "delivered"), late: tr("опоздания", "lateness"), undelivered: tr("не доставлено", "not delivered"), forced: tr("вынужденные посадки", "forced landings"),
+             lost: tr("потеряны", "lost"), pads: tr("посадки на зарядку", "pad landings"), energy: tr("энергия", "energy") };
+  var cnt = { delivered: sc.counts.delivered + " / " + sc.counts.orders, late: nf(sc.counts.late_s / 60, 1) + tr(" мин", " min"), undelivered: (sc.counts.orders - sc.counts.delivered) + "", forced: sc.counts.forced + "", lost: sc.counts.lost + "", pads: sc.counts.pads + "",
+              energy: nf(sc.counts.kwh, 2) + tr(" кВт·ч при эталоне ", " kWh vs reference ") + nf(sc.counts.ref_kwh, 2) };
+  var t = "<tr><th>" + tr("часть счёта", "part") + '</th><th class="n">' + tr("сколько", "count") + '</th><th class="n">' + tr("очки", "points") + "</th></tr>" +
+    "<tr><td>" + tr("старт", "start") + '</td><td></td><td class="n">' + S.SC.base + "</td></tr>";
+  Object.keys(NM).forEach(function (k) { t += "<tr><td>" + NM[k] + '</td><td class="n">' + cnt[k] + '</td><td class="n">' + nf(sc.parts[k], 1) + "</td></tr>"; });
+  $("resParts").innerHTML = t;
+  var R = DATA.rivals[key()], rows = RIVALS.map(function (w) { return [w, R[w].score, R[w].counts]; });
+  if (!watch) { rows.push(["you", sc.score, sc.counts]); bestSet(sc); }
+  rows.sort(function (a, b) { return b[1] - a[1]; });
+  var c = "<tr><th>" + tr("кто", "who") + '</th><th class="n">' + tr("счёт", "score") + '</th><th class="n">' + tr("доставлено", "delivered") + '</th><th class="n">' + tr("посадок", "forced") + "</th></tr>";
+  rows.forEach(function (r) { c += "<tr" + (r[0] === "you" ? ' class="me"' : "") + "><td>" + WHO[r[0]][LANG] + '</td><td class="n">' + nf(r[1], 1) + '</td><td class="n">' + r[2].delivered + " / " + r[2].orders + '</td><td class="n">' + r[2].forced + "</td></tr>"; });
+  $("resCmp").innerHTML = c;
+  var why = [];
+  if (!watch) {
+    var ex = R.extella;
+    if (sc.counts.forced) why.push(["rej", tr("Вынужденных посадок: ", "Forced landings: ") + sc.counts.forced + tr(" (−250 каждая). Смотри оценку заряда по прогнозу перед отправкой и бери площадку, если остаётся меньше 15 %.", " (−250 each). Check the forecast charge estimate before sending and add a pad when it shows under 15%.")]);
+    if (sc.counts.orders - sc.counts.delivered > ex.counts.orders - ex.counts.delivered) why.push(["warn", tr("Недоставленных больше, чем у Qwen 3.5 9B с Extella: ", "More undelivered orders than Qwen 3.5 9B with Extella: ") + (sc.counts.orders - sc.counts.delivered) + tr(" против ", " against ") + (ex.counts.orders - ex.counts.delivered) + tr(". Каждый стоит −60; два заказа за рейс и скорость «быстро» экономят время.", ". Each costs −60; two orders per flight and fast speed save time.")]);
+    if (sc.parts.energy < -50) why.push(["warn", tr("Энергия ушла сверх эталона: ", "Energy above the reference: ") + nf(sc.parts.energy, 1) + tr(" очков. Против ветра выше и медленнее дороже; ниже и быстрее часто дешевле.", " points. Higher and slower into the wind costs more; lower and faster is often cheaper.")]);
+    if (sc.score > ex.score) why.push(["ok", tr("Ты обошёл Qwen 3.5 9B с Extella на ", "You beat Qwen 3.5 9B with Extella by ") + nf(sc.score - ex.score, 1) + tr(" очков.", " points.")]);
+  }
+  $("resWhy").innerHTML = why.map(function (w) { return '<div class="' + w[0] + '" style="margin-top:6px">' + esc(w[1]) + "</div>"; }).join("");
+  if (TEST) window.__droneResult = { score: sc.score, decisions: decLog };
+  window.scrollTo({ top: $("result").offsetTop - 8 });
+}
+$("againBtn").onclick = function () { finished = false; start(watch ? "watch" : "play"); };
+$("otherBtn").onclick = function () { finished = false; G = null; drill = null; $("play").hidden = true; $("result").hidden = true; $("pick").hidden = false; $("intro").hidden = false; $("drills").hidden = false; drillCards(); pickUI(); window.scrollTo({ top: 0 }); };
+
+$("langBtn").onclick = function () {
+  LANG = LANG === "ru" ? "en" : "ru";
+  try { if (SITE) localStorage.setItem("robot_lang", LANG); } catch (e) {}
+  staticText(); pickUI(); drillCards(); setGhost(G && !watch && !drill ? ghostWho : ""); speedUI(); if (G) { fcTable(); render(); }
+  if (drill && G) $("drillGoal").innerHTML = "<b>" + esc(drill[LANG].title) + ".</b> " + esc(drill[LANG].goal);
+};
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { if (G) { prepMap(); render(); } });
+
+staticText(); pickUI(); drillCards();
+requestAnimationFrame(loop);
+
+
+/* ---------- Пульт: приборы и физические органы управления ---------- */
+var ROSE_RU = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"], ROSE_EN = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+
+function roseSvg(u, v) {
+  var sp = Math.sqrt(u * u + v * v), from = 0, col = "#8ab4e0";
+  if (sp >= 0.5) { from = Math.atan2(-u, -v) * 180 / Math.PI; if (from < 0) from += 360; }
+  if (sp > 12) col = "#ff8a7e"; else if (sp > 8) col = "#ffb13d"; else if (sp > 4) col = "#9ef0c0";
+  var let4 = LANG === "ru" ? ["С", "В", "Ю", "З"] : ["N", "E", "S", "W"], ticks = "", k;
+  for (k = 0; k < 12; k++) {
+    var a = k * 30, r1 = k % 3 === 0 ? 17 : 20, s = Math.sin(a * Math.PI / 180), c = Math.cos(a * Math.PI / 180);
+    ticks += '<line x1="' + (26 + r1 * s).toFixed(1) + '" y1="' + (26 - r1 * c).toFixed(1) + '" x2="' + (26 + 22 * s).toFixed(1) +
+      '" y2="' + (26 - 22 * c).toFixed(1) + '" stroke="#3b4653" stroke-width="' + (k % 3 === 0 ? 2 : 1) + '"/>';
+  }
+  var dirs = "";
+  [[0, -14], [14, 0], [0, 14], [-14, 0]].forEach(function (d, i) {
+    dirs += '<text x="' + (26 + d[0]) + '" y="' + (26 + d[1] + 3.5) + '" fill="#6d7a8a" font-size="8" font-family="ui-monospace,Menlo,Consolas,monospace" text-anchor="middle">' + let4[i] + "</text>";
+  });
+  var needle = sp < 0.5 ? '<circle cx="26" cy="26" r="3" fill="#6d7a8a"/>'
+    : '<g transform="rotate(' + (from + 180).toFixed(1) + ' 26 26)">' +
+      '<path d="M26 8 L30 24 L26 21 L22 24 Z" fill="' + col + '"/><circle cx="26" cy="26" r="2.5" fill="' + col + '"/></g>';
+  return '<svg width="52" height="52" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#0a0e13" stroke="#1d2531"/>' +
+    ticks + dirs + needle + "</svg>";
+}
+
+function gauge(label, value, sub, cls, svg) {
+  return '<div class="gauge">' + (svg || "") + "<div><span class=\"lbl\">" + esc(label) + '</span><span class="val' +
+    (cls ? " " + cls : "") + '">' + value + "</span>" + (sub ? '<span class="sub">' + sub + "</span>" : "") + "</div></div>";
+}
+
+function railRender(ob) {
+  var c = G.counts, wait = 0, i;
+  for (i = 0; i < ob.orders.length; i++) if (ob.orders[i].status === "wait") wait++;
+  var dw = ob.depot_wind, sp = Math.sqrt(dw[0] * dw[0] + dw[1] * dw[1]);
+  var h = gauge(tr("ветер у склада", "wind at the depot"), nf(sp, 1) + '<span class="sub"> ' + tr("м/с", "m/s") + "</span>",
+    compass(dw[0], dw[1]) + (sp > 12 ? " · " + tr("выше предела", "over the limit") : ""),
+    sp > 12 ? "red" : sp > 8 ? "amber" : "", roseSvg(dw[0], dw[1]));
+  h += gauge(tr("за бортом", "outside"), nf(ob.temp_now) + " °C",
+    ob.cap_now < 0.999 ? tr("ёмкость ", "capacity ") + nf(ob.cap_now * 100) + " %" : tr("ёмкость полная", "full capacity"),
+    ob.temp_now >= 40 || ob.temp_now <= 0 ? "red" : "");
+  h += gauge(tr("доставлено", "delivered"), c.delivered + '<span class="sub"> / ' + ob.orders.length + "</span>",
+    tr("ждут ", "waiting ") + wait, "green");
+  h += gauge(tr("посадки вне площадки", "forced landings"), c.forced + (c.lost ? " · " + c.lost : ""),
+    c.lost ? tr("потеряно дронов ", "drones lost ") + c.lost : tr("дроны целы", "drones intact"),
+    c.forced || c.lost ? "red" : "green");
+  $("rail").innerHTML = h;
+}
+
+var deskSig = "";
+
+function deskSync() {
+  var sel = $("altSel"), sig = sel.value + "|" + $("padSel0").innerHTML.length + "|" + $("padSel0").value + "|" +
+    $("padSel").innerHTML.length + "|" + $("padSel").value + "|" + LANG;
+  if (sig === deskSig) return;
+  deskSig = sig;
+  var h = "", k;
+  [120, 100, 60, 30].forEach(function (a) {
+    h += '<button type="button" role="radio" data-alt="' + a + '" aria-checked="' + (+sel.value === a) + '">' + a + "</button>";
+  });
+  $("altLever").innerHTML = h;
+  Array.prototype.forEach.call($("altLever").querySelectorAll("[data-alt]"), function (b) {
+    b.onclick = function () { sel.value = b.getAttribute("data-alt"); deskSig = ""; sel.dispatchEvent(new Event("change")); };
+  });
+  [["padSeg0", "padSel0"], ["padSeg", "padSel"]].forEach(function (pair) {
+    var box = $(pair[0]), s2 = $(pair[1]), t = "";
+    for (k = 0; k < s2.options.length; k++) {
+      var o = s2.options[k];
+      t += '<button type="button" role="radio" data-v="' + esc(o.value) + '" aria-checked="' + (o.value === s2.value) + '">' + esc(o.textContent) + "</button>";
+    }
+    box.innerHTML = t;
+    Array.prototype.forEach.call(box.querySelectorAll("[data-v]"), function (b) {
+      b.onclick = function () { s2.value = b.getAttribute("data-v"); deskSig = ""; s2.dispatchEvent(new Event("change")); };
+    });
+  });
+}
+
+
+/* ---------- Звук и отклик пульта ---------- */
+var AU = root_audio();
+function root_audio() { try { return window.DroneAudio || null; } catch (e) { return null; } }
+
+function sndText() {
+  var b = $("sndBtn"); if (!b || !AU) return;
+  b.textContent = AU.on() ? tr("звук вкл", "sound on") : tr("звук выкл", "sound off");
+  b.setAttribute("aria-pressed", AU.on() ? "true" : "false");
+}
+if ($("sndBtn")) $("sndBtn").onclick = function () { if (AU) { AU.toggle(); AU.buzz(10); } sndText(); };
+
+var evSeen = 0, ordSeen = 0, alarmT = 0;
+function alarmFlash() {
+  var el = $("play").querySelector(".console"); if (!el) return;
+  el.classList.remove("alarm"); void el.offsetWidth; el.classList.add("alarm");
+  clearTimeout(alarmT); alarmT = setTimeout(function () { el.classList.remove("alarm"); }, 950);
+}
+
+function soundRender(ob) {
+  if (!AU) return;
+  if (G.events.length < evSeen) { evSeen = 0; ordSeen = 0; }      // новая смена
+  var i, e, air = 0, gs = 0, low = false;
+  for (i = evSeen; i < G.events.length; i++) {
+    e = G.events[i];
+    if (e[1] === "forced" || e[1] === "lost") { alarmFlash(); AU.buzz([18, 60, 18]); }
+    AU.event(e[1]);
+  }
+  evSeen = G.events.length;
+  var now = 0;
+  for (i = 0; i < G.orders.length; i++) if (G.orders[i].t <= G.t) now++;
+  if (now > ordSeen) { if (ordSeen) { AU.event("order"); AU.buzz(8); } ordSeen = now; }
+  for (i = 0; i < G.drones.length; i++) {
+    var d = G.drones[i];
+    if (d.mode === "air") { air++; gs += d.gs; }
+    if (d.mode === "air" && d.soc < 0.2) low = true;
+  }
+  var dw = ob.depot_wind;
+  AU.update({ air: air, gs: air ? gs / air : 0, wind: Math.sqrt(dw[0] * dw[0] + dw[1] * dw[1]),
+              low: low, run: !paused && !isDone() });
+}
+
+function consoleRender() {
+  if (!G) return;
+  var _ob = G.observe();
+  soundRender(_ob);
+  railRender(_ob);
+  deskSync();
+  Array.prototype.forEach.call($("drones").querySelectorAll(".drone"), function (el) {
+    var k = +el.getAttribute("data-d");
+    if (G.drones[k]) el.setAttribute("data-mode", G.drones[k].mode);
+  });
+}
+
+document.addEventListener("click", function (e) {
+  if (!AU || !AU.on()) return;
+  var b = e.target && e.target.closest ? e.target.closest("button") : null;
+  if (!b || b.disabled || !b.closest(".console")) return;
+  if (b.id === "sndBtn") return;
+  AU.event(b.closest("#altLever") ? "lever" : "key");
+  AU.buzz(8);
+}, true);
+
+var renderBase = render;
+render = function () { renderBase(); try { consoleRender(); } catch (e) {} };
+
+document.addEventListener("keydown", function (e) {
+  if ($("play").hidden || watch) return;
+  var t = e.target && e.target.tagName;
+  if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT" || e.metaKey || e.ctrlKey || e.altKey) return;
+  var k = e.key.toLowerCase();
+  if (k === "1" || k === "2" || k === "3" || k === "4") {
+    $("altSel").value = [30, 60, 100, 120][+k - 1]; deskSig = ""; $("altSel").dispatchEvent(new Event("change")); e.preventDefault();
+  } else if (k === "e" || k === "у") { $("ecoBtn").click(); e.preventDefault(); }
+  else if (k === "f" || k === "а") { $("fastBtn").click(); e.preventDefault(); }
+  else if (k === "enter") { if (!$("sendBtn").disabled) { $("sendBtn").click(); e.preventDefault(); } }
+});
+
+if (TEST) window.__drone = {
+  start: function (c, s, m) { city = c; seed = s; pickUI(); start(m || "play"); },
+  drill: function (i) { start("play", DRILLS[i]); },
+  run: function () { var n = 0; while (!isDone() && n < 20000) { oneStep(); n++; } finish(); render(); return drill ? window.__droneDrill : G.score(); },
+  send: function (d, route, alt, sp) { var dec = typeof d === "object" ? d : { drone: d, route: route, alt: alt || 60, speed: sp || "eco" }, r = G.decide(dec); if (!r.length) decLog.push([steps, dec]); render(); return r; },
+  until: function (t) { while (G.t < t && !isDone()) oneStep(); render(); return G.observe(); },
+  est: function (route, alt, sp) { return estimate(route, alt || 60, sp || "eco"); },
+  log: function () { return decLog; },
+  trail: function () { return trail; },
+  at: function (x, y) { return P(x, y); }      // карта: метры -> пиксели холста, для проверки подсказки
+};
+})();
+</script>
