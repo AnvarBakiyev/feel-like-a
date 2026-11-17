@@ -1,0 +1,70 @@
+{
+ "id": "zoo",
+ "title": {
+  "en": "A Month at the Zoo",
+  "ru": "Месяц зоопарка"
+ },
+ "summary": "Run a small Brooklyn zoo for 30 days: keepers on shift, frozen feed, ticket price, crowds and event cards. Race Qwen 3.5 9B with Extella, Claude Opus 5.5, Qwen 3.5 9B alone and a Python program on the same month.",
+ "authors": [
+  "Extella"
+ ],
+ "license": {
+  "code": "MIT",
+  "data": "CC-BY-4.0"
+ },
+ "settings": {
+  "scenario": [
+   "heat",
+   "spring",
+   "flu"
+  ],
+  "place": [
+   "park",
+   "waterfront",
+   "subway"
+  ],
+  "team": [
+   "small",
+   "mid",
+   "large"
+  ],
+  "world": [
+   "ny2",
+   "ny"
+  ]
+ },
+ "open_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "tests": [
+  "python3 test_sim.py",
+  "python3 test_replay.py",
+  "python3 web/make_parity.py ny2 && node web/parity.mjs"
+ ],
+ "verify": [
+  "python3 verify.py"
+ ],
+ "contract": {
+  "settings": {
+   "place": "waterfront",
+   "team": "mid",
+   "scenario": "flu",
+   "world": "ny2"
+  },
+  "seeds": [
+   1,
+   2
+  ],
+  "driver": "drivers:full",
+  "hidden_keys": [
+   "hidden",
+   "u_loss",
+   "boost",
+   "noise"
+  ]
+ }
+}

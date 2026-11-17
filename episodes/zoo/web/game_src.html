@@ -1,0 +1,1141 @@
+<title>Месяц зоопарка</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Podkova:wght@500;600;700;800&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+/* Зоопарк как путеводитель у входа: живая карта в центре, жёлтые указатели вместо кнопок,
+   таблички на дереве вместо подписей. Остальное тихое, чтобы карта оставалась главной. */
+:root{
+  --bg:#e6efdd; --panel:#fffdf5; --panel2:#f4f1e2; --fg:#1d2a22; --muted:#5b6a5f; --line:#cfd8c4;
+  --sign:#f2c230; --sign-fg:#33260f; --wood:#7a5533; --leaf:#1f7a4d; --leaf-soft:#dcefe2;
+  --ghost:#6d4bb0; --ghost-soft:#ece6f7; --ok:#1f7a4d; --ok-soft:#dcefe2; --bad:#c23b2b; --bad-soft:#f8e1dc; --warn:#96610a; --warn-soft:#f9edd2;
+  --water:#39a9c4; --frame:#213a2e;
+  --display:"Podkova",Georgia,"Times New Roman",serif;
+  --sans:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1d17; --panel:#17291f; --panel2:#1d3327; --fg:#e9efe6; --muted:#9db0a2; --line:#2c4436;
+  --sign:#f2c230; --sign-fg:#2a1f0b; --wood:#c9a273; --leaf:#59c38d; --leaf-soft:#173527;
+  --ghost:#b9a2ee; --ghost-soft:#261f3a; --ok:#6fd09a; --ok-soft:#173527; --bad:#f08b7c; --bad-soft:#3d1d18; --warn:#edba55; --warn-soft:#382a12;
+  --frame:#0a1510; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1d17; --panel:#17291f; --panel2:#1d3327; --fg:#e9efe6; --muted:#9db0a2; --line:#2c4436;
+  --sign:#f2c230; --sign-fg:#2a1f0b; --wood:#c9a273; --leaf:#59c38d; --leaf-soft:#173527;
+  --ghost:#b9a2ee; --ghost-soft:#261f3a; --ok:#6fd09a; --ok-soft:#173527; --bad:#f08b7c; --bad-soft:#3d1d18; --warn:#edba55; --warn-soft:#382a12;
+  --frame:#0a1510; color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding-block:14px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+header.top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;color:var(--sign-fg);background:var(--sign);border:2px solid var(--wood);border-radius:10px;padding:3px 14px 5px;cursor:pointer;min-height:0;transform:rotate(-1.2deg)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,6.2vw,64px);line-height:.98;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.15;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:700;font-size:18px;margin:0}
+p{margin:0;max-width:64ch}
+.muted{color:var(--muted)} .small{font-size:14px} .note{font-size:13.5px;color:var(--muted)}
+.n{font-variant-numeric:tabular-nums}
+.big{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:10px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+button{font:inherit;font-size:15px;padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;min-height:38px}
+button:hover:not(:disabled){border-color:var(--muted)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+/* жёлтый указатель: главное действие экрана, одно */
+button.go{font-family:var(--display);font-weight:800;font-size:20px;background:var(--sign);color:var(--sign-fg);border:2px solid var(--wood);border-radius:12px;padding:8px 22px 10px;min-height:50px;box-shadow:0 3px 0 var(--wood)}
+button.go:hover:not(:disabled){border-color:var(--wood);transform:translateY(-1px);box-shadow:0 4px 0 var(--wood)}
+button.go:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--wood)}
+button.on,button[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);font-weight:600}
+button.link{border:0;background:none;padding:0;min-height:0;color:var(--leaf);text-decoration:underline;text-underline-offset:3px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;border-radius:0;min-height:34px;padding:5px 10px;font-size:14px}
+.seg button+button{border-left:1px solid var(--line)}
+.step{display:inline-flex;align-items:center;gap:4px}
+.step button{min-width:38px;min-height:38px;padding:0;font-weight:700;font-size:18px;border-radius:50%}
+.step .v{min-width:2.6em;text-align:center;font-family:var(--display);font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.rej{border-left:4px solid var(--bad);background:var(--bad-soft);padding:7px 11px;border-radius:0 8px 8px 0;font-size:14.5px}
+.okmsg{border-left:4px solid var(--ok);background:var(--ok-soft);padding:7px 11px;border-radius:0 8px 8px 0;font-size:14.5px}
+.warnmsg{border-left:4px solid var(--warn);background:var(--warn-soft);padding:7px 11px;border-radius:0 8px 8px 0;font-size:14.5px}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 9px;border-radius:99px;border:1.5px solid currentColor;white-space:nowrap}
+.pill.ok{color:var(--ok)} .pill.bad{color:var(--bad)} .pill.warn{color:var(--warn)} .pill.ghost{color:var(--ghost)}
+table{border-collapse:collapse;width:100%;font-size:14.5px} .tbl{overflow-x:auto}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600} td.n,th.n{text-align:right;white-space:nowrap}
+
+/* карта */
+.stage{position:relative;border-radius:22px;background:var(--frame);border:3px solid var(--frame);box-shadow:0 10px 30px rgba(20,40,30,.18)}
+.stage canvas{display:block;width:100%;height:auto;border-radius:19px}
+.plaque{position:absolute;transform:translate(6px,6px);font-family:var(--display);font-weight:700;font-size:13.5px;line-height:1.1;color:#33260f;background:#fff6dc;border:1.5px solid #7a5533;border-radius:8px;padding:3px 8px 4px;min-height:0;display:flex;gap:6px;align-items:center;box-shadow:0 2px 0 rgba(60,40,20,.35);white-space:nowrap}
+.plaque:hover:not(:disabled){border-color:#33260f;background:#fff}
+.plaque .kp{font-family:var(--sans);font-weight:700;font-size:12px;background:#1f7a4d;color:#fff;border-radius:99px;padding:1px 7px}
+.plaque.low{background:#ffe3b0;border-color:#96610a} .plaque.bad{background:#ffd9d2;border-color:#c23b2b}
+.plaque.low .kp{background:#96610a} .plaque.bad .kp{background:#c23b2b}
+.pop{position:absolute;z-index:4;width:min(264px,calc(100% - 16px));background:var(--panel);color:var(--fg);border:2px solid var(--wood);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 12px 30px rgba(10,30,20,.35)}
+.pop .line{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chipbar{position:absolute;left:8px;right:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:flex-end;pointer-events:none}
+.chip{pointer-events:auto;font-size:13px;font-weight:600;background:rgba(15,29,23,.78);color:#f3f6ef;border-radius:99px;padding:4px 11px;backdrop-filter:blur(4px)}
+.clock{font-family:var(--display);font-weight:800;font-size:22px;background:#fff6dc;color:#33260f;border:2px solid #7a5533;border-radius:10px;padding:1px 12px 3px}
+.toast{position:absolute;left:50%;top:12px;transform:translateX(-50%);max-width:calc(100% - 24px);background:#fff6dc;color:#33260f;border:2px solid #7a5533;border-radius:12px;padding:6px 14px;font-weight:600;font-size:14.5px;text-align:center;box-shadow:0 6px 18px rgba(10,30,20,.3)}
+
+/* игра: карта слева, стол управляющего справа */
+.play{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+@media (min-width:1040px){.play{grid-template-columns:minmax(0,1.22fr) minmax(360px,.78fr)}.play .left{position:sticky;top:12px}}
+.left,.desk{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hud{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:7px 11px;min-width:0}
+.stat .k{font-size:12.5px;color:var(--muted);font-weight:600}
+.stat .v{font-family:var(--display);font-weight:700;font-size:21px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.15}
+.stat.ghost{border-color:var(--ghost)} .stat.ghost .v{color:var(--ghost)}
+.ribbon{display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:2px}
+.ribbon i{display:block;height:14px;border-radius:3px;background:var(--line)}
+.ribbon i.we{background:color-mix(in srgb,var(--line) 60%,var(--muted))}
+.ribbon i.up{background:var(--ok)} .ribbon i.dn{background:var(--bad)} .ribbon i.now{background:var(--sign);outline:2px solid var(--wood);outline-offset:1px}
+.fc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fc .d{border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0;display:flex;flex-direction:column;gap:2px;background:var(--panel)}
+.fc .d.tom{border:2px solid var(--wood);background:var(--panel2)}
+.fc svg{width:30px;height:30px}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden;position:relative}
+.meter b{display:block;height:100%;border-radius:99px;background:var(--leaf)}
+.meter.over b{background:var(--bad)}
+.meter::after{content:"";position:absolute;left:66.6%;top:-2px;bottom:-2px;width:2px;background:var(--fg);opacity:.55}
+/* решения вечера: плитки, раскрыта одна */
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.tile>button.head{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;border:0;border-radius:0;background:none;padding:10px 12px;min-height:54px}
+.tile .ico{width:36px;height:36px;border-radius:10px;background:var(--panel2);display:grid;place-items:center;color:var(--wood)}
+.tile .ico svg{width:24px;height:24px}
+.tile .ttl{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.1}
+.tile .sum{font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile.open{border:2px solid var(--wood)}
+.tile .body{padding:4px 12px 14px;display:flex;flex-direction:column;gap:10px}
+.tile.att{border-color:var(--warn)} .tile.err{border-color:var(--bad)}
+.shift{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 10px;align-items:center}
+.shift .hh{font-size:13px;color:var(--muted);font-weight:600;text-align:center}
+.shift .nm.hot{color:var(--leaf);font-weight:700}
+.shift .cell{display:flex;align-items:center;gap:6px;justify-content:center}
+.shift .cell::before{content:attr(data-h);font-size:12.5px;color:var(--muted);display:none}
+@media (max-width:560px){.shift{grid-template-columns:1fr 1fr;gap:4px 8px}.shift .hh,.shift .corner{display:none}.shift .nm{grid-column:1/-1;margin-top:8px}.shift .cell{justify-content:flex-start}.shift .cell::before{display:inline}
+  .hud{grid-template-columns:repeat(3,minmax(0,1fr))}.stat .v{font-size:18px}.step button{min-width:34px;min-height:34px}}
+input[type=range]{width:100%;accent-color:var(--leaf);height:30px}
+.gauge{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center}
+.supp{padding-block:8px;border-bottom:1px dashed var(--line);display:flex;flex-direction:column;gap:6px}
+.supp:last-of-type{border-bottom:0}
+.qtys{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.qtys label{display:inline-flex;gap:6px;align-items:center;font-size:14.5px}
+.ticket{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center}
+.stub{font-family:var(--display);font-weight:800;font-size:26px;background:var(--sign);color:var(--sign-fg);border-radius:10px;padding:6px 16px 8px;border:2px dashed var(--wood);transform:rotate(-2deg)}
+.ecard{background:var(--panel);border:2px solid var(--warn);border-radius:14px;padding:12px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 12px}
+.ecard .pic{width:46px;height:46px;border-radius:12px;background:var(--warn-soft);display:grid;place-items:center;color:var(--warn)}
+.ecard .pic svg{width:30px;height:30px}
+.ecard .opts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.ghostbox{border-left:4px solid var(--ghost);background:var(--ghost-soft);padding:9px 12px;border-radius:0 12px 12px 0}
+.closebar{position:sticky;bottom:0;padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--bg) 78%,transparent);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;z-index:5}
+/* первый экран */
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:center}
+@media (min-width:1040px){.hero{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}
+.opt{display:flex;flex-direction:column;gap:6px}
+.opt .lab{font-family:var(--display);font-weight:700;font-size:16px;color:var(--wood)}
+.choice{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;text-align:left;padding:8px 10px;border-radius:12px;min-height:56px}
+.choice svg{width:34px;height:34px;color:var(--wood)}
+.choice.on{border:2px solid var(--wood);background:var(--panel2)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.chart svg{display:block;width:100%;height:auto}
+.dayres{border:2px solid var(--wood)}
+.stand{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:6px 10px;align-items:center;font-size:14.5px}
+.stand .pl{font-family:var(--display);font-weight:800;font-size:17px;width:1.3em;text-align:center}
+.stand .nm{min-width:0} .stand .nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stand .bar{height:6px;border-radius:99px;background:var(--line);margin-top:3px;overflow:hidden} .stand .bar i{display:block;height:100%;border-radius:99px}
+.stand .me b{color:var(--leaf)} .stand .gap{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.pnl td,.pnl th{padding:5px 6px;font-size:14px}
+.bump{animation:bump .5s ease-out}@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+#snd[aria-pressed="false"]{opacity:.55;text-decoration:line-through}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
+@media (prefers-reduced-motion:no-preference){.pop,.toast{animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(6px)}to{transform:none}}.toast{animation-name:popc}@keyframes popc{from{transform:translate(-50%,-8px)}to{transform:translate(-50%,0)}}}
+</style>
+
+<div class="wrap" id="app">
+  <header class="top">
+    <button class="brand" id="home" type="button">Месяц зоопарка</button>
+    <div class="row">
+      <div class="seg" role="group" aria-label="Language"><button type="button" id="lang-ru">RU</button><button type="button" id="lang-en">EN</button></div>
+      <button type="button" id="snd" aria-label="Sound" style="min-height:34px;padding:5px 10px;font-size:14px">♪</button>
+      <div class="seg" role="group" aria-label="Theme"><button type="button" id="th-light" aria-label="Light theme">☀</button><button type="button" id="th-dark" aria-label="Dark theme">☾</button></div>
+    </div>
+  </header>
+  <main id="main"><p class="muted">Загружаю зоопарк…</p></main>
+</div>
+
+<script>/*SIM*/</script>
+<script>/*SCENE*/</script>
+<script>/*AUDIO*/</script>
+<script>
+var DATA = /*DATA*/;
+(function(){
+"use strict";
+var S = window.ZooSim, W = DATA.world;
+var $ = function(id){ return document.getElementById(id); };
+var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+var SECT = ["pool", "cats", "birds", "yard", "tropic"];
+var SITE = !!window.ZOO_SITE, LANG = SITE ? "en" : "ru";
+try { var l0 = localStorage.getItem(SITE ? "robot_lang" : "zoo_lang"); if (l0 === "en" || l0 === "ru") LANG = l0; } catch (e) {}
+try { var th0 = localStorage.getItem("zoo_theme"); if (th0) document.documentElement.setAttribute("data-theme", th0); } catch (e) {}
+
+/* ---------- тексты ---------- */
+var T = {
+ru: {brand:"Месяц зоопарка", tag:"Тридцать дней вы управляющий небольшого зоопарка в Бруклине. Рядом тот же месяц проходит Extella.",
+ setup_h:"Выберите месяц", place:"Место", team:"Смотрителей на старте", scen:"Сценарий",
+ st_park:"Тихий парк", st_park_s:"Посетителей меньше всех", st_waterfront:"Набережная", st_waterfront_s:"Средний поток",
+ st_subway:"У метро", st_subway_s:"Посетителей больше всех",
+ tm_small:"9 смотрителей", tm_small_s:"Минимум ухода не закрыть, пока не выйдет новый", tm_mid:"12 смотрителей", tm_mid_s:"Хватает на обычный день",
+ tm_large:"15 смотрителей", tm_large_s:"Есть запас, но зарплата идёт всегда",
+ sc_heat:"Жаркий июль", sc_heat_s:"Посетителей много, но жара закрывает вольеры", sc_spring:"Весна и детёныши", sc_spring_s:"У барсов котята и внимание прессы",
+ sc_flu:"Птичий грипп осенью", sc_flu_s:"Грипп у диких птиц города",
+ how_h:"Как это устроено", how:"Каждый вечер вы решаете, кто выйдет в смену, сколько корма разморозить и заказать, какой будет цена билета и что ответить на карточку события. Проверка зоопарка отклоняет решение, которое нарушает правила ухода, и называет правило. Утром день проходит сам.",
+ score_h:"Счёт месяца", score:"Выручка минус расходы, минус $5 000 за каждый день секции, где животные недокормлены или без минимума ухода, минус $15 000 за нарушение, найденное инспекцией, минус $100 000 за гибель животного, минус $5 за посетителя, ушедшего из очереди. Считается только управляемая часть: постоянных расходов и дотации здесь нет.",
+ lessons:"Три урока", first_time:"Первый раз? Три урока занимают две минуты и показывают, как Проверка отказывает и чем это стоит.", play:"Играть месяц", board:"Таблица рекордов", skip:"Пропустить уроки",
+ l_h:"Урок", l_next:"Дальше", l_done:"К игре", l_again:"Ещё раз",
+ l1_h:"Смена", l1:"Вечер перед первым днём. Поставьте смотрителей на завтра. В вольер снежных барсов входят вдвоём, в бассейне и контактном дворе кто-то нужен всегда.",
+ l1_ok:"Смена проходит Проверку. Это и есть обычный вечер: правила видны до того, как день начался.",
+ l2_h:"Разморозка", l2:"Рыба и мясо мороженые. Разморозить надо накануне, а размороженное живёт сутки. Мало разморозите, животные останутся недокормлены: $5 000 за день секции. Много, остаток выбросится.",
+ l2_hint:"Норма на день", l2_run:"Прожить день",
+ l3_h:"Карточка события", l3:"Птичий грипп нашли у диких птиц города. Эксперт считает, во что в среднем обойдётся каждый ответ. Исход на этом зерне заранее никто не знает.",
+ l3_pick:"Посмотреть, что вышло", l3_res:"Что вышло на этом зерне", l3_note:"Оценка это среднее по многим месяцам, а месяц один. Поэтому карточка остаётся выбором, а не арифметикой.",
+ day:"День", of:"из", money_sc:"Счёт", rep:"Репутация", keepers:"Смотрителей", viol:"Нарушений", vis_y:"Пришло вчера",
+ win_h:"Зоопарк", win_note:"На окне только то, что есть в отчёте дня",
+ fc_h:"Завтра и дальше", fc_note:"Разброс прогноза, точное число после закрытия",
+ wd:["пн","вт","ср","чт","пт","сб","вс"], wx:{clear:"ясно", rain:"дождь", hot:"жара от 90 °F", advisory:"Heat Advisory"},
+ sec:{pool:"Бассейн", cats:"Барсы", birds:"Птичий дом", yard:"Контактный двор", tropic:"Тропический дом"},
+ half:["утро","день"], cards_h:"Карточки событий", card_by:"Ответить до вечера дня", est:"оценка",
+ shift_h:"Смена на завтра", shift_note:"Минимум ухода подсвечен", shift_min:"минимум", cash:"Кассы", kiosk:"Киоски", shows:"Кормлений при публике",
+ shows_note:"Каждое кормление держат двое: в бассейне нужно 4 смотрителя в эту половину дня",
+ thaw_h:"Разморозка на завтра", thaw_fish:"Рыба, кг", thaw_meat:"Мясо, кг", thaw_norm:"норма",
+ ord_h:"Заказ кормов", ord_none:"Завтра поставок нет", ord_total:"Итого", ord_fill:"По норме с запасом", ord_clear:"Убрать заказ",
+ price_h:"Билет и бесплатные часы", price_adult:"Взрослый билет", price_base:"база", free_wed:"Бесплатный вход в среду днём",
+ team_h:"Люди и ветеринар", hire:"Нанять смотрителей", hire_note:"новый выходит через 7 дней", vet:"Вызвать ветеринара завтра",
+ vet_note:"нужно два визита за месяц, было", close:"Закрыть вечер", close_bad:"Проверка отклонила решение",
+ day_res:"Итог дня", ahead:"впереди", behind:"позади", vis:"Посетителей", rev:"Выручка", left:"ушли из очереди", fed_bad:"недокорм",
+ ghost_say:"Extella в этот вечер", ghost_plan:"Замысел", end_h:"Месяц прошёл", you:"Вы", diff:"Разница",
+ chart_h:"Счёт по дням", chart_note:"вы, Extella, модели без Extella и программа на Python", parts_h:"Из чего счёт", part:"Статья",
+ save:"Попасть в таблицу", saving:"Сохраняю…", saved:"Записано", save_fail:"Не получилось сохранить",
+ again:"Этот же месяц заново", other:"Другой месяц", board_h:"Таблица рекордов", name:"Игрок", best:"Лучший счёт", vs:"Против Extella",
+ beat:"обогнал", nobeat:"пока нет", board_off:"Таблица доступна на опубликованной странице: она хранится рядом со страницей.",
+ board_empty:"Пока никто не сыграл.", loading:"Загружаю…", someone:"Игрок",
+ verdict_h:"Где вы выиграли и где проиграли", v_better:"лучше Extella на", v_worse:"хуже Extella на",
+ verdict_note:"Сравниваются статьи счёта за тот же месяц: зерно одно, поэтому разница только в решениях.",
+ verify:"В таблицу уходит журнал решений, а не счёт: счёт пересчитывается из решений тем же симулятором.",
+ careful:"Программа на Python", ghost:"Extella", deaths:"Гибель животных", total:"Счёт месяца"},
+en: {brand:"A Month at the Zoo", tag:"For thirty days you run a small zoo in Brooklyn. Extella plays the same month beside you.",
+ setup_h:"Pick your month", place:"Place", team:"Keepers at the start", scen:"Scenario",
+ st_park:"Quiet park", st_park_s:"The fewest visitors", st_waterfront:"Waterfront", st_waterfront_s:"A middling flow",
+ st_subway:"By the subway", st_subway_s:"The most visitors",
+ tm_small:"9 keepers", tm_small_s:"Too few for the care minimum until a new keeper starts", tm_mid:"12 keepers", tm_mid_s:"Enough for an ordinary day",
+ tm_large:"15 keepers", tm_large_s:"Some slack, but the payroll never stops",
+ sc_heat:"A hot July", sc_heat_s:"Crowds come, but the heat closes the yards", sc_spring:"Spring and cubs", sc_spring_s:"The snow leopards have cubs and the press calls",
+ sc_flu:"Bird flu in autumn", sc_flu_s:"Flu among the city's wild birds",
+ how_h:"How it works", how:"Every evening you decide who comes on shift, how much feed to thaw and order, what the ticket costs and what to answer on an event card. The zoo's rulebook rejects a decision that breaks an animal care rule and names the rule. The day then plays itself.",
+ score_h:"The month's score", score:"Revenue minus costs, minus $5,000 for each section-day where animals are underfed or left without the minimum care, minus $15,000 per violation found by an inspection, minus $100,000 for an animal's death, minus $5 for every visitor who left the queue. Only the part you control is counted: fixed costs and the city grant are not here.",
+ lessons:"Three lessons", first_time:"First time? The three lessons take two minutes and show how the rulebook rejects a decision and what it costs.", play:"Play the month", board:"Leaderboard", skip:"Skip the lessons",
+ l_h:"Lesson", l_next:"Next", l_done:"To the game", l_again:"Again",
+ l1_h:"The shift", l1:"The evening before day one. Put keepers on tomorrow's shift. Two keepers enter the snow leopard enclosure together; the pool and the petting yard always need somebody.",
+ l1_ok:"The shift passes the rulebook. That is an ordinary evening: you see the rules before the day starts.",
+ l2_h:"Thawing", l2:"Fish and meat come frozen. You thaw the night before, and thawed feed lives 24 hours. Thaw too little and animals go underfed: $5,000 per section-day. Thaw too much and the rest is binned.",
+ l2_hint:"A day's ration", l2_run:"Live the day",
+ l3_h:"An event card", l3:"Bird flu has been found in the city's wild birds. The expert estimates what each answer costs on average. Nobody knows the outcome on this seed in advance.",
+ l3_pick:"See what happened", l3_res:"What happened on this seed", l3_note:"An estimate is an average over many months, and you get one month. That is why the card stays a choice, not arithmetic.",
+ day:"Day", of:"of", money_sc:"Score", rep:"Reputation", keepers:"Keepers", viol:"Violations", vis_y:"Came yesterday",
+ win_h:"The zoo", win_note:"The window shows only what the day's report holds",
+ fc_h:"Tomorrow and beyond", fc_note:"A forecast band; the exact number comes after closing",
+ wd:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], wx:{clear:"clear", rain:"rain", hot:"over 90 °F", advisory:"Heat Advisory"},
+ sec:{pool:"Pool", cats:"Snow leopards", birds:"Bird house", yard:"Petting yard", tropic:"Tropical house"},
+ half:["morning","afternoon"], cards_h:"Event cards", card_by:"Answer by the evening of day", est:"estimate",
+ shift_h:"Tomorrow's shift", shift_note:"The care minimum is highlighted", shift_min:"minimum", cash:"Cashiers", kiosk:"Kiosks", shows:"Public feedings",
+ shows_note:"Each feeding takes two keepers: the pool needs 4 keepers in that half of the day",
+ thaw_h:"Thawing for tomorrow", thaw_fish:"Fish, kg", thaw_meat:"Meat, kg", thaw_norm:"ration",
+ ord_h:"Feed order", ord_none:"No deliveries tomorrow", ord_total:"Total", ord_fill:"Ration plus a buffer", ord_clear:"Clear the order",
+ price_h:"Ticket and free hours", price_adult:"Adult ticket", price_base:"base", free_wed:"Free entry on Wednesday afternoon",
+ team_h:"People and the vet", hire:"Hire keepers", hire_note:"a new keeper starts in 7 days", vet:"Call the vet tomorrow",
+ vet_note:"two visits a month are required; so far", close:"Close the evening", close_bad:"The rulebook rejected the decision",
+ day_res:"The day", ahead:"ahead", behind:"behind", vis:"Visitors", rev:"Revenue", left:"left the queue", fed_bad:"underfed",
+ ghost_say:"Extella that evening", ghost_plan:"Plan", end_h:"The month is over", you:"You", diff:"Difference",
+ chart_h:"Score by day", chart_note:"you, Extella, models without Extella and a Python program", parts_h:"Where the score comes from", part:"Line",
+ save:"Join the leaderboard", saving:"Saving…", saved:"Saved", save_fail:"Could not save",
+ again:"Same month again", other:"Another month", board_h:"Leaderboard", name:"Player", best:"Best score", vs:"Against Extella",
+ beat:"beat it", nobeat:"not yet", board_off:"The leaderboard lives next to the published page.",
+ board_empty:"Nobody has played yet.", loading:"Loading…", someone:"Player",
+ verdict_h:"Where you won and where you lost", v_better:"better than Extella by", v_worse:"worse than Extella by",
+ verdict_note:"The same month, line by line: one seed, so the difference is only in the decisions.",
+ verify:"The page sends the decision log, not the score: the score is recomputed from those decisions by the same simulator.",
+ careful:"A Python program", ghost:"Extella", deaths:"Animal deaths", total:"Month score"}
+};
+
+/* дополнения к текстам: новые места интерфейса */
+var T2 = {
+ru: {tap:"Нажмите на вольер, чтобы поставить людей", morning:"утро", afternoon:"день", min:"минимум ухода", feed_show:"Кормление при публике",
+ gate:"Вход", gate_s:"Кассиров", kiosk_t:"Киоск", kiosk_s:"Продавцов", done:"Готово", tomorrow:"Завтра", fill:"Заполненность", fill_note:"вместимость без толчеи",
+ fill_over:"толчея: тратят меньше, отзываются хуже", food:"Корм", skip:"Пропустить день", open_h:"Зоопарк открыт", visitors:"Посетителей", revenue:"Выручка",
+ lead:"впереди Extella на", lag:"позади Extella на", you:"Вы", d_shift:"Смена", d_food:"Корм", d_order:"Поставка", d_ticket:"Билет", d_team:"Люди и ветеринар",
+ items:{fish:"рыба", meat:"мясо", hay:"сено", produce:"овощи и фрукты"}, kgu:"кг", in_freezer:"в морозилке", ration:"норма",
+ hero_note:"Карта живая: так выглядит обычный день. Нажмите на любой вольер.",
+ short:{pool:"Бассейн", cats:"Барсы", birds:"Птицы", yard:"Двор", tropic:"Тропики"},
+ stand_h:"Счёт и прибыль", stand_after:"после дня", stand_show:"Показать счёт и прибыль", stand_hide:"Свернуть", pnl_h:"Прибыль и убытки с начала месяца", cmp:"Сравнить с",
+ grp:{revenue:"Выручка", goods:"Еда, сувениры, комиссия карт", wages:"Зарплата смен", feed:"Корма", other:"Электричество, ветеринар, события", penalties:"Штрафы и потери"},
+ with_x:"с Extella", no_x:"без Extella",
+ prog_note:"Программа на Python не модель и не человек, а короткий код без ИИ. Ставит людей по минимуму ухода, размораживает ровно норму, заказывает корм с запасом, цену не трогает. Это планка аккуратной игры по инструкции.", leader:"лидер", same:"те же решения считает тот же симулятор",
+ night:"Вечер. Зоопарк закрыт, решения на завтра.", evening_of:"Вечер перед днём", sick:"болеет", on_shift:"в смене", of:"из", free:"свободно"},
+en: {tap:"Tap an enclosure to put keepers there", morning:"morning", afternoon:"afternoon", min:"care minimum", feed_show:"Public feeding",
+ gate:"Gate", gate_s:"Cashiers", kiosk_t:"Kiosk", kiosk_s:"Kiosk staff", done:"Done", tomorrow:"Tomorrow", fill:"How full", fill_note:"comfortable capacity",
+ fill_over:"crowded: people spend less and review worse", food:"Feed", skip:"Skip the day", open_h:"The zoo is open", visitors:"Visitors", revenue:"Revenue",
+ lead:"ahead of Extella by", lag:"behind Extella by", you:"You", d_shift:"Shift", d_food:"Feed", d_order:"Delivery", d_ticket:"Ticket", d_team:"People and the vet",
+ items:{fish:"fish", meat:"meat", hay:"hay", produce:"fruit and veg"}, kgu:"kg", in_freezer:"in the freezer", ration:"ration",
+ hero_note:"The map is alive: this is an ordinary day. Tap any enclosure.",
+ short:{pool:"Pool", cats:"Leopards", birds:"Birds", yard:"Yard", tropic:"Tropics"},
+ stand_h:"Score and profit", stand_after:"after day", stand_show:"Show score and profit", stand_hide:"Hide", pnl_h:"Profit and loss since day one", cmp:"Compare with",
+ grp:{revenue:"Revenue", goods:"Food, souvenirs, card fees", wages:"Shift wages", feed:"Feed", other:"Electricity, vet, events", penalties:"Penalties and losses"},
+ with_x:"with Extella", no_x:"without Extella",
+ prog_note:"The Python program is neither a model nor a person, just short code with no AI. It staffs to the care minimum, thaws the exact ration, orders feed with a buffer and never touches the price. It is the bar for careful play by the book.", leader:"leader", same:"the same simulator scores the same kind of decisions",
+ night:"Evening. The zoo is closed; decide for tomorrow.", evening_of:"The evening before day", sick:"out sick", on_shift:"on shift", of:"of", free:"free"}
+};
+function tt(k){ return T2[LANG][k]; }
+function t(k){ return T[LANG][k]; }
+function money(x, sign){ var v = Math.round(x), s = Math.abs(v).toLocaleString(LANG === "ru" ? "ru-RU" : "en-US"); return (v < 0 ? "−" : (sign && v > 0 ? "+" : "")) + "$" + s; }
+function money2(x){ return "$" + x.toFixed(2); }
+function num(x){ return Math.round(x).toLocaleString(LANG === "ru" ? "ru-RU" : "en-US"); }
+function kg(x){ return (Math.round(x * 10) / 10).toLocaleString(LANG === "ru" ? "ru-RU" : "en-US"); }
+function dayN(d){ return d + 1; }
+function clone(x){ return JSON.parse(JSON.stringify(x)); }
+
+/* ---------- состояние ---------- */
+var screen = "start", G = null, DLOG = [], draft = null, lastDay = null, saveState = "";
+var pick = {sc: "flu", pl: "waterfront", tm: "mid"};
+try { var p0 = JSON.parse(localStorage.getItem("zoo_pick") || "null"); if (p0 && p0.sc && p0.pl && p0.tm) pick = p0; } catch (e) {}
+function key(){ return pick.sc + "_" + pick.pl + "_" + pick.tm; }
+function ghost(){ return DATA.ghosts[key()] || null; }
+function careful(){ return DATA.careful[key()] || null; }
+function has(k){ return !!DATA.ghosts[k]; }
+
+/* ---------- черновик вечера ---------- */
+function suggestRow(obs){
+  var prev = obs.schedule[String(obs.wd)], mn = obs.min_tomorrow, r = {keepers: {}, cashiers: [1, 1], kiosk: [1, 1], shows: prev.shows || 0};
+  SECT.forEach(function(s){ r.keepers[s] = [Math.max(prev.keepers[s][0], mn[s][0]), Math.max(prev.keepers[s][1], mn[s][1])]; });
+  r.keepers.cats[0] = Math.max(2, r.keepers.cats[0]);
+  r.keepers.pool[0] = Math.max(1, r.keepers.pool[0]);
+  r.keepers.pool[1] = Math.max(1, r.keepers.pool[1]);
+  r.keepers.yard = [Math.max(1, r.keepers.yard[0]), Math.max(1, r.keepers.yard[1])];
+  var f = obs.forecast[0];
+  for (var h = 0; h < 2; h++) {
+    r.cashiers[h] = Math.max(1, Math.min(8, Math.ceil(f.high[h] * 0.75 / (W.gate_per_cashier_hour * W.halves.hours[h]))));
+    r.kiosk[h] = Math.max(0, Math.min(8, Math.ceil(f.high[h] * 0.7 / (W.kiosk_per_worker_hour * W.halves.hours[h]))));
+  }
+  for (var k = 0; k < r.shows; k++) r.keepers.pool[k] = Math.max(r.keepers.pool[k], W.shows.pool_keepers_needed);
+  return legalizeRow(r, obs, mn);
+}
+function availKeepers(obs){
+  var n = 0; obs.staff.forEach(function(x){ if (x.start <= obs.day) n++; });
+  return n - obs.sick_tomorrow;
+}
+function legalizeRow(r, obs, mn){
+  // смена должна проходить Проверку: сперва убираем лишнее сверх минимума ухода, потом по правилам
+  mn = mn || obs.min_tomorrow;
+  var avail = availKeepers(obs);
+  SECT.forEach(function(sx){ r.keepers[sx] = [Math.min(6, r.keepers[sx][0]), Math.min(6, r.keepers[sx][1])]; });
+  r.keepers.pool[0] = Math.max(1, r.keepers.pool[0]); r.keepers.pool[1] = Math.max(1, r.keepers.pool[1]);
+  r.keepers.yard = [Math.max(1, r.keepers.yard[0]), Math.max(1, r.keepers.yard[1])];
+  r.keepers.cats[0] = Math.max(2, r.keepers.cats[0]);
+  r.cashiers = [Math.max(1, r.cashiers[0]), Math.max(1, r.cashiers[1])];
+  for (var hh = 0; hh < 2; hh++) {
+    for (var guard = 0; guard < 40; guard++) {
+      var used = 0; SECT.forEach(function(sx){ used += r.keepers[sx][hh]; });
+      if (used <= avail) break;
+      var floorOf = function(sx, care){
+        var f = care ? mn[sx][hh] : (sx === "pool" || sx === "yard" ? 1 : 0);
+        if (sx === "cats" && hh === 0) f = 2;                                  // вольер барсов убирают вдвоём
+        if (sx === "pool" && hh < r.shows) f = Math.max(f, W.shows.pool_keepers_needed);
+        return f;
+      };
+      var pickWorst = function(care){
+        var best = null, gain = 0;
+        SECT.forEach(function(sx){ var over = r.keepers[sx][hh] - floorOf(sx, care); if (over > gain) { gain = over; best = sx; } });
+        return best;
+      };
+      var best = pickWorst(true) || pickWorst(false);                          // сперва лишнее сверх минимума ухода, потом по правилам
+      if (!best) { if (r.shows > 0) { r.shows--; continue; } break; }
+      r.keepers[best][hh]--;
+    }
+  }
+  return r;
+}
+function newDraft(){
+  var obs = G.observe(), nd = obs.need_kg_per_day, st = obs.stock;
+  var have = {fish: st.freezer.fish + st.thawed_for_tomorrow.fish, meat: st.freezer.meat + st.thawed_for_tomorrow.meat};
+  return {obs: obs, row: suggestRow(obs),
+          thaw: {fish: Math.round(Math.min(nd.fish, have.fish) * 10) / 10, meat: Math.round(Math.min(nd.meat, have.meat) * 10) / 10},
+          qty: {}, price: obs.price, free_wed: obs.free_wed, hire: 0, vet: false, choices: {}};
+}
+function fillOrder(){
+  var obs = draft.obs, nd = obs.need_kg_per_day, st = obs.stock, q = {};
+  if (obs.suppliers.frozen.delivers_tomorrow) {
+    var gap = 1; for (var k = 1; k <= 7; k++) if (obs.suppliers.frozen.days.indexOf((obs.wd + k) % 7) >= 0) { gap = k; break; }
+    var it = {};
+    ["fish", "meat"].forEach(function(f){
+      var hv = st.freezer[f] + st.thawed_for_tomorrow[f] - nd[f], want = nd[f] * (gap + 3) - hv;
+      if (want > 0) it[f] = 10 * Math.ceil(want / 10);
+    });
+    var tot = 0; Object.keys(it).forEach(function(f){ tot += it[f] * obs.suppliers.frozen.prices_kg[f]; });
+    while (tot < obs.suppliers.frozen.min_order) { it.fish = (it.fish || 0) + 10; tot += 10 * obs.suppliers.frozen.prices_kg.fish; }
+    var room = st.freezer_kg - (st.freezer.fish + st.freezer.meat + st.thawed_for_tomorrow.fish + st.thawed_for_tomorrow.meat - draft.thaw.fish - draft.thaw.meat);
+    while (it.fish > 10 && it.fish + (it.meat || 0) > room) it.fish -= 10;
+    q.frozen = it;
+  }
+  if (obs.suppliers.hay.delivers_tomorrow && st.hay < nd.hay * 11) q.hay = {hay: 500};
+  var usable = 0; st.produce.forEach(function(x){ if (x[1] >= obs.day) usable += x[0]; });
+  if (obs.suppliers.produce.delivers_tomorrow && usable < nd.produce * 1.6) q.produce = {produce: Math.max(obs.suppliers.produce.min_kg, Math.ceil(nd.produce * 2.1 - usable))};
+  draft.qty = q;
+}
+function buildDec(){
+  var obs = draft.obs, sch = clone(obs.schedule);
+  // остальные дни недели остаются от прошлых вечеров: приводим их к законному виду, иначе Проверка отказывает за день, которого игрок не видит
+  for (var w = 0; w < 7; w++) if (w !== obs.wd) sch[String(w)] = legalizeRow(sch[String(w)], obs, null);
+  sch[String(obs.wd)] = clone(draft.row);
+  var dec = {schedule: sch, thaw: {fish: draft.thaw.fish, meat: draft.thaw.meat}, price: draft.price, free_wed: !!draft.free_wed};
+  var orders = {};
+  Object.keys(draft.qty).forEach(function(s){
+    var it = {}; Object.keys(draft.qty[s]).forEach(function(i){ if (draft.qty[s][i] > 0) it[i] = draft.qty[s][i]; });
+    if (Object.keys(it).length) orders[s] = it;
+  });
+  if (Object.keys(orders).length) dec.orders = orders;
+  if (draft.hire) dec.hire = draft.hire;
+  if (draft.vet) dec.vet_visit = true;
+  if (Object.keys(draft.choices).length) dec.choices = clone(draft.choices);
+  return dec;
+}
+function orderTotal(){
+  var obs = draft.obs, tot = 0;
+  Object.keys(draft.qty).forEach(function(s){ Object.keys(draft.qty[s]).forEach(function(i){ tot += (draft.qty[s][i] || 0) * obs.suppliers[s].prices_kg[i]; }); });
+  return tot;
+}
+function rejections(){ var r = G.check(buildDec()); return r[0] || []; }
+function rejFor(prefix, list){ return list.filter(function(r){ return r.field === prefix || r.field.indexOf(prefix + ".") === 0; }); }
+function rejHTML(list){ return list.map(function(r){ return '<div class="rej">' + esc(r[LANG]) + '</div>'; }).join(""); }
+
+
+/* ---------- значки ---------- */
+function ico(name){
+  var p = {
+    sun:'<circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></g>',
+    rain:'<path d="M7 15a4.5 4.5 0 0 1 .6-9 5.5 5.5 0 0 1 10.5 1.6A3.8 3.8 0 0 1 17.5 15z" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.5 17.5l-1 3M12.5 17.5l-1 3M16.5 17.5l-1 3"/></g>',
+    hot:'<path d="M10 4a2 2 0 0 1 4 0v8.6a4.5 4.5 0 1 1-4 0z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="16.5" r="2.4" fill="currentColor"/><path d="M12 8v7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    people:'<circle cx="8" cy="7.5" r="3" fill="currentColor"/><path d="M2.5 20v-2.5A5.5 5.5 0 0 1 13.5 17.5V20z" fill="currentColor"/><circle cx="17" cy="9" r="2.4" fill="currentColor" opacity=".6"/><path d="M15 20v-2.5a6.5 6.5 0 0 0-1.3-3.9A4.5 4.5 0 0 1 21.5 17.5V20z" fill="currentColor" opacity=".6"/>',
+    fish:'<path d="M3 12c3.5-5 9-6 13.5-2.8L21 6.5v11l-4.500-2.700C12 18 6.500 17 3 12z" fill="currentColor"/><circle cx="8" cy="11" r="1.1" fill="var(--panel2)"/>',
+    truck:'<path d="M2 6.5h11v9.500H2z" fill="currentColor"/><path d="M13 9.500h4.500l3.500 3.500v3h-8z" fill="currentColor" opacity=".7"/><circle cx="6.500" cy="17.500" r="2.200" fill="currentColor" stroke="var(--panel2)" stroke-width="1.200"/><circle cx="17" cy="17.500" r="2.200" fill="currentColor" stroke="var(--panel2)" stroke-width="1.200"/>',
+    ticket:'<path d="M3 7.500h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4z" fill="currentColor"/><path d="M14.500 8v9" stroke="var(--panel2)" stroke-width="1.400" stroke-dasharray="2 2"/>',
+    vet:'<rect x="4" y="5" width="16" height="15" rx="3" fill="currentColor"/><path d="M12 9v7M8.500 12.500h7" stroke="var(--panel2)" stroke-width="2.400" stroke-linecap="round"/><path d="M9 5V3.500h6V5" stroke="currentColor" stroke-width="2" fill="none"/>',
+    bolt:'<path d="M13.500 2L5 13.500h5.500L9.500 22 19 10h-5.500z" fill="currentColor"/>',
+    bus:'<rect x="3" y="5" width="18" height="12" rx="3" fill="currentColor"/><path d="M5.500 8h13v4h-13z" fill="var(--warn-soft)"/><circle cx="7.500" cy="18" r="2" fill="currentColor"/><circle cx="16.500" cy="18" r="2" fill="currentColor"/>',
+    clip:'<rect x="5" y="4" width="14" height="17" rx="2" fill="currentColor"/><rect x="9" y="2.500" width="6" height="3.500" rx="1" fill="currentColor" stroke="var(--warn-soft)"/><path d="M8.500 11h7M8.500 14.500h7M8.500 18h4" stroke="var(--warn-soft)" stroke-width="1.600" stroke-linecap="round"/>',
+    wrench:'<path d="M20.500 6.500a5 5 0 0 1-6.700 4.700L6 19l-2.500-2.500 7.800-7.800A5 5 0 0 1 17.500 3.500l-3 3 2.500 2.500z" fill="currentColor"/>',
+    heart:'<path d="M12 20.500S3.500 15 3.500 9.200A4.700 4.700 0 0 1 12 6.500a4.700 4.700 0 0 1 8.500 2.700C20.500 15 12 20.500 12 20.500z" fill="currentColor"/>',
+    paw:'<ellipse cx="12" cy="15.500" rx="5" ry="4" fill="currentColor"/><circle cx="6" cy="10.500" r="2.200" fill="currentColor"/><circle cx="10" cy="6.500" r="2.200" fill="currentColor"/><circle cx="14.500" cy="6.500" r="2.200" fill="currentColor"/><circle cx="18.300" cy="10.500" r="2.200" fill="currentColor"/>',
+    bird:'<path d="M3 13c3-6 9-8 13-5l4-2-1.500 4.500C19 16 14 19 8 18l-4 3 1-5z" fill="currentColor"/><circle cx="15" cy="9.500" r="1" fill="var(--warn-soft)"/>',
+    tree:'<circle cx="8" cy="10" r="5" fill="currentColor"/><circle cx="15" cy="9" r="6" fill="currentColor" opacity=".75"/><path d="M11 13h2.500v8H11z" fill="currentColor"/>',
+    wave:'<path d="M2 9c2.500-3 5-3 7.500 0s5 3 7.500 0 3.500-2 5-1M2 15c2.500-3 5-3 7.500 0s5 3 7.500 0 3.500-2 5-1" stroke="currentColor" stroke-width="2.400" fill="none" stroke-linecap="round"/>',
+    metro:'<circle cx="12" cy="12" r="9.500" fill="currentColor"/><path d="M7 16.500V8l5 6 5-6v8.500" stroke="var(--panel)" stroke-width="2.200" fill="none" stroke-linejoin="round" stroke-linecap="round"/>',
+    k9:'<circle cx="7" cy="8" r="2.600" fill="currentColor"/><path d="M3 19v-2.500a4 4 0 0 1 8 0V19z" fill="currentColor"/><circle cx="17" cy="8" r="2.600" fill="currentColor" opacity=".35"/><path d="M13 19v-2.500a4 4 0 0 1 8 0V19z" fill="currentColor" opacity=".35"/>',
+    k12:'<circle cx="7" cy="8" r="2.600" fill="currentColor"/><path d="M3 19v-2.500a4 4 0 0 1 8 0V19z" fill="currentColor"/><circle cx="17" cy="8" r="2.600" fill="currentColor"/><path d="M13 19v-2.500a4 4 0 0 1 8 0V19z" fill="currentColor"/>',
+    k15:'<circle cx="5" cy="9" r="2.300" fill="currentColor"/><path d="M1.500 19v-2a3.500 3.500 0 0 1 7 0v2z" fill="currentColor"/><circle cx="12" cy="7" r="2.600" fill="currentColor"/><path d="M8 19v-3a4 4 0 0 1 8 0v3z" fill="currentColor"/><circle cx="19" cy="9" r="2.300" fill="currentColor"/><path d="M15.500 19v-2a3.500 3.500 0 0 1 7 0v2z" fill="currentColor"/>'
+  }[name] || "";
+  return '<svg viewBox="0 0 24 24" aria-hidden="true">' + p.replace(/(\d)\.(\d)00/g, "$1.$2") + '</svg>';
+}
+var WXI = {clear: "sun", rain: "rain", hot: "hot", advisory: "hot"};
+var KINDI = {heatwave: "hot", cubs_press: "heart", cubs_watch: "paw", hpai: "bird", pump: "wrench", power: "bolt", sealion: "fish", school: "bus", donor: "heart", sick: "vet", inspection: "clip"};
+
+/* ---------- карта: одна на все экраны ---------- */
+var CV = document.createElement("canvas"), SC = null, pop = null, film = null, openTile = "shift";
+var AU = window.ZooAudio;
+["pointerdown", "keydown"].forEach(function(ev){ document.addEventListener(ev, function(){ AU.unlock(); setAmbience(); }, {once: false, passive: true}); });
+function setAmbience(){
+  if (screen === "start") AU.ambience({mode: "idle", crowd: .12});
+  else if (screen === "play" && film) { var r = film.rep, h = SC ? SC.half : 0, v = r.by_half && r.by_half[h] ? r.by_half[h].admitted : r.visitors / 2; AU.ambience({mode: "day", crowd: v / 1600, rain: r.weather === "rain"}); }
+  else if (screen === "play") AU.ambience({mode: "evening"});
+  else AU.ambience({mode: "off"});
+}
+function sceneSfx(n){
+  if (n === "coin") AU.coin(); else if (n === "show") { AU.bark(.15); AU.splash(.62); }
+  else if (n.indexOf("animal:") === 0) AU.animal(n.slice(7));
+}
+function confetti(){
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var cv = document.createElement("canvas"); cv.id = "confetti"; document.body.appendChild(cv);
+  var c = cv.getContext("2d"), w = cv.width = innerWidth, h = cv.height = innerHeight, t0 = performance.now(), col = ["#f2c230", "#1f7a4d", "#e4572e", "#3a86c8", "#ef8fb1", "#6d4bb0"], ps = [];
+  for (var i = 0; i < 150; i++) ps.push({x: Math.random() * w, y: -20 - Math.random() * h * .6, vx: (Math.random() - .5) * 90, vy: 120 + Math.random() * 220, r: Math.random() * 6.3, vr: (Math.random() - .5) * 9, s: 5 + Math.random() * 6, c: col[i % col.length]});
+  (function frame(now){ var t = (now - t0) / 1000; c.clearRect(0, 0, w, h);
+    ps.forEach(function(p){ var x = p.x + p.vx * t + Math.sin(t * 3 + p.r) * 14, y = p.y + p.vy * t; c.save(); c.translate(x, y); c.rotate(p.r + p.vr * t); c.fillStyle = p.c; c.globalAlpha = Math.max(0, 1 - Math.max(0, t - 3.2) / 1.2); c.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); c.restore(); });
+    if (t < 4.4 && cv.parentNode) requestAnimationFrame(frame); else if (cv.parentNode) cv.parentNode.removeChild(cv); })(t0);
+}
+function sceneLayout(){ var slot = $("scene-slot"); if (!slot || !SC) return; var w = slot.getBoundingClientRect().width; SC.setLayout(w < 560 ? "tall" : "wide"); SC.resize(); }
+function mountScene(){
+  var slot = $("scene-slot"); if (!slot) { if (SC) SC.stop(); return; }
+  if (!SC) { SC = ZooScene.create(CV, {scenario: pick.sc, lang: LANG}); SC.onsfx = sceneSfx; }
+  SC.lang = LANG;
+  if (CV.parentNode !== slot) slot.insertBefore(CV, slot.firstChild);
+  sceneLayout(); SC.start();
+}
+window.addEventListener("resize", function(){ sceneLayout(); if (screen === "play") renderOverlay(); });
+CV.addEventListener("click", function(e){
+  if (SC && (screen === "start" || (screen === "play" && film))) { var b0 = CV.getBoundingClientRect(); SC.poke(SC.hit((e.clientX - b0.left) / b0.width, (e.clientY - b0.top) / b0.height)); return; }
+  if (screen !== "play" || film || !SC) return;
+  var b = CV.getBoundingClientRect(), s = SC.hit((e.clientX - b.left) / b.width, (e.clientY - b.top) / b.height);
+  pop = s && s !== pop ? s : null; if (s && s !== "gate" && s !== "kiosk") openTile = "shift"; if (pop) AU.pop(); render();
+});
+CV.addEventListener("mousemove", function(e){
+  if (!SC || (screen !== "play" && screen !== "start")) { CV.style.cursor = ""; return; }
+  var b = CV.getBoundingClientRect(); SC.hover = SC.hit((e.clientX - b.left) / b.width, (e.clientY - b.top) / b.height); CV.style.cursor = SC.hover ? "pointer" : "";
+});
+CV.addEventListener("mouseleave", function(){ if (SC) SC.hover = null; });
+function eveningState(){
+  var obs = draft.obs, al = {}, kp = {};
+  SECT.forEach(function(s){ kp[s] = draft.row.keepers[s].slice();
+    if (draft.row.keepers[s][0] < obs.min_tomorrow[s][0] || draft.row.keepers[s][1] < obs.min_tomorrow[s][1]) al[s] = "low"; });
+  if (draft.thaw.fish + 1e-9 < obs.need_kg_per_day.fish) al.pool = "low";
+  if (draft.thaw.meat + 1e-9 < obs.need_kg_per_day.meat) al.cats = "low";
+  var rep = G.journal.length ? G.journal[G.journal.length - 1] : null, dead = {};
+  (G.dead || []).forEach(function(d){ var w = d[1]; if (w === "birds" || w === "tropic" || w === "pool" || w === "cats" || w === "yard") dead[w] = true; });
+  return {weather: obs.forecast[0].weather, keepers: kp, cashiers: draft.row.cashiers, kiosk: draft.row.kiosk, shows: draft.row.shows, alerts: al,
+          cubs: pick.sc === "spring" && !!(rep && (G.flags || {}).cubs_lost_from == null && obs.day > 12), dead: dead};
+}
+
+/* ---------- экраны ---------- */
+function choice(group, val, icon, title, sub){
+  var on = pick[group] === val;
+  return '<button type="button" class="choice'+(on ? " on" : "")+'" data-pick="'+group+':'+val+'" aria-pressed="'+on+'">'+ico(icon)+'<span><b>'+esc(title)+'</b><br><span class="note">'+esc(sub)+'</span></span></button>';
+}
+function startHTML(){
+  var g = ghost(), played = false; try { played = localStorage.getItem("zoo_played") === "1"; } catch (e) {}
+  var h = '<section class="hero"><div class="stack" style="gap:14px"><h1>'+esc(t("brand"))+'</h1>' +
+    (SITE && window.EXTELLA_DEF ? '<p class="note" style="font-size:15px">'+esc(window.EXTELLA_DEF[LANG])+'</p>' : '') + '<p style="font-size:19px">'+esc(t("tag"))+'</p>' +
+    '<div class="row"><button type="button" id="go-play" class="go">'+esc(t("play"))+'</button><button type="button" id="go-lesson"'+(played ? '' : ' class="on"')+'>'+esc(t("lessons"))+'</button>'+(SITE ? '' : '<button type="button" id="go-board">'+esc(t("board"))+'</button>')+'</div>' +
+    (played ? '' : '<p class="note">'+esc(t("first_time"))+'</p>') + '</div>' +
+    '<div class="stack"><div class="stage" id="scene-slot"></div><p class="note">'+esc(tt("hero_note"))+'</p></div></section>';
+  h += '<section class="stack"><h2>'+esc(t("setup_h"))+'</h2><div class="picks">' +
+    '<div class="opt"><span class="lab">'+esc(t("scen"))+'</span>' + [["heat","sun"],["spring","paw"],["flu","bird"]].map(function(v){ return choice("sc", v[0], v[1], t("sc_" + v[0]), t("sc_" + v[0] + "_s")); }).join("") + '</div>' +
+    '<div class="opt"><span class="lab">'+esc(t("place"))+'</span>' + [["park","tree"],["waterfront","wave"],["subway","metro"]].map(function(v){ return choice("pl", v[0], v[1], t("st_" + v[0]), t("st_" + v[0] + "_s")); }).join("") + '</div>' +
+    '<div class="opt"><span class="lab">'+esc(t("team"))+'</span>' + [["small","k9"],["mid","k12"],["large","k15"]].map(function(v){ return choice("tm", v[0], v[1], t("tm_" + v[0]), t("tm_" + v[0] + "_s")); }).join("") + '</div></div>';
+  if (!g) h += '<div class="warnmsg">'+esc(LANG === "ru" ? "Для этой комбинации журнал Extella ещё не записан: играть можно, призрака рядом не будет." : "Extella's run for this combination is not recorded yet: you can play, but there will be no ghost beside you.")+'</div>';
+  h += '</section><section class="grid2"><div class="panel"><h2>'+esc(t("how_h"))+'</h2><p>'+esc(t("how"))+'</p></div>' +
+    '<div class="panel"><h2>'+esc(t("score_h"))+'</h2><p class="small">'+esc(t("score"))+'</p></div></section>';
+  h += '<section class="panel"><h2>'+esc(LANG === "ru" ? "Кто играет рядом" : "Who plays beside you")+'</h2><div class="small stack" style="gap:6px">' + (LANG === "ru" ? [
+      "<b>Qwen 3.5 9B с Extella.</b> Малая модель пишет короткий замысел вечера, эксперт на Extella собирает из него точное решение и сам ставит цену билета на каждый день.",
+      "<b>Claude Opus 5.5 без Extella.</b> Большая модель играла тот же месяц сама, по тем же правилам и через ту же Проверку, без доступа к коду игры. Перед каждым ответом она размышляла.",
+      "<b>Qwen 3.5 9B без Extella.</b> Та же малая модель сама пишет всё решение вечера, без размышления.",
+      "<b>Программа на Python.</b> Короткий код без ИИ: минимум ухода, корм по норме, цена базовая."] : [
+      "<b>Qwen 3.5 9B with Extella.</b> The small model writes a short plan for the evening; an expert on Extella turns it into the exact decision and sets the ticket price for each day.",
+      "<b>Claude Opus 5.5 without Extella.</b> The large model played the same month on its own, by the same rules and through the same rulebook check, without access to the game code. It reasoned before every answer.",
+      "<b>Qwen 3.5 9B without Extella.</b> The same small model writes the whole evening decision itself, without reasoning.",
+      "<b>A Python program.</b> Short code with no AI: care minimum, ration-sized feed, base price."]).map(function(x){ return '<p>'+x+'</p>'; }).join("") +
+    '<p class="note">'+esc(LANG === "ru" ? "Все играли месяц с тем же зерном: погода, события и посетители одинаковы, разница только в решениях. Записанные журналы пересчитываются тем же симулятором, что работает на этой странице." : "Everyone played the month with the same seed: weather, events and visitors are identical, only the decisions differ. The recorded logs are recomputed by the same simulator that runs on this page.")+'</p></div></section>';
+  if (g) h += '<section class="ghostbox"><b>'+esc(t("ghost"))+'</b> <span class="small muted">'+esc(g.model || "")+', '+esc(LANG === "ru" ? "эксперт" : "expert")+' '+esc(g.expert_sha || "")+'</span><div class="small">'+esc(LANG === "ru" ? "Страница проигрывает записанный месяц Extella и ничего не досчитывает." : "The page replays Extella's recorded month and computes nothing of its own.")+'</div></section>';
+  return h;
+}
+
+/* --- уроки --- */
+var lesson = {step: 1, l1: null, l2: null, l2done: null, l3: null, l3done: false};
+function lessonGame(upto){
+  var L = DATA.lessons.settings, g = new S.Game(L.seed, L.place, L.team, L.scenario, W);
+  DATA.lessons.base_log.forEach(function(x){ if (x[0] < upto) { g.observe(); g.decide(x[1]); g.step(); } });
+  return g;
+}
+
+function stepper(id, v, lo, hi){
+  return '<span class="step"><button type="button" data-st="'+id+':-1" aria-label="−"'+(v <= lo ? ' disabled' : '')+'>−</button><span class="v n">'+v+'</span><button type="button" data-st="'+id+':1" aria-label="+"'+(v >= hi ? ' disabled' : '')+'>+</button></span>';
+}
+function shiftRowHTML(row, obs, rj, prefix){
+  var H0 = t("half")[0], H1 = t("half")[1];
+  var cell = function(h, inner){ return '<span class="cell" data-h="'+esc(h)+'">'+inner+'</span>'; };
+  var h = '<div class="shift"><span class="corner"></span><span class="hh">'+esc(H0)+'</span><span class="hh">'+esc(H1)+'</span>';
+  SECT.forEach(function(s){
+    h += '<span class="nm'+(pop === s ? " hot" : "")+'">'+esc(t("sec")[s])+' <span class="note">'+esc(t("shift_min"))+' '+obs.min_tomorrow[s][0]+'/'+obs.min_tomorrow[s][1]+'</span></span>' +
+      cell(H0, stepper(prefix + "k:" + s + ":0", row.keepers[s][0], 0, 6)) + cell(H1, stepper(prefix + "k:" + s + ":1", row.keepers[s][1], 0, 6));
+  });
+  h += '<span class="nm">'+esc(t("cash"))+'</span>' + cell(H0, stepper(prefix + "c:0", row.cashiers[0], 0, 8)) + cell(H1, stepper(prefix + "c:1", row.cashiers[1], 0, 8));
+  h += '<span class="nm">'+esc(t("kiosk"))+'</span>' + cell(H0, stepper(prefix + "q:0", row.kiosk[0], 0, 8)) + cell(H1, stepper(prefix + "q:1", row.kiosk[1], 0, 8));
+  h += '</div>';
+  h += '<div class="row between"><span>'+esc(t("shows"))+'</span>'+stepper(prefix + "s", row.shows, 0, W.shows.max)+'</div><p class="note">'+esc(t("shows_note"))+'</p>';
+  return h + rejHTML(rj);
+}
+function lessonHTML(){
+  var D = DATA.lessons, U = LANG === "ru";
+  var h = '<section class="panel" style="max-width:760px;margin:0 auto;width:100%"><span class="pill warn">'+esc(t("l_h"))+' '+lesson.step+' / 3</span>';
+  if (lesson.step === 1) {
+    var g = lessonGame(0), obs = g.observe();
+    if (!lesson.l1) { lesson.l1 = suggestRow(obs); lesson.l1.keepers.cats = [1, 1]; }
+    var dec = {schedule: (function(){ var s = clone(obs.schedule); s[String(obs.wd)] = clone(lesson.l1); return s; })()};
+    var rj = g.check(dec)[0] || [];
+    h += '<h1 style="font-size:40px">'+esc(t("l1_h"))+'</h1><p>'+esc(t("l1"))+'</p>' + shiftRowHTML(lesson.l1, obs, rj, "L1");
+    h += rj.length ? '' : '<div class="okmsg">'+esc(t("l1_ok"))+'</div>';
+    h += '<div class="row"><button type="button" id="l-next" class="go"'+(rj.length ? ' disabled' : '')+'>'+esc(t("l_next"))+'</button></div>';
+  } else if (lesson.step === 2) {
+    var g2 = lessonGame(0), o2 = g2.observe();
+    if (lesson.l2 == null) lesson.l2 = Math.round(o2.need_kg_per_day.fish * 0.5);
+    h += '<h1 style="font-size:40px">'+esc(t("l2_h"))+'</h1><p>'+esc(t("l2"))+'</p>';
+    h += '<div class="row"><span>'+esc(t("thaw_fish"))+'</span>'+stepper("L2f", lesson.l2, 0, 60)+'<span class="note">'+esc(t("l2_hint"))+': '+kg(o2.need_kg_per_day.fish)+' '+esc(tt("kgu"))+'</span></div>';
+    if (!lesson.l2done) h += '<div class="row"><button type="button" id="l-run" class="go">'+esc(t("l2_run"))+'</button></div>';
+    else {
+      var r = lesson.l2done;
+      h += '<div class="'+(r.bad ? "rej" : "okmsg")+'">'+esc(U ? ("Бассейн накормлен на " + Math.round(r.fed * 100) + " %. ") : ("The pool was fed " + Math.round(r.fed * 100) + "%. ")) +
+        esc(r.bad ? (U ? "Это день секции с недокормом: −$5 000." : "That is an underfed section-day: −$5,000.") : (U ? "Нарушений нет." : "No violations.")) +
+        (r.waste > 0.05 ? esc(U ? (" Выброшено " + kg(r.waste) + " кг вчерашней рыбы.") : (" " + kg(r.waste) + " kg of yesterday's fish was binned.")) : "") + '</div>';
+      h += '<div class="row"><button type="button" id="l-again">'+esc(t("l_again"))+'</button><button type="button" id="l-next" class="go">'+esc(t("l_next"))+'</button></div>';
+    }
+  } else {
+    var g3 = lessonGame(D.card_t), o3 = g3.observe();
+    var c = (o3.cards || []).filter(function(x){ return x.id === D.card_id; })[0];
+    h += '<h1 style="font-size:40px">'+esc(t("l3_h"))+'</h1><p>'+esc(t("l3"))+'</p>';
+    if (c) {
+      var K = DATA.cards[c.kind], tx3 = cardText(c);
+      h += '<div class="ecard"><div class="pic">'+ico(KINDI[c.kind] || "clip")+'</div><div><b>'+esc(tx3.title)+'</b><p class="small">'+esc(tx3.text)+'</p></div><div class="opts">' +
+        c.options.map(function(o){ var on = lesson.l3 === o, e = (D.card_est || {})[o];
+          return '<button type="button" class="'+(on ? "on" : "")+'" data-l3="'+o+'" aria-pressed="'+on+'" style="text-align:left"><b>'+esc((K.options && K.options[o] && K.options[o][LANG]) || o)+'</b>' +
+            (e == null ? '' : '<br><span class="note">'+esc(t("est"))+' '+money(e, 1)+'</span>') + '</button>'; }).join("") + '</div></div>';
+    }
+    if (lesson.l3 && lesson.l3done) {
+      var oc = D.card_outcomes[lesson.l3];
+      h += '<div class="'+(oc.deaths ? "rej" : "okmsg")+'"><b>'+esc(t("l3_res"))+'.</b> '+esc(U ? "Счёт месяца " : "The month scored ")+money(oc.score)+'. ' +
+        esc(oc.hit ? (U ? "Заражение выпало: птицы погибли." : "The infection landed: the birds died.") : (U ? "Заражения не было." : "No infection.")) + '</div>' +
+        '<p class="note">'+esc(t("l3_note"))+'</p><div class="row"><button type="button" id="l-again">'+esc(t("l_again"))+'</button><button type="button" id="l-done" class="go">'+esc(t("l_done"))+'</button></div>';
+    } else {
+      h += '<div class="row"><button type="button" id="l-show" class="go"'+(lesson.l3 ? '' : ' disabled')+'>'+esc(t("l3_pick"))+'</button></div>';
+    }
+  }
+  return h + '<div class="row"><button type="button" id="skip-l" class="link">'+esc(t("skip"))+'</button></div></section>';
+}
+function runLesson2(){
+  var g = lessonGame(0), obs = g.observe(), base = DATA.lessons.base_log[0][1], dec = clone(base);
+  dec.thaw = {fish: lesson.l2, meat: base.thaw ? base.thaw.meat : obs.need_kg_per_day.meat};
+  g.decide(dec);
+  var rep = g.step();
+  lesson.l2done = {fed: rep.fed.pool, bad: !!(rep.violations && rep.violations.pool),
+                   waste: Math.max(0, lesson.l2 - obs.need_kg_per_day.fish)};
+}
+
+
+/* --- игра --- */
+var EVT = {
+  ru: {shade: "поставили тень и холодную воду", press: "пресса приехала к котятам", vet_visit: "приезжал ветеринар",
+       no_delivery_frozen: "поставщик не привёз мороженый корм", donor_cancelled: "донор отменил экскурсию",
+       sealion_relapse: "морской лев заболел снова", tropic_cold: "в тропическом доме нет света и тепла",
+       death_tropic: "гибель животного в тропическом доме", hpai_hit: "птичий грипп дошёл до зоопарка",
+       donor: "пожертвование донора", inspection: "инспекция USDA, нарушений найдено"},
+  en: {shade: "shade and cold water were set up", press: "the press came for the cubs", vet_visit: "the vet came",
+       no_delivery_frozen: "the frozen feed was not delivered", donor_cancelled: "the donor cancelled the tour",
+       sealion_relapse: "the sea lion fell ill again", tropic_cold: "the tropical house has no light or heat",
+       death_tropic: "an animal died in the tropical house", hpai_hit: "bird flu reached the zoo",
+       donor: "a donor gift", inspection: "USDA inspection, violations found"}
+};
+function eventText(e){
+  var M = EVT[LANG];
+  if (M[e]) return M[e];
+  var i = e.lastIndexOf("_"), head = i < 0 ? e : e.slice(0, i), tail = e.slice(i + 1);
+  if (M[head]) return M[head] + " " + (head === "donor" ? "$" + num(+tail) : tail);
+  return e;
+}
+var PART = {
+  ru: {revenue: "выручка", cogs: "себестоимость еды и сувениров", card_fees: "комиссия карт", wages: "зарплата смен",
+       feed: "корма", leftover_feed: "остаток кормов", electricity: "электричество", vet: "ветеринар",
+       event_costs: "расходы по событиям", section_violations: "штрафы за уход", inspection: "штрафы инспекции",
+       deaths: "гибель животных", queue: "ушедшие из очереди", vet_visits: "визиты ветеринара"},
+  en: {revenue: "revenue", cogs: "cost of food and souvenirs", card_fees: "card fees", wages: "shift wages",
+       feed: "feed", leftover_feed: "leftover feed", electricity: "electricity", vet: "the vet",
+       event_costs: "event costs", section_violations: "care penalties", inspection: "inspection penalties",
+       deaths: "animal deaths", queue: "visitors lost from the queue", vet_visits: "vet visits"}
+};
+function partName(k){ return (PART[LANG] || {})[k] || k; }
+function cardText(c){
+  var K = DATA.cards[c.kind]; if (!K) return {title: c.kind, text: "", opts: {}};
+  var txt = K[LANG].text.split("{day2}").join(dayN(c.day + 1)).split("{day}").join(dayN(c.day));
+  return {title: K[LANG].title, text: txt, opts: K.options || {}};
+}
+
+var lastDay = null, dailyCache = [];
+function tile(id, icon, title, summary, inner, state, badge){
+  var op = openTile === id;
+  return '<div class="tile'+(op ? " open" : "")+(state ? " " + state : "")+'"><button type="button" class="head" data-tile="'+id+'" aria-expanded="'+op+'">' +
+    '<span class="ico">'+ico(icon)+'</span><span><span class="ttl">'+esc(title)+'</span><br><span class="sum">'+esc(summary)+'</span></span>'+(badge || '<span></span>')+'</button>' +
+    (op ? '<div class="body">'+inner+'</div>' : '') + '</div>';
+}
+function fillOf(f){   // заполненность половин дня в долях вместимости; null, если в мире нет тесноты
+  if (!W.crowding) return null;
+  return [(f.low[0] + f.high[0]) / 2 / W.crowding.comfort_per_half, (f.low[1] + f.high[1]) / 2 / W.crowding.comfort_per_half];
+}
+function hudHTML(){
+  var obs = draft ? draft.obs : G.observe(), sc = G.score().score, g = ghost(), gd = g ? (obs.day > 0 ? g.daily[obs.day - 1] : 0) : null;
+  var h = '<div class="ribbon" aria-hidden="true">';
+  for (var d = 0; d < obs.days_total; d++) {
+    var cls = "", wd = (obs.wd - obs.day + d + 700) % 7;
+    if (d < dailyCache.length && g) { var mine = dailyCache[d] - (d ? dailyCache[d - 1] : 0), his = g.daily[d] - (d ? g.daily[d - 1] : 0); cls = mine >= his ? "up" : "dn"; }
+    else if (d === obs.day && !film) cls = "now"; else if (wd >= 5) cls = "we";
+    h += '<i class="'+cls+'"></i>';
+  }
+  h += '</div><div class="hud">' +
+    '<div class="stat"><div class="k">'+esc(t("day"))+'</div><div class="v">'+dayN(Math.min(obs.day, obs.days_total - 1))+' <span class="small muted">'+esc(t("of"))+' '+obs.days_total+'</span></div></div>' +
+    '<div class="stat"><div class="k">'+esc(tt("you"))+'</div><div class="v" id="hud-score">'+money(sc)+'</div></div>' +
+    (g ? '<div class="stat ghost"><div class="k">Extella</div><div class="v">'+money(gd)+'</div></div>' : '') +
+    '<div class="stat"><div class="k">'+esc(t("rep"))+'</div><div class="v">'+obs.reputation.toFixed(2)+'</div></div>' +
+    '<div class="stat"><div class="k">'+esc(t("viol"))+'</div><div class="v"'+(obs.violations ? ' style="color:var(--bad)"' : '')+'>'+obs.violations+'</div></div></div>';
+  return h;
+}
+function overlayHTML(){
+  if (!SC) return "";
+  var h = "", obs = draft.obs, U = LANG === "ru";
+  if (film) {
+    h += '<div class="chipbar"><span class="clock" id="f-clock">10:00</span><span class="chip" id="f-half">'+esc(tt("morning"))+'</span></div><div id="f-toast"></div>';
+    return h;
+  }
+  var place = function(r, dy){ return r.x > .42 ? 'right:'+((1 - r.x - r.w) * 100)+'%;top:'+((r.y + (dy || 0)) * 100)+'%;transform:translate(-6px,6px)' : 'left:'+(r.x * 100)+'%;top:'+((r.y + (dy || 0)) * 100)+'%'; };
+  SECT.forEach(function(s){
+    var r = SC.rect(s), k = draft.row.keepers[s], mn = obs.min_tomorrow[s], low = k[0] < mn[0] || k[1] < mn[1];
+    h += '<button type="button" class="plaque'+(low ? " low" : "")+'" data-pop="'+s+'" style="'+place(r)+'" aria-label="'+esc(t("sec")[s])+'">'+esc(SC.layoutName === "tall" ? tt("short")[s] : t("sec")[s])+' <span class="kp">'+k[0]+' / '+k[1]+'</span></button>';
+  });
+  var rg = SC.rect("gate"), rk = SC.rect("kiosk");
+  h += '<button type="button" class="plaque" data-pop="gate" style="right:'+((1 - rg.x) * 100)+'%;top:'+((rg.y + rg.h * .3) * 100)+'%;transform:translate(-4px,0)">'+esc(t("cash"))+' <span class="kp">'+draft.row.cashiers[0]+' / '+draft.row.cashiers[1]+'</span></button>';
+  h += '<button type="button" class="plaque" data-pop="kiosk" style="left:'+((rk.x + rk.w) * 100)+'%;top:'+((rk.y + rk.h * .1) * 100)+'%;transform:translate(2px,0)">'+esc(t("kiosk"))+' <span class="kp">'+draft.row.kiosk[0]+' / '+draft.row.kiosk[1]+'</span></button>';
+  if (pop) {
+    var pr = SC.rect(pop), below = pr.y < .45, sw = ($("scene-slot") || CV).getBoundingClientRect().width || 600, maxL = Math.max(1, 100 - 100 * Math.min(264, sw - 16) / sw - 1), left = Math.min(Math.max(pr.x * 100, 1), maxL);
+    var pos = 'left:'+left+'%;' + (below ? 'top:'+((pr.y + pr.h) * 100 - 6)+'%' : 'bottom:'+((1 - pr.y) * 100 + 1)+'%');
+    h += '<div class="pop" role="dialog" style="'+pos+'">';
+    if (pop === "gate" || pop === "kiosk") {
+      var arr = pop === "gate" ? draft.row.cashiers : draft.row.kiosk, code = pop === "gate" ? "c" : "q";
+      h += '<h3>'+esc(pop === "gate" ? tt("gate") : tt("kiosk_t"))+'</h3>' +
+        '<div class="line"><span>'+esc(tt("morning"))+'</span>'+stepper(code + ":0", arr[0], 0, 8)+'</div><div class="line"><span>'+esc(tt("afternoon"))+'</span>'+stepper(code + ":1", arr[1], 0, 8)+'</div>';
+    } else {
+      var kk = draft.row.keepers[pop], m2 = obs.min_tomorrow[pop];
+      h += '<h3>'+esc(t("sec")[pop])+'</h3><span class="note">'+esc(W.sections[pop].animals[LANG].charAt(0).toUpperCase() + W.sections[pop].animals[LANG].slice(1))+'</span><span class="note">'+esc(tt("min").charAt(0).toUpperCase() + tt("min").slice(1))+': '+m2[0]+' / '+m2[1]+'</span>' +
+        '<div class="line"><span>'+esc(tt("morning"))+'</span>'+stepper("k:" + pop + ":0", kk[0], 0, 6)+'</div><div class="line"><span>'+esc(tt("afternoon"))+'</span>'+stepper("k:" + pop + ":1", kk[1], 0, 6)+'</div>';
+      if (pop === "pool") h += '<div class="line"><span>'+esc(tt("feed_show"))+'</span>'+stepper("s", draft.row.shows, 0, W.shows.max)+'</div>';
+    }
+    h += '<div class="line"><span class="note">'+esc(tt("free"))+': '+freeKeepers()+'</span><button type="button" data-pop="close">'+esc(tt("done"))+'</button></div></div>';
+  }
+  return h;
+}
+function freeKeepers(){
+  var obs = draft.obs, avail = availKeepers(obs), u = [0, 1].map(function(hh){ var n = 0; SECT.forEach(function(sx){ n += draft.row.keepers[sx][hh]; }); return avail - n; });
+  return u[0] + " / " + u[1];
+}
+function deskHTML(){
+  var obs = draft.obs, rj = rejections(), U = LANG === "ru", g = ghost(), h = "";
+  if (lastDay) h += lastDay;
+  h += standingsHTML();
+  // завтра и дальше
+  h += '<div class="fc">' + obs.forecast.map(function(f, i){
+    var fl = fillOf(f), mx = fl ? Math.max(fl[0], fl[1]) : null;
+    return '<div class="d'+(i === 0 ? " tom" : "")+'"><div class="row between"><b class="big">'+(i === 0 ? esc(tt("tomorrow")) : esc(t("day")) + " " + dayN(f.day))+'</b>'+ico(WXI[f.weather] || "sun")+'</div>' +
+      '<div class="small">'+esc(t("wd")[f.wd])+', '+esc(t("wx")[f.weather] || f.weather)+'</div><div class="small n"><b>'+num(f.low[0] + f.low[1])+'–'+num(f.high[0] + f.high[1])+'</b></div>' +
+      (mx == null ? '' : '<div class="meter'+(mx > 1 ? " over" : "")+'" title="'+esc(tt("fill"))+'"><b style="width:'+Math.min(100, mx * 66.6)+'%"></b></div>') + '</div>';
+  }).join("") + '</div>';
+  var f0 = obs.forecast[0], fl0 = fillOf(f0);
+  if (fl0 && Math.max(fl0[0], fl0[1]) > 1) h += '<div class="warnmsg">'+esc(tt("fill"))+' '+esc(tt("tomorrow").toLowerCase())+': '+Math.round(fl0[0] * 100)+' % '+esc(U ? "и" : "and")+' '+Math.round(fl0[1] * 100)+' %. '+esc(U ? "Это " : "That means ")+esc(tt("fill_over"))+'.</div>';
+  // карточки событий
+  obs.cards.forEach(function(c){
+    var tx = cardText(c), cur = draft.choices[c.id] || c.chosen || c.default;
+    h += '<div class="ecard"><div class="pic">'+ico(KINDI[c.kind] || "clip")+'</div><div><div class="row between"><b class="big" style="font-size:17px">'+esc(tx.title)+'</b><span class="note">'+esc(t("card_by"))+' '+dayN(c.decide_by_evening_of)+'</span></div>' +
+      '<p class="small">'+esc(tx.text)+'</p></div><div class="opts">' + c.options.map(function(o){
+        var on = cur === o;
+        return '<button type="button" class="'+(on ? "on" : "")+'" data-ch="'+esc(c.id)+':'+esc(o)+'" aria-pressed="'+on+'">'+esc((tx.opts[o] && tx.opts[o][LANG]) || o) +
+          (o === c.default ? ' <span class="note">'+esc(U ? "по умолчанию" : "default")+'</span>' : '') + '</button>';
+      }).join("") + rejHTML(rejFor("choices." + c.id, rj)) + '</div></div>';
+  });
+  // смена
+  var staffNow = 0; obs.staff.forEach(function(x){ if (x.start <= obs.day) staffNow++; });
+  var avail = staffNow - obs.sick_tomorrow;
+  var used = [0, 1].map(function(hh){ var n = 0; SECT.forEach(function(sx){ n += draft.row.keepers[sx][hh]; }); return n; });
+  var short = SECT.filter(function(sx){ return draft.row.keepers[sx][0] < obs.min_tomorrow[sx][0] || draft.row.keepers[sx][1] < obs.min_tomorrow[sx][1]; });
+  var rjS = rejFor("schedule." + obs.wd, rj);
+  var shiftIn = shiftRowHTML(draft.row, obs, rjS, "");
+  if (short.length) shiftIn += '<div class="warnmsg">'+esc((U ? "Минимум ухода не закрыт: " : "Below the care minimum: ") + short.map(function(s){ return t("sec")[s]; }).join(", ") + ". " +
+    (U ? "Это " : "That is ") + money(short.length * W.penalties.section_day) + (U ? " за завтрашний день. Людей в штате " : " for tomorrow. You employ ") + staffNow +
+    (U ? ", новый смотритель выходит через " : "; a new keeper starts in ") + W.staff.hire_delay_days + (U ? " дней." : " days."))+'</div>';
+  h += tile("shift", "people", tt("d_shift") + ", " + t("wd")[obs.wd], tt("on_shift") + " " + used[0] + " " + (U ? "и" : "and") + " " + used[1] + " " + tt("of") + " " + avail + ", " + t("shows").toLowerCase() + " " + draft.row.shows,
+    shiftIn, rjS.length ? "err" : (short.length ? "att" : ""),
+    short.length ? '<span class="pill bad">'+esc(U ? "ниже минимума" : "below minimum")+'</span>' : (obs.sick_tomorrow ? '<span class="pill warn">'+esc(tt("sick"))+' '+obs.sick_tomorrow+'</span>' : ''));
+  // корм: разморозка ползунком с отметкой нормы
+  var needF = obs.need_kg_per_day.fish, needM = obs.need_kg_per_day.meat, haveF = obs.stock.freezer.fish + obs.stock.thawed_for_tomorrow.fish, haveM = obs.stock.freezer.meat + obs.stock.thawed_for_tomorrow.meat;
+  var thawShort = draft.thaw.fish + 1e-9 < needF || draft.thaw.meat + 1e-9 < needM;
+  var foodIn = '<p class="note">'+esc(U ? "Размораживают накануне, размороженное живёт сутки." : "Thaw the night before; thawed feed lasts a day.")+'</p>' +
+    '<div class="gauge"><label for="rg-fish"><b>'+esc(t("thaw_fish"))+'</b> <span class="note">'+esc(tt("ration"))+' '+kg(needF)+', '+esc(tt("in_freezer"))+' '+kg(haveF)+'</span></label><span class="big" id="rv-fish">'+kg(draft.thaw.fish)+'</span>' +
+    '<input type="range" id="rg-fish" min="0" max="'+Math.max(needF * 2, 10).toFixed(1)+'" step="0.2" value="'+draft.thaw.fish+'" style="grid-column:1/-1"></div>' +
+    '<div class="gauge"><label for="rg-meat"><b>'+esc(t("thaw_meat"))+'</b> <span class="note">'+esc(tt("ration"))+' '+kg(needM)+', '+esc(tt("in_freezer"))+' '+kg(haveM)+'</span></label><span class="big" id="rv-meat">'+kg(draft.thaw.meat)+'</span>' +
+    '<input type="range" id="rg-meat" min="0" max="'+Math.max(needM * 2, 4).toFixed(1)+'" step="0.1" value="'+draft.thaw.meat+'" style="grid-column:1/-1"></div>' +
+    '<div class="row"><button type="button" id="thaw-norm">'+esc(U ? "Ровно по норме" : "Exactly the ration")+'</button></div>' + rejHTML(rejFor("thaw", rj));
+  h += tile("food", "fish", tt("d_food"), (U ? "рыба " : "fish ") + kg(draft.thaw.fish) + ", " + (U ? "мясо " : "meat ") + kg(draft.thaw.meat) + " " + tt("kgu"),
+    foodIn, rejFor("thaw", rj).length ? "err" : (thawShort ? "att" : ""), thawShort ? '<span class="pill bad">'+esc(U ? "будет недокорм" : "underfed")+'</span>' : '');
+  // поставка
+  var anyDel = ["frozen", "hay", "produce"].some(function(s){ return obs.suppliers[s].delivers_tomorrow; });
+  if (anyDel) {
+    var inner = '<div class="row"><button type="button" id="ord-fill">'+esc(t("ord_fill"))+'</button><button type="button" id="ord-clear">'+esc(t("ord_clear"))+'</button></div>';
+    ["frozen", "hay", "produce"].forEach(function(s){
+      var S0 = obs.suppliers[s]; if (!S0.delivers_tomorrow) return;
+      var items = Object.keys(S0.prices_kg), stepkg = s === "frozen" ? (S0.case_kg || 10) : s === "hay" ? (S0.bale_kg || 25) : 1;
+      inner += '<div class="supp"><span><b>'+esc(W.suppliers[s][LANG])+'</b> <span class="note">' +
+        items.map(function(i){ return esc(tt("items")[i] || i) + " " + money2(S0.prices_kg[i]) + "/" + tt("kgu"); }).join(", ") +
+        (S0.min_order ? ', '+esc(U ? "заказ от" : "min order")+' '+money2(S0.min_order) : '') + (S0.min_kg ? ', '+esc(U ? "от" : "min")+' '+S0.min_kg+' '+tt("kgu") : '') + '</span></span>' +
+        '<div class="qtys">' + items.map(function(i){
+          return '<label>'+esc(tt("items")[i] || i)+' '+stepper("o:" + s + ":" + i + ":" + stepkg, (draft.qty[s] && draft.qty[s][i]) || 0, 0, 2000)+'</label>';
+        }).join("") + '</div>' + rejHTML(rejFor("orders." + s, rj)) + '</div>';
+    });
+    var tot = orderTotal();
+    inner += '<div class="row between"><span class="small">'+esc(t("ord_total"))+'</span><span class="big">'+money2(tot)+'</span></div>';
+    h += tile("order", "truck", tt("d_order"), tot > 0 ? money2(tot) : (U ? "ничего не заказано, завтра возят" : "nothing ordered; they deliver tomorrow"), inner,
+      rejFor("orders", rj).length ? "err" : (tot === 0 ? "att" : ""), tot === 0 ? '<span class="pill warn">'+esc(U ? "завтра возят" : "delivery day")+'</span>' : '');
+  }
+  // билет
+  var lo = W.prices.adult * W.prices.bounds[0], hi = W.prices.adult * W.prices.bounds[1], pct = Math.round((draft.price / W.prices.adult - 1) * 100);
+  var tIn = '<div class="ticket"><span class="stub" id="rv-price">'+money2(draft.price)+'</span><div><label for="rg-price" class="note">'+esc(t("price_adult"))+', '+esc(t("price_base"))+' '+money2(W.prices.adult)+'</label>' +
+    '<input type="range" id="rg-price" min="'+lo.toFixed(2)+'" max="'+hi.toFixed(2)+'" step="0.25" value="'+draft.price+'"></div></div>' +
+    '<div class="row"><button type="button" id="price-base">'+esc(U ? "Вернуть базовую" : "Back to base")+'</button><button type="button" data-tg="free_wed" class="'+(draft.free_wed ? "on" : "")+'" aria-pressed="'+!!draft.free_wed+'">'+esc(t("free_wed"))+'</button></div>' +
+    '<p class="note">'+esc(U ? "Дешевле билет, больше людей; дороже, меньше людей, но каждый платит больше. Людей сверх вместимости зоопарк обслуживает хуже." : "A cheaper ticket brings more people; a dearer one brings fewer who each pay more. Past its comfortable capacity the zoo serves people worse.")+'</p>' + rejHTML(rejFor("price", rj));
+  h += tile("ticket", "ticket", tt("d_ticket"), money2(draft.price) + (pct ? " (" + (pct > 0 ? "+" : "−") + Math.abs(pct) + " %)" : "") + (draft.free_wed ? (U ? ", среда днём бесплатно" : ", free Wed afternoon") : ""),
+    tIn, rejFor("price", rj).length ? "err" : "", '');
+  // люди и ветеринар
+  var vetLeft = obs.vet_visits_min - obs.vet_visits, daysLeft = obs.days_total - obs.day, vetSoon = vetLeft > 0 && daysLeft <= vetLeft + 2;
+  h += tile("team", "vet", tt("d_team"), (U ? "найм " : "hiring ") + draft.hire + ", " + (U ? "ветеринар был " : "vet visits ") + obs.vet_visits + " " + tt("of") + " " + obs.vet_visits_min,
+    '<div class="row between"><span>'+esc(t("hire"))+' <span class="note">'+esc(t("hire_note"))+'</span></span>'+stepper("hi", draft.hire, 0, 3)+'</div>' +
+    '<div class="row"><button type="button" data-tg="vet" class="'+(draft.vet ? "on" : "")+'" aria-pressed="'+!!draft.vet+'">'+esc(t("vet"))+'</button><span class="note">'+esc(t("vet_note"))+' '+obs.vet_visits+' / '+obs.vet_visits_min+'</span></div>' + rejHTML(rejFor("hire", rj)),
+    rejFor("hire", rj).length ? "err" : (vetSoon && !draft.vet ? "att" : ""), vetSoon && !draft.vet ? '<span class="pill warn">'+esc(U ? "ветеринар не был" : "vet is due")+'</span>' : '');
+  var shown = ["thaw", "price", "hire", "schedule." + obs.wd].concat(obs.cards.map(function(c){ return "choices." + c.id; })).concat(["frozen", "hay", "produce"].map(function(x){ return "orders." + x; }));
+  var rest = rj.filter(function(r){ return !shown.some(function(pfx){ return r.field === pfx || r.field.indexOf(pfx + ".") === 0; }); });
+  if (rest.length) h += '<div class="panel"><h3>'+esc(t("close_bad"))+'</h3>'+rejHTML(rest)+'</div>';
+  return h;
+}
+/* --- счёт и прибыль после каждого дня: где вы и где остальные --- */
+var GRP = {revenue: ["revenue"], goods: ["cogs", "card_fees"], wages: ["wages"], feed: ["feed", "leftover_feed"], other: ["electricity", "vet", "event_costs"],
+           penalties: ["section_violations", "inspection", "deaths", "queue", "vet_visits"]};
+var standOpen = true, cmpWith = "extella";
+try { if (localStorage.getItem("zoo_stand") === "0") standOpen = false; } catch (e) {}
+function modelName(m, withX){ m = m || ""; var nm = /qwen3\.5-9b|qwen3\.5:9b/i.test(m) ? "Qwen 3.5 9B" : /claude-opus-5\.5/i.test(m) ? "Claude Opus 5.5" : (m || (LANG === "ru" ? "модель" : "model")); return nm + " " + (withX ? tt("with_x") : tt("no_x")); }
+function rivalsNow(){   // все, с кем сравниваемся в этом месяце
+  var g = ghost(), c = careful(), RV = DATA.rivals || {}, out = [];
+  if (g) out.push({id: "extella", name: modelName(g.model, true), col: "var(--ghost)", d: g});
+  [["opus", "#c2410c"], ["small", "var(--warn)"]].forEach(function(x){ var r = (RV[x[0]] || {})[key()]; if (r) out.push({id: x[0], name: modelName(r.model, false), col: x[1], d: r}); });
+  if (c) out.push({id: "careful", name: t("careful"), col: "var(--muted)", d: c});
+  return out;
+}
+function standingsHTML(){
+  var n = dailyCache.length; if (!n) return "";
+  var U = LANG === "ru", day = n - 1, P = G.score().parts, mine = {}, tot = dailyCache[day];
+  Object.keys(GRP).forEach(function(k){ var v = 0; GRP[k].forEach(function(x){ v += P[x] || 0; }); mine[k] = v; });
+  var R = rivalsNow();
+  if (!standOpen) return '<div class="row"><button type="button" id="stand-tg">'+esc(tt("stand_show"))+'</button></div>';
+  var rows = [{me: true, name: tt("you"), col: "var(--leaf)", v: tot}].concat(R.map(function(x){ return {name: x.name, col: x.col, v: x.d.daily[day]}; })).sort(function(a, b){ return b.v - a.v; });
+  var top = Math.max.apply(null, rows.map(function(x){ return x.v; }).concat([1])), low = Math.min.apply(null, rows.map(function(x){ return x.v; }).concat([0]));
+  var h = '<div class="panel"><div class="row between"><h3>'+esc(tt("stand_h"))+' <span class="note">'+esc(tt("stand_after"))+' '+dayN(day)+'</span></h3><button type="button" id="stand-tg" class="link">'+esc(tt("stand_hide"))+'</button></div><div class="stand">';
+  rows.forEach(function(x, i){
+    var w = Math.max(3, (x.v - low) / Math.max(1, top - low) * 100), gap = x.me ? "" : money(x.v - tot, 1);
+    h += '<span class="pl">'+(i + 1)+'</span><span class="nm'+(x.me ? " me" : "")+'"><b>'+esc(x.name)+'</b><div class="bar"><i style="width:'+w+'%;background:'+x.col+'"></i></div></span>' +
+      '<span class="big n">'+money(x.v)+'</span><span class="gap n">'+(x.me ? (i === 0 ? esc(tt("leader")) : "") : esc(gap))+'</span>';
+  });
+  h += '</div>';
+  var who = R.filter(function(x){ return x.id === cmpWith; })[0] || R[0];
+  if (who && who.d.pnl) {
+    var his = who.d.pnl[day], keys = DATA.pnl_groups || Object.keys(GRP), hisTot = his.reduce(function(a, b){ return a + b; }, 0);
+    h += '<div class="row between" style="margin-top:6px"><b>'+esc(tt("pnl_h"))+'</b></div>';
+    if (R.length > 1) h += '<div class="row"><span class="note">'+esc(tt("cmp"))+'</span>' + R.map(function(x){ return '<button type="button" data-cmp="'+x.id+'" class="'+(x.id === who.id ? "on" : "")+'" aria-pressed="'+(x.id === who.id)+'" style="min-height:32px;padding:3px 10px;font-size:13.5px">'+esc(x.name)+'</button>'; }).join("") + '</div>';
+    h += '<div class="tbl"><table class="pnl"><thead><tr><th></th><th class="n">'+esc(tt("you"))+'</th><th class="n">'+esc(who.name)+'</th><th class="n">'+esc(t("diff"))+'</th></tr></thead><tbody>' +
+      keys.map(function(k, i){ var a = mine[k], b = his[i], df = a - b;
+        return '<tr><td>'+esc(tt("grp")[k])+'</td><td class="n">'+money(a)+'</td><td class="n">'+money(b)+'</td><td class="n" style="color:var(--'+(Math.abs(df) < 50 ? "muted" : df > 0 ? "ok" : "bad")+')">'+money(df, 1)+'</td></tr>'; }).join("") +
+      '<tr><td><b>'+esc(t("total"))+'</b></td><td class="n"><b>'+money(tot)+'</b></td><td class="n"><b>'+money(hisTot)+'</b></td><td class="n"><b style="color:var(--'+(tot - hisTot >= 0 ? "ok" : "bad")+')">'+money(tot - hisTot, 1)+'</b></td></tr></tbody></table></div>';
+  }
+  return h + '<p class="note">'+esc(U ? "Один и тот же месяц и одно зерно: разница только в решениях." : "The same month and the same seed: only the decisions differ.")+'</p><p class="note">'+esc(tt("prog_note"))+'</p></div>';
+}
+function closebarHTML(){
+  if (film) return '<span class="small muted">'+esc(tt("open_h"))+'</span><button type="button" id="skip-day">'+esc(tt("skip"))+'</button>';
+  var obs = draft.obs, rj = rejections(), U = LANG === "ru", f0 = obs.forecast[0];
+  var note = rj.length ? (t("close_bad") + ": " + rj.length) : (tt("evening_of") + " " + dayN(obs.day) + ". " + t("wd")[f0.wd] + ", " + (t("wx")[f0.weather] || f0.weather) + ", " + num(f0.low[0] + f0.low[1]) + "–" + num(f0.high[0] + f0.high[1]) + " " + (U ? "посетителей" : "visitors"));
+  return '<span class="small '+(rj.length ? "" : "muted")+'" style="'+(rj.length ? "color:var(--bad);font-weight:600" : "")+'">'+esc(note)+'</span><button type="button" id="close-ev" class="go"'+(rj.length ? ' disabled' : '')+'>'+esc(t("close"))+'</button>';
+}
+function playHTML(){
+  return '<section id="hud" class="stack" style="gap:8px">'+hudHTML()+'</section><section class="play"><div class="left"><div class="stage" id="scene-slot"><div id="overlay"></div></div>'+(film ? '' : '<p class="note">'+esc(tt("night"))+' '+esc(tt("tap"))+'.</p>')+'<div id="ghost-say"></div></div>' +
+    '<div class="desk" id="desk">'+(film ? filmDeskHTML() : deskHTML())+'</div></section><div class="closebar" id="closebar">'+closebarHTML()+'</div>';
+}
+function ghostSayHTML(){
+  var g = ghost(), obs = draft ? draft.obs : null; if (!g || !obs || film || !g.why_ru[obs.day]) return "";
+  var pl = g.plan[obs.day] || {}, U = LANG === "ru", nm = {stock: U ? "запас" : "stock", staff: U ? "смены" : "staff", price: U ? "цена" : "price", free_wed: U ? "бесплатная среда" : "free Wed"},
+      val = {lean: U ? "экономно" : "lean", normal: U ? "обычно" : "normal", safe: U ? "надёжно" : "safe", "true": U ? "да" : "yes", "false": U ? "нет" : "no", expert: U ? "выбирает эксперт" : "set by the expert"};
+  return '<div class="ghostbox"><b>'+esc(t("ghost_say"))+'</b><div class="small">'+esc(U ? g.why_ru[obs.day] : g.why_en[obs.day])+'</div>' +
+    '<div class="note">'+esc(Object.keys(pl).map(function(k){ var v = String(pl[k]); return (nm[k] || k) + " " + (val[v] || (k === "price" ? (pl[k] === 0 ? (U ? "базовая" : "base") : (pl[k] > 0 ? "+" : "") + v + " %") : v)); }).join(", "))+', '+esc(t("shows").toLowerCase())+' '+(g.shows[obs.day] != null ? g.shows[obs.day] : "")+'</div></div>';
+}
+function renderOverlay(){ var o = $("overlay"); if (o) o.innerHTML = overlayHTML(); var gs = $("ghost-say"); if (gs) gs.innerHTML = ghostSayHTML(); }
+function filmDeskHTML(){
+  var U = LANG === "ru", r = film.rep;
+  return '<div class="panel dayres"><h2>'+esc(t("day"))+' '+dayN(r.day)+'. '+esc(tt("open_h"))+'</h2><p class="muted">'+esc(t("wd")[film.wd])+', '+esc(t("wx")[r.weather] || r.weather)+'. '+esc(U ? "День идёт сам: смотрите на карту." : "The day plays itself: watch the map.")+'</p>' +
+    '<div class="hud"><div class="stat"><div class="k">'+esc(tt("visitors"))+'</div><div class="v" id="f-vis">0</div></div><div class="stat"><div class="k">'+esc(tt("revenue"))+'</div><div class="v" id="f-rev">$0</div></div>' +
+    '<div class="stat"><div class="k">'+esc(U ? "За день" : "The day")+'</div><div class="v" id="f-delta">$0</div></div></div><div id="f-events" class="stack"></div></div>';
+}
+function closeEvening(){
+  var dec = buildDec(), obs = draft.obs;
+  if ((G.check(dec)[0] || []).length) return;
+  G.decide(dec); DLOG.push([obs.day, dec]);
+  var before = G.score().score, rep = G.step(), sc = G.score().score;
+  dailyCache.push(sc); pop = null; lastDay = null;
+  film = {rep: rep, wd: obs.wd, before: before, after: sc, shown: 0, half: -1};
+  AU.open(); render(); window.scrollTo({top: 0, behavior: "smooth"});
+  var evs = (rep.events || []).slice(), viol = Object.keys(rep.violations || {});
+  SC.playDay(rep, function(p, done){
+    var ck = $("f-clock"); if (ck) { var mins = Math.round(600 + p * 420), hh = Math.floor(mins / 60), mm = mins % 60; ck.textContent = hh + ":" + (mm < 10 ? "0" : "") + mm; }
+    var bh = rep.by_half || [], v0 = bh[0] ? bh[0].admitted : rep.visitors * .45, v1 = bh[1] ? bh[1].admitted : rep.visitors * .55;
+    var vis = p < .5 ? v0 * p / .5 : v0 + v1 * (p - .5) / .5, share = rep.visitors ? vis / (v0 + v1 || 1) : p;
+    var fv = $("f-vis"), fr = $("f-rev"), hs = $("hud-score");
+    if (fv) fv.textContent = num(vis); if (fr) fr.textContent = money(rep.revenue * share); if (hs) hs.textContent = money(film.before + (film.after - film.before) * share);
+    var fd = $("f-delta"), fh = $("f-half"); if (fd) { var dl = (film.after - film.before) * share; fd.textContent = money(dl, 1); fd.style.color = dl >= 0 ? "var(--ok)" : "var(--bad)"; }
+    if (fh) fh.textContent = p < .5 ? tt("morning") : tt("afternoon");
+    if (film.half !== (p < .5 ? 0 : 1)) { film.half = p < .5 ? 0 : 1; setAmbience(); }
+    var want = Math.floor(p * (evs.length + viol.length + 1));
+    while (film.shown < want && film.shown < evs.length + viol.length) {
+      var i = film.shown++, txt = i < evs.length ? eventText(evs[i]) : ((LANG === "ru" ? "Нарушение ухода: " : "Care violation: ") + t("sec")[viol[i - evs.length]]), bad = i >= evs.length;
+      var box = $("f-events"); if (box) box.insertAdjacentHTML("beforeend", '<div class="'+(bad ? "rej" : "okmsg")+'">'+esc(txt)+'</div>');
+      var tb = $("f-toast"); if (tb) tb.innerHTML = '<div class="toast">'+esc(txt)+'</div>';
+      if (bad) AU.buzz(); else AU.pop();
+    }
+    if (done) finishDay();
+  });
+}
+function finishDay(){
+  var rep = film.rep, sc = film.after, g = ghost(), gd = g ? g.daily[rep.day] : null, d = gd == null ? null : sc - gd, U = LANG === "ru";
+  var fl = (rep.by_half || []).map(function(x){ return x.crowding || 0; }), crowd = fl.length ? Math.max.apply(null, fl) : 0;
+  // сколько дней подряд день выигран у Extella
+  var streak = 0; if (g) for (var i = dailyCache.length - 1; i >= 0; i--) { var mine = dailyCache[i] - (i ? dailyCache[i - 1] : 0), his = g.daily[i] - (i ? g.daily[i - 1] : 0); if (mine >= his) streak++; else break; }
+  AU.close(); if (d != null) setTimeout(function(){ if (d >= 0) AU.good(); else AU.bad(); }, 650);
+  lastDay = '<div class="panel dayres"><div class="row between"><h2>'+esc(t("day_res"))+' '+dayN(rep.day)+'</h2>' +
+    (d == null ? '' : '<span class="pill '+(d >= 0 ? "ok" : "bad")+'">'+esc(d >= 0 ? tt("lead") : tt("lag"))+' '+money(Math.abs(d))+'</span>') + '</div>' +
+    '<div class="hud"><div class="stat"><div class="k">'+esc(t("vis"))+'</div><div class="v">'+num(rep.visitors)+'</div></div>' +
+    '<div class="stat"><div class="k">'+esc(t("rev"))+'</div><div class="v">'+money(rep.revenue)+'</div></div>' +
+    '<div class="stat"><div class="k">'+esc(U ? "За день" : "The day")+'</div><div class="v" style="color:var(--'+(film.after - film.before >= 0 ? "ok" : "bad")+')">'+money(film.after - film.before, 1)+'</div></div></div>' +
+    (streak >= 2 ? '<div class="okmsg">'+esc(U ? ("День выигран у Extella " + streak + (streak < 5 ? " раза подряд." : " раз подряд.")) : ("You out-earned Extella " + streak + " days in a row."))+'</div>' : '') +
+    (rep.queue_lost ? '<div class="warnmsg">'+esc(U ? ("Из очереди ушли " + num(rep.queue_lost) + ": касс не хватило.") : (num(rep.queue_lost) + " left the queue: too few cashiers."))+'</div>' : '') +
+    (crowd > 0 ? '<div class="warnmsg">'+esc(U ? ("Толчея: людей было на " + Math.round(crowd * 100) + " % больше вместимости, тратили меньше.") : ("Crowded: " + Math.round(crowd * 100) + "% over capacity, so people spent less."))+'</div>' : '') +
+    (Object.keys(rep.violations || {}).length ? '<div class="rej">'+esc(U ? "Нарушения ухода: " : "Care violations: ")+esc(Object.keys(rep.violations).map(function(s){ return t("sec")[s]; }).join(", "))+'</div>' : '') +
+    (rep.events && rep.events.length ? '<div class="note">'+esc(rep.events.map(eventText).join("; "))+'</div>' : '') + '</div>';
+  film = null;
+  if (G.done()) { screen = "end"; render(); offerSave(); window.scrollTo(0, 0); var gg = ghost(); if (gg && G.score().score > gg.score) { AU.win(); confetti(); } return; }
+  draft = newDraft(); openTile = firstAttention(); render();
+  var hs = $("hud-score"); if (hs) hs.classList.add("bump");
+}
+function firstAttention(){
+  var obs = draft.obs;
+  if (SECT.some(function(sx){ return draft.row.keepers[sx][0] < obs.min_tomorrow[sx][0] || draft.row.keepers[sx][1] < obs.min_tomorrow[sx][1]; })) return "shift";
+  if (["frozen", "hay", "produce"].some(function(s){ return obs.suppliers[s].delivers_tomorrow; })) return "order";
+  return "shift";
+}
+
+/* --- итог --- */
+function chartSVG(lines){
+  var w = 720, h = 260, pad = 44, n = 30, all = [];
+  lines.forEach(function(L){ L.v.forEach(function(x){ all.push(x); }); });
+  var lo = Math.min.apply(null, all.concat([0])), hi = Math.max.apply(null, all);
+  var sx = function(i){ return pad + i * (w - pad - 190) / (n - 1); }, sy = function(v){ return h - 26 - (v - lo) * (h - 46) / Math.max(1, hi - lo); };
+  var out = '<svg viewBox="0 0 '+w+' '+h+'" role="img">';
+  out += '<line x1="'+pad+'" y1="'+sy(0)+'" x2="'+(w - 190)+'" y2="'+sy(0)+'" stroke="var(--line)"/>';
+  // подписи у концов линий не должны налезать друг на друга
+  var labs = lines.map(function(L){ return {L: L, y: sy(L.v[L.v.length - 1])}; }).sort(function(a, b){ return a.y - b.y; });
+  for (var q = 1; q < labs.length; q++) if (labs[q].y - labs[q - 1].y < 16) labs[q].y = labs[q - 1].y + 16;
+  lines.forEach(function(L){
+    out += '<path d="' + L.v.map(function(v, i){ return (i ? "L" : "M") + sx(i).toFixed(1) + " " + sy(v).toFixed(1); }).join(" ") + '" fill="none" stroke="'+L.c+'" stroke-width="'+(L.w || 2)+'" stroke-linejoin="round"'+(L.d ? ' stroke-dasharray="5 4"' : '')+'/>';
+    var last = L.v[L.v.length - 1], ly = labs.filter(function(x){ return x.L === L; })[0].y;
+    out += '<circle cx="'+sx(L.v.length - 1)+'" cy="'+sy(last)+'" r="4" fill="'+L.c+'"/><text x="'+(sx(L.v.length - 1) + 8)+'" y="'+(ly + 4)+'" font-size="12.5" font-weight="700" fill="'+L.c+'" font-family="var(--sans)">'+esc(L.n)+'</text>';
+  });
+  out += '<text x="'+pad+'" y="14" font-size="12" fill="var(--muted)" font-family="var(--sans)">'+esc(money(hi))+'</text>';
+  out += '<text x="'+pad+'" y="'+(h - 6)+'" font-size="12" fill="var(--muted)" font-family="var(--sans)">'+esc(t("day"))+' 1–30</text>';
+  return out + '</svg>';
+}
+function endHTML(){
+  var s = G.score(), g = ghost(), c = careful(), U = LANG === "ru";
+  var lines = [];
+  if (c) lines.push({v: c.daily, c: "var(--muted)", d: 1, n: t("careful")});
+  [["small", "var(--warn)"], ["opus", "#c2410c"]].forEach(function(x){ var rv = ((DATA.rivals || {})[x[0]] || {})[key()]; if (rv) lines.push({v: rv.daily, c: x[1], n: modelName(rv.model, false)}); });
+  if (g) lines.push({v: g.daily, c: "var(--ghost)", n: "Extella"});
+  lines.push({v: dailyCache.slice(), c: "var(--leaf)", w: 3, n: tt("you")});
+  var won = g ? s.score > g.score : null;
+  var h = '<section class="stack"><span class="note">'+esc(t("sc_" + pick.sc))+', '+esc(t("st_" + pick.pl).toLowerCase())+', '+esc(t("tm_" + pick.tm))+'</span>' +
+    '<h1>'+esc(won == null ? t("end_h") : won ? (U ? "Вы обыграли Extella" : "You beat Extella") : (U ? "Extella сыграла лучше" : "Extella played it better"))+'</h1>' +
+    '<div class="hud"><div class="stat"><div class="k">'+esc(tt("you"))+'</div><div class="v">'+money(s.score)+'</div></div>' +
+    (g ? '<div class="stat ghost"><div class="k">Extella</div><div class="v">'+money(g.score)+'</div></div>' : '') +
+    ["opus", "small"].map(function(w){ var rv = ((DATA.rivals || {})[w] || {})[key()]; return rv ? '<div class="stat"><div class="k">'+esc(modelName(rv.model, false))+'</div><div class="v">'+money(rv.score)+'</div></div>' : ''; }).join("") +
+    (c ? '<div class="stat"><div class="k">'+esc(t("careful"))+'</div><div class="v">'+money(c.score)+'</div></div>' : '') +
+    '<div class="stat"><div class="k">'+esc(t("deaths"))+'</div><div class="v">'+s.counts.deaths+'</div></div>' +
+    '<div class="stat"><div class="k">'+esc(t("viol"))+'</div><div class="v">'+s.counts.section_violation_days+'</div></div></div></section>';
+  h += '<section class="panel chart"><h2>'+esc(t("chart_h"))+'</h2>'+chartSVG(lines)+'</section>';
+  if (g) {
+    var diffs = Object.keys(s.parts).map(function(k){ return {k: k, d: s.parts[k] - (g.parts[k] || 0)}; })
+      .filter(function(x){ return Math.abs(x.d) >= 500; }).sort(function(a, b){ return Math.abs(b.d) - Math.abs(a.d); }).slice(0, 4);
+    if (diffs.length) {
+      h += '<section class="panel"><h2>'+esc(t("verdict_h"))+'</h2>' + diffs.map(function(x){
+        return '<div class="'+(x.d >= 0 ? "okmsg" : "rej")+'">'+esc(partName(x.k))+': '+esc(x.d >= 0 ? t("v_better") : t("v_worse"))+' '+money(Math.abs(x.d))+'</div>';
+      }).join("") + '<p class="note">'+esc(t("verdict_note"))+'</p></section>';
+    }
+    var keys = Object.keys(s.parts);
+    h += '<section class="panel"><h2>'+esc(t("parts_h"))+'</h2><div class="tbl"><table><thead><tr><th>'+esc(t("part"))+'</th><th class="n">'+esc(tt("you"))+'</th><th class="n">Extella</th><th class="n">'+esc(t("diff"))+'</th></tr></thead><tbody>' +
+      keys.map(function(k){ var a = s.parts[k], b = g.parts[k] || 0;
+        return '<tr><td>'+esc(partName(k))+'</td><td class="n">'+money(a)+'</td><td class="n">'+money(b)+'</td><td class="n">'+money(a - b, 1)+'</td></tr>'; }).join("") +
+      '<tr><td><b>'+esc(t("total"))+'</b></td><td class="n"><b>'+money(s.score)+'</b></td><td class="n"><b>'+money(g.score)+'</b></td><td class="n"><b>'+money(s.score - g.score, 1)+'</b></td></tr>' +
+      '</tbody></table></div></section>';
+  }
+  h += '<section class="row"><button type="button" id="save" class="go" hidden>'+esc(t("save"))+'</button><span id="savemsg" class="small">'+esc(saveState)+'</span>' +
+    '<button type="button" id="again">'+esc(t("again"))+'</button><button type="button" id="other">'+esc(t("other"))+'</button>'+(SITE ? '' : '<button type="button" id="go-board">'+esc(t("board"))+'</button>')+'</section><p class="note">'+esc(t("verify"))+'</p>';
+  return h;
+}
+
+/* ---------- таблица рекордов ---------- */
+var DB = null, USER = null, rows = null, dbState = "loading";
+setTimeout(function(){ if (dbState === "loading") { dbState = "off"; if (screen === "board") renderBoard(); } }, 10000);
+(async function(){
+  try { if (!window.claude || !window.claude.use) { dbState = "off"; return; } DB = await window.claude.use("db"); USER = await window.claude.use("user"); } catch (e) { DB = null; }
+  if (!DB) { dbState = "off"; if (screen === "board") renderBoard(); return; }
+  try { DB.collection("scores").onSnapshot(function(snap){ dbState = "on"; rows = snap.docs.map(function(d){ return {id: d.id, data: d.data()}; }); if (screen === "board") renderBoard(); }, function(){ dbState = "off"; if (screen === "board") renderBoard(); }); } catch (e) { dbState = "off"; }
+})();
+async function offerSave(){
+  if (!DB || !USER || screen !== "end") return;
+  var me; try { me = await USER.id(); } catch (e) { return; } if (!me) return;
+  var b = $("save"); if (!b) return; b.hidden = false;
+  b.onclick = async function(){
+    b.disabled = true; var was = b.textContent; b.textContent = t("saving");
+    try {
+      var chk = S.replay(DATA.seed, {place: pick.pl, team: pick.tm, scenario: pick.sc}, DLOG, W);
+      var g = ghost(), ref = DB.collection("scores").doc(me), cur = await ref.get(), data = cur.exists ? cur.data() : {best: {}};
+      var best = data.best || {}, prev = best[key()];
+      if (!prev || chk.score > prev.score) best[key()] = {score: chk.score, extella: g ? g.score : null, beat: g ? chk.score > g.score : null, seed: DATA.seed, at: new Date().toISOString(), log: DLOG};
+      await ref.set({best: best});
+      saveState = t("saved"); $("savemsg").textContent = saveState; b.hidden = true;
+    } catch (e) { $("savemsg").textContent = t("save_fail"); }
+    finally { b.disabled = false; b.textContent = was; }
+  };
+}
+async function renderBoard(){
+  var el = $("board"); if (!el) return;
+  var h = '<section class="stack"><h1>'+esc(t("board_h"))+'</h1>';
+  if (dbState === "loading") { el.innerHTML = h + '<p class="muted">'+esc(t("loading"))+'</p></section>'; return; }
+  if (!DB || dbState === "off" || !rows) { el.innerHTML = h + '<p class="muted">'+esc(t("board_off"))+'</p><button type="button" id="home2">'+esc(t("other"))+'</button></section>'; return; }
+  var prof = {}; try { if (rows.length && USER) prof = await USER.profiles(rows.map(function(r){ return r.id; })); } catch (e) {}
+  if (!rows.length) h += '<p class="muted">'+esc(t("board_empty"))+'</p>';
+  Object.keys(DATA.ghosts).forEach(function(k){
+    var list = rows.filter(function(r){ return r.data.best && r.data.best[k]; }).map(function(r){ return {id: r.id, b: r.data.best[k]}; }).sort(function(a, b){ return b.b.score - a.b.score; });
+    if (!list.length) return;
+    var p = k.split("_");
+    h += '<h2>'+esc(t("sc_" + p[0]))+' · '+esc(t("st_" + p[1]))+' · '+esc(t("tm_" + p[2]))+'</h2><div class="tbl"><table><thead><tr><th>'+esc(t("name"))+'</th><th class="n">'+esc(t("best"))+'</th><th class="n">Extella</th><th>'+esc(t("vs"))+'</th></tr></thead><tbody>' +
+      list.map(function(r){ var nm = (prof[r.id] && prof[r.id].name) || t("someone");
+        return '<tr><td>'+esc(nm)+'</td><td class="n mono">'+money(r.b.score)+'</td><td class="n mono">'+(r.b.extella == null ? "—" : money(r.b.extella))+'</td><td>'+(r.b.beat ? '<span class="pill ok">'+esc(t("beat"))+'</span>' : '<span class="muted">'+esc(t("nobeat"))+'</span>')+'</td></tr>'; }).join("") +
+      '</tbody></table></div>';
+  });
+  el.innerHTML = h + '<p class="note">'+esc(t("verify"))+'</p><button type="button" id="home2">'+esc(t("other"))+'</button></section>';
+}
+
+/* ---------- отрисовка и события ---------- */
+function render(){
+  var m = $("main"), keep = null, ae = document.activeElement;
+  if (ae && ae.dataset) keep = ae.dataset.st ? '[data-st="' + ae.dataset.st + '"]' : ae.dataset.tile ? '[data-tile="' + ae.dataset.tile + '"]' : ae.id ? "#" + ae.id : null;
+  $("home").textContent = t("brand");
+  document.title = t("brand");
+  ["ru", "en"].forEach(function(l){ $("lang-" + l).setAttribute("aria-pressed", String(LANG === l)); });
+  $("snd").setAttribute("aria-pressed", String(AU.isOn())); $("snd").title = LANG === "ru" ? "Звук" : "Sound";
+  if (CV.parentNode) CV.parentNode.removeChild(CV);
+  if (screen === "start") m.innerHTML = startHTML();
+  else if (screen === "lesson") m.innerHTML = lessonHTML();
+  else if (screen === "play") m.innerHTML = playHTML();
+  else if (screen === "end") m.innerHTML = endHTML();
+  else if (screen === "board") { m.innerHTML = '<div id="board"><p class="muted">'+esc(t("loading"))+'</p></div>'; renderBoard(); }
+  mountScene();
+  if (SC) {
+    if (screen === "start") { SC.setScenario(pick.sc); SC.setIdle({weather: pick.sc === "heat" ? "hot" : "clear", keepers: {pool: [4, 3], cats: [2, 1], birds: [2, 1], yard: [2, 2], tropic: [1, 1]}, cashiers: [2, 2], kiosk: [2, 2], shows: 2, cubs: pick.sc === "spring"}); }
+    else if (screen === "play" && !film) { SC.focus = pop; SC.setEvening(eveningState()); }
+  }
+  if (screen === "play") renderOverlay();
+  setAmbience();
+  if (keep) { try { var el = document.querySelector(keep); if (el && !el.disabled) el.focus({preventScroll: true}); } catch (e) {} }
+}
+function startGame(){
+  try { localStorage.setItem("zoo_played", "1"); } catch (e) {}
+  G = new S.Game(DATA.seed, pick.pl, pick.tm, pick.sc, W);
+  DLOG = []; dailyCache = []; lastDay = null; saveState = ""; film = null; pop = null;
+  draft = newDraft(); openTile = firstAttention(); screen = "play";
+  if (SC) SC.setScenario(pick.sc);
+  render(); window.scrollTo(0, 0);
+}
+function bump(id, dir){
+  var p = id.split(":");
+  if (screen === "lesson") {
+    if (p[0] === "L1k") { lesson.l1.keepers[p[1]][+p[2]] = Math.max(0, Math.min(6, lesson.l1.keepers[p[1]][+p[2]] + dir)); return true; }
+    if (p[0] === "L1c") { lesson.l1.cashiers[+p[1]] = Math.max(0, Math.min(8, lesson.l1.cashiers[+p[1]] + dir)); return true; }
+    if (p[0] === "L1q") { lesson.l1.kiosk[+p[1]] = Math.max(0, Math.min(8, lesson.l1.kiosk[+p[1]] + dir)); return true; }
+    if (p[0] === "L1s") { lesson.l1.shows = Math.max(0, Math.min(W.shows.max, lesson.l1.shows + dir)); return true; }
+    if (p[0] === "L2f") { lesson.l2 = Math.max(0, Math.min(60, lesson.l2 + dir * 2)); lesson.l2done = null; return true; }
+    return false;
+  }
+  if (p[0] === "k") { draft.row.keepers[p[1]][+p[2]] = Math.max(0, Math.min(6, draft.row.keepers[p[1]][+p[2]] + dir)); return true; }
+  if (p[0] === "c") { draft.row.cashiers[+p[1]] = Math.max(0, Math.min(8, draft.row.cashiers[+p[1]] + dir)); return true; }
+  if (p[0] === "q") { draft.row.kiosk[+p[1]] = Math.max(0, Math.min(8, draft.row.kiosk[+p[1]] + dir)); return true; }
+  if (p[0] === "s") { draft.row.shows = Math.max(0, Math.min(W.shows.max, draft.row.shows + dir)); return true; }
+  if (p[0] === "tf") { draft.thaw.fish = Math.max(0, Math.round((draft.thaw.fish + dir * 2) * 10) / 10); return true; }
+  if (p[0] === "tm") { draft.thaw.meat = Math.max(0, Math.round((draft.thaw.meat + dir * 0.5) * 10) / 10); return true; }
+  if (p[0] === "o") { var s = p[1], it = p[2], st = +p[3];
+    draft.qty[s] = draft.qty[s] || {}; draft.qty[s][it] = Math.max(0, (draft.qty[s][it] || 0) + dir * st); return true; }
+  if (p[0] === "pr") { var lo = W.prices.adult * W.prices.bounds[0], hi = W.prices.adult * W.prices.bounds[1];
+    draft.price = Math.min(hi, Math.max(lo, Math.round((draft.price + dir * 0.5) * 100) / 100)); return true; }
+  if (p[0] === "hi") { draft.hire = Math.max(0, Math.min(3, draft.hire + dir)); return true; }
+  return false;
+}
+
+document.addEventListener("input", function(e){
+  var el = e.target; if (!draft || !el || el.type !== "range") return;
+  if (el.id === "rg-fish") { draft.thaw.fish = Math.round(+el.value * 10) / 10; $("rv-fish").textContent = kg(draft.thaw.fish); }
+  else if (el.id === "rg-meat") { draft.thaw.meat = Math.round(+el.value * 10) / 10; $("rv-meat").textContent = kg(draft.thaw.meat); }
+  else if (el.id === "rg-price") { draft.price = Math.round(+el.value * 100) / 100; $("rv-price").textContent = money2(draft.price); }
+  if (SC) SC.setEvening(eveningState());
+});
+document.addEventListener("change", function(e){ if (e.target && e.target.type === "range" && screen === "play") { render(); var el = $(e.target.id); if (el) el.focus({preventScroll: true}); } });
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape" && pop) { pop = null; render(); return; }
+  if (e.key !== "Enter" || screen !== "play" || e.target.closest("button, summary, input")) return;
+  var b = $("close-ev"); if (b && !b.disabled) { e.preventDefault(); b.click(); }
+});
+document.addEventListener("click", function(e){
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.id === "snd") { AU.toggle(); b.setAttribute("aria-pressed", String(AU.isOn())); if (AU.isOn()) AU.pop(); return; }
+  if (b.dataset.st || b.dataset.tile || b.dataset.ch || b.dataset.tg || b.dataset.pick) AU.click();
+  if (b.dataset.pop && b.dataset.pop !== "close") AU.pop();
+  if (b.id === "lang-ru" || b.id === "lang-en") { LANG = b.id.slice(5); try { localStorage.setItem(SITE ? "robot_lang" : "zoo_lang", LANG); } catch (x) {} render(); return; }
+  if (b.id === "th-light" || b.id === "th-dark") {
+    var v = b.id.slice(3), cur = document.documentElement.getAttribute("data-theme");
+    if (cur === v) { document.documentElement.removeAttribute("data-theme"); v = ""; } else document.documentElement.setAttribute("data-theme", v);
+    try { if (v) localStorage.setItem("zoo_theme", v); else localStorage.removeItem("zoo_theme"); } catch (x) {}
+    return;
+  }
+  if (b.id === "home" || b.id === "other" || b.id === "home2") { if (SC) SC.skipDay(); film = null; screen = "start"; render(); return; }
+  if (b.dataset.pick) { var q = b.dataset.pick.split(":"); pick[q[0]] = q[1]; try { localStorage.setItem("zoo_pick", JSON.stringify(pick)); } catch (x) {} render(); return; }
+  if (b.id === "go-play") { startGame(); return; }
+  if (b.id === "go-lesson") { lesson = {step: 1, l1: null, l2: null, l2done: null, l3: null, l3done: false}; screen = "lesson"; render(); return; }
+  if (b.id === "go-board") { screen = "board"; render(); return; }
+  if (b.id === "skip-l") { screen = "start"; render(); return; }
+  if (b.id === "l-next") { lesson.step++; render(); return; }
+  if (b.id === "l-run") { runLesson2(); render(); return; }
+  if (b.id === "l-again") { if (lesson.step === 2) lesson.l2done = null; else lesson.l3done = false; render(); return; }
+  if (b.id === "l-show") { lesson.l3done = true; render(); return; }
+  if (b.id === "l-done") { screen = "start"; render(); return; }
+  if (b.dataset.l3) { lesson.l3 = b.dataset.l3; lesson.l3done = false; render(); return; }
+  if (b.dataset.pop) { pop = b.dataset.pop === "close" || b.dataset.pop === pop ? null : b.dataset.pop; if (pop && pop !== "gate" && pop !== "kiosk") openTile = "shift"; render(); return; }
+  if (b.dataset.tile) { openTile = openTile === b.dataset.tile ? null : b.dataset.tile; render(); return; }
+  if (b.id === "stand-tg") { standOpen = !standOpen; try { localStorage.setItem("zoo_stand", standOpen ? "1" : "0"); } catch (x) {} render(); return; }
+  if (b.dataset.cmp) { cmpWith = b.dataset.cmp; render(); return; }
+  if (b.dataset.st) { var i = b.dataset.st.lastIndexOf(":"), id = b.dataset.st.slice(0, i), dir = +b.dataset.st.slice(i + 1);
+    if (bump(id, dir)) render(); return; }
+  if (b.dataset.ch) { var c = b.dataset.ch.split(":"); draft.choices[c[0]] = c[1]; render(); return; }
+  if (b.dataset.tg) { draft[b.dataset.tg] = !draft[b.dataset.tg]; render(); return; }
+  if (b.id === "thaw-norm") { var o = draft.obs, st = o.stock; draft.thaw = {fish: Math.round(Math.min(o.need_kg_per_day.fish, st.freezer.fish + st.thawed_for_tomorrow.fish) * 10) / 10, meat: Math.round(Math.min(o.need_kg_per_day.meat, st.freezer.meat + st.thawed_for_tomorrow.meat) * 10) / 10}; render(); return; }
+  if (b.id === "price-base") { draft.price = W.prices.adult; render(); return; }
+  if (b.id === "ord-fill") { fillOrder(); render(); return; }
+  if (b.id === "ord-clear") { draft.qty = {}; render(); return; }
+  if (b.id === "close-ev") { closeEvening(); return; }
+  if (b.id === "skip-day") { if (SC) SC.skipDay(); return; }
+  if (b.id === "again") { startGame(); return; }
+});
+render();
+})();
+</script>

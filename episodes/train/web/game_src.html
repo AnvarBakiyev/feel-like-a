@@ -67,6 +67,8 @@ tr:last-child td{border-bottom:none}
 .cab{display:flex;flex-direction:column;gap:10px}
 .window{width:100%;aspect-ratio:12/5;min-height:170px;max-height:300px;border-radius:6px 6px 0 0;border:1px solid var(--line);border-bottom:0;background:var(--sky);display:block}
 .front{width:100%;aspect-ratio:16/7;min-height:190px;max-height:340px;display:block;border-radius:10px 10px 0 0;border:6px solid #2a323c;border-bottom:0;background:var(--sky)}
+.front3d{aspect-ratio:16/8;max-height:460px;cursor:grab;touch-action:none;background:#9cc3e6}
+.hint3d{position:absolute;left:12px;bottom:10px;font-size:11px;color:#fff;background:rgba(10,10,10,.45);padding:3px 8px;border-radius:8px;pointer-events:none}
 .desk{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 118px 150px;gap:12px;background:#232a33;color:#e6ebf1;border-radius:0 0 10px 10px;padding:12px;border:6px solid #2a323c;border-top:0}
 @media (max-width:760px){.desk{grid-template-columns:minmax(0,1fr) 110px}.desk .dmi{grid-column:1/-1}.desk .btns{grid-column:1/-1;flex-direction:row;flex-wrap:wrap}}
 .dmi{width:100%;height:200px;display:block;border-radius:8px;border:2px solid #3a4552}
@@ -76,7 +78,10 @@ tr:last-child td{border-bottom:none}
 .info b{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
 .info span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--mono);font-size:12px;color:#c3ccd7}
 .desk .flags .flag-chip{background:#1b2129;color:#c3ccd7}
-.desk .flags .flag-chip.gh{background:#2c2440;color:#c9b2ee}
+.desk .flags details.rules{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:6px}
+details.rules summary{cursor:pointer}
+details.rules table td.n{text-align:right}
+.flag-chip.gh{background:#2c2440;color:#c9b2ee}
 .handle{display:flex;flex-direction:column;align-items:center;gap:6px}
 .hlabel{font-size:11px;color:#93a0b0}
 .hwrap{display:flex;gap:6px;align-items:stretch;height:190px}
@@ -131,6 +136,7 @@ kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-b
   <div style="display:flex;flex-direction:column;gap:6px">
     <div class="note mono" id="eyebrow"></div>
     <h1 id="h1"></h1>
+    <p id="sitedef" class="note" hidden style="max-width:760px;margin:6px 0 0"></p>
   </div>
   <div class="row">
     <nav aria-label="sections">
@@ -152,8 +158,9 @@ kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-b
   <div id="pick"></div>
   <div id="cab" class="cab" hidden>
     <div id="goalbar" class="ok" hidden></div>
-    <div style="position:relative"><canvas id="front" class="front" aria-label="cab front window"></canvas>
-      <button type="button" id="viewbtn" style="position:absolute;top:12px;right:12px;font-size:13px;padding:5px 10px;opacity:.92"></button></div>
+    <div style="position:relative"><canvas id="front" class="front" aria-label="cab front window"></canvas><canvas id="front3d" class="front front3d" aria-label="3D view behind the train" hidden></canvas>
+      <div id="hint3d" class="hint3d" hidden></div>
+      <div style="position:absolute;top:12px;right:12px;display:flex;gap:8px"><button type="button" id="sndbtn" style="font-size:13px;padding:5px 10px;opacity:.92"></button><button type="button" id="musbtn" style="font-size:13px;padding:5px 10px;opacity:.92"></button><button type="button" id="viewbtn" style="font-size:13px;padding:5px 10px;opacity:.92"></button></div></div>
     <canvas id="strip" class="strip" aria-hidden="true"></canvas>
     <div class="desk">
       <canvas id="dmi" class="dmi" aria-label="speed display"></canvas>
@@ -199,12 +206,18 @@ kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-b
 <script>/*SIM*/</script>
 <script>/*SCENE*/</script>
 <script>/*CAB*/</script>
+<script>/*THREE*/</script>
+<script>var DATA3D = /*DATA3D*/;</script>
+<script>/*TRAIN3D*/</script>
+<script>var MASH_MUSIC = "/*MUSIC*/";</script>
+<script>/*AUDIO*/</script>
 <script>
 var DATA = /*DATA*/;
 (function(){
 "use strict";
-var S = window.TrainSim, LANG = "ru";
-try { var sl = localStorage.getItem("mash_lang"); if (sl === "en" || sl === "ru") LANG = sl; } catch (e) {}
+var S = window.TrainSim, LANG = window.MASH_SITE ? "en" : "ru";
+// на extella.dev язык общий для всего сайта (robot_lang), в артефакте свой
+try { var sl = localStorage.getItem(window.MASH_SITE ? "robot_lang" : "mash_lang") || localStorage.getItem("mash_lang"); if (sl === "en" || sl === "ru") LANG = sl; } catch (e) {}
 var $ = function (id) { return document.getElementById(id); };
 var T = {
  ru: {eyebrow:"Эпизод 2 · Почувствуй себя…", h1:"Почувствуй себя машинистом", lessons:"Уроки", drive:"Рейс", board:"Лидерборд",
@@ -214,10 +227,10 @@ var T = {
   keys:"Клавиши: <kbd>↑</kbd><kbd>↓</kbd> контроллер, <kbd>пробел</kbd> выбег, <kbd>Q</kbd> песок, <kbd>E</kbd> экстренный, <kbd>P</kbd> пауза, <kbd>V</kbd> вид.",
   pick:"Выберите участок и рейс", seed:"Рейс", start:"Отправиться", pusher:"Толкач (второй локомотив, −100 очков)",
   weather:{dry:"сухо",wet:"дождь, мокрый рельс",leaves:"листопад, скользкий рельс"}, sched:"График", delay:"Задержка отправления", warn:"Лист предупреждений", none:"пусто",
-  track_work:"ремонт пути", ahead:"впереди", behind:"позади", ghost:"Extella", wait_dep:"Ждите отправления", slip:"боксование", slide:"юз", atp:"защита тормозит", emerg_on:"экстренное", sand_on:"песок",
-  late:"опоздание", early:"опережение", result:"Итог рейса", you:"Ты", beat:"Ты обыграл Extella", lost:"Extella впереди", again:"Ещё рейс", save:"Записать в лидерборд", saved:"Записано",
+  track_work:"ремонт пути", ahead:"впереди", behind:"позади", ghost:"Qwen 3.5 9B с Extella", wait_dep:"Ждите отправления", slip:"боксование", slide:"юз", atp:"защита тормозит", emerg_on:"экстренное", sand_on:"песок",
+  late:"опоздание", early:"опережение", result:"Итог рейса", you:"Ты", beat:"Ты обыграл Qwen 3.5 9B с Extella", lost:"Qwen 3.5 9B с Extella впереди", again:"Ещё рейс", save:"Записать в лидерборд", saved:"Записано",
   parts:{late:"опоздание",energy:"энергия к эталону",stop_precision:"точность остановки",protection:"защита",missed_stops:"пропуск станции",comfort:"комфорт",pusher:"толкач",unfinished:"не доехал"},
-  score:"счёт", chart:"Скорость по километрам: ты (чёрная), Extella (фиолетовая), малая модель без Extella (синяя), большая без Extella (жёлтая), большая с обратной связью (красная), ограничение (пунктир)", board_empty:"Пока никто не записался. Пройдите рейс и запишите результат.", board_off:"Лидерборд работает на странице в claude.ai для участников команды.",
+  score:"счёт", chart:"Скорость по километрам: ты (чёрная), Qwen 3.5 9B с Extella (фиолетовая), Qwen 3.5 9B без Extella (синяя), Claude Opus 5.5 без Extella (жёлтая), Claude Opus 5.5 с обратной связью (красная), ограничение (пунктир)", board_empty:"Пока никто не записался. Пройдите рейс и запишите результат.", board_off:"Лидерборд работает на странице в claude.ai для участников команды.",
   board_h:"Кто проехал лучше", name:"кто", best:"лучший счёт", vs:"против Extella", someone:"Участник", plan:"План Extella", why:"почему", tries:"попыток"},
  en: {eyebrow:"Episode 2 · Feel like a…", h1:"Feel like a train driver", lessons:"Lessons", drive:"Drive", board:"Leaderboard",
   l1:"Braking distance", l2:"Grade and adhesion", l3:"Protection", l4:"Energy and timetable", l5:"How Extella works",
@@ -226,10 +239,10 @@ var T = {
   keys:"Keys: <kbd>↑</kbd><kbd>↓</kbd> controller, <kbd>space</kbd> coast, <kbd>Q</kbd> sand, <kbd>E</kbd> emergency, <kbd>P</kbd> pause, <kbd>V</kbd> view.",
   pick:"Pick a line and a run", seed:"Run", start:"Depart", pusher:"Banking engine (second locomotive, −100 points)",
   weather:{dry:"dry",wet:"rain, wet rail",leaves:"leaf fall, slippery rail"}, sched:"Timetable", delay:"Departure delay", warn:"Notices", none:"none",
-  track_work:"track work", ahead:"ahead", behind:"behind", ghost:"Extella", wait_dep:"Wait for departure", slip:"wheel slip", slide:"wheel slide", atp:"protection braking", emerg_on:"emergency", sand_on:"sand",
-  late:"late", early:"early", result:"Run result", you:"You", beat:"You beat Extella", lost:"Extella is ahead", again:"Another run", save:"Save to leaderboard", saved:"Saved",
+  track_work:"track work", ahead:"ahead", behind:"behind", ghost:"Qwen 3.5 9B with Extella", wait_dep:"Wait for departure", slip:"wheel slip", slide:"wheel slide", atp:"protection braking", emerg_on:"emergency", sand_on:"sand",
+  late:"late", early:"early", result:"Run result", you:"You", beat:"You beat Qwen 3.5 9B with Extella", lost:"Qwen 3.5 9B with Extella is ahead", again:"Another run", save:"Save to leaderboard", saved:"Saved",
   parts:{late:"lateness",energy:"energy vs reference",stop_precision:"stop precision",protection:"protection",missed_stops:"missed station",comfort:"comfort",pusher:"banking engine",unfinished:"did not arrive"},
-  score:"score", chart:"Speed by kilometre: you (black), Extella (purple), small model without Extella (blue), large model without Extella (yellow), large model with feedback (red), limit (dashed)", board_empty:"Nobody has saved a run yet. Drive one and save it.", board_off:"The leaderboard works on the claude.ai page for team members.",
+  score:"score", chart:"Speed by kilometre: you (black), Qwen 3.5 9B with Extella (purple), Qwen 3.5 9B without Extella (blue), Claude Opus 5.5 without Extella (yellow), Claude Opus 5.5 with feedback (red), limit (dashed)", board_empty:"Nobody has saved a run yet. Drive one and save it.", board_off:"The leaderboard works on the claude.ai page for team members.",
   board_h:"Who drove best", name:"who", best:"best score", vs:"vs Extella", someone:"Someone", plan:"Extella's plan", why:"why", tries:"attempts"}
 };
 function t(k){ return T[LANG][k]; }
@@ -246,7 +259,7 @@ var TEACH = {ru:{de_krm:"300 км/ч и подъёмы до 40 ‰: выбег �
 var screen = "lessons";
 function show(s){ var was = screen; screen = s; if (s === "lessons" && was !== "lessons" && typeof startDemo === "function" && $("demo")) startDemo(); ["lessons","drive","board"].forEach(function(x){ $("scr-"+x).hidden = x !== s; $("nav-"+x).setAttribute("aria-pressed", x === s ? "true" : "false"); }); if (s === "board") renderBoard(); }
 ["lessons","drive","board"].forEach(function(x){ $("nav-"+x).addEventListener("click", function(){ show(x); }); });
-$("lang").addEventListener("click", function(){ LANG = LANG === "ru" ? "en" : "ru"; try { localStorage.setItem("mash_lang", LANG); } catch (e) {} renderAll(); });
+$("lang").addEventListener("click", function(){ LANG = LANG === "ru" ? "en" : "ru"; try { localStorage.setItem("mash_lang", LANG); if (window.MASH_SITE) localStorage.setItem("robot_lang", LANG); } catch (e) {} renderAll(); });
 
 /* ---------- уроки ---------- */
 var lessonN = 1;
@@ -444,27 +457,27 @@ function lesson5(el){
   // 1. кто с кем соревнуется: что видит, когда решает, что пишет, кто ведёт поезд
   var who = U ? [
     ["Ты", "кабину: скорость, допустимую скорость, знаки впереди, станцию", "всё время", "сам двигаешь контроллер", "ты"],
-    ["Extella", "брифинг до отправления: график, погоду, ремонт пути, профиль", "один раз до отправления (если Проверка отказала, исправляет план, до трёх попыток)", "короткий замысел на языке поездки: «разгон до 280», «песок с км 42 до км 70», «толкач да»", "обработчик Extella: каждые полсекунды держит скорость у допустимой и сам соблюдает ограничения"],
-    ["Малая модель без Extella", "тот же брифинг", "один раз до отправления", "положение контроллера по километрам: «с км 0 тяга 100 %, с км 22 тормоз»", "никто: план исполняется буквально, без поправок"],
-    ["Большая модель без Extella", "тот же брифинг", "один раз до отправления", "то же: контроллер по километрам, посчитанный в уме", "никто: план исполняется буквально"],
-    ["Большая модель с обратной связью", "кабину, как ты", "по ходу рейса на каждом событии: в среднем 61 раз за рейс", "положение контроллера и до какого километра его держать", "сама, по ходу рейса"],
+    ["Qwen 3.5 9B с Extella", "брифинг до отправления: график, погоду, ремонт пути, профиль", "один раз до отправления (если Проверка отказала, исправляет план, до трёх попыток)", "короткий замысел на языке поездки: «разгон до 280», «песок с км 42 до км 70», «толкач да»", "обработчик Extella: каждые полсекунды держит скорость у допустимой и сам соблюдает ограничения"],
+    ["Qwen 3.5 9B без Extella", "тот же брифинг", "один раз до отправления", "положение контроллера по километрам: «с км 0 тяга 100 %, с км 22 тормоз»", "никто: план исполняется буквально, без поправок"],
+    ["Claude Opus 5.5 без Extella", "тот же брифинг", "один раз до отправления", "то же: контроллер по километрам, посчитанный в уме", "никто: план исполняется буквально"],
+    ["Claude Opus 5.5 с обратной связью", "кабину, как ты", "по ходу рейса на каждом событии: в среднем 61 раз за рейс", "положение контроллера и до какого километра его держать", "сама, по ходу рейса"],
     ["Простая программа (не ИИ)", "кабину", "каждые полсекунды", "ничего не планирует: всегда едет на 3 км/ч ниже допустимой и тормозит к станции по формуле", "она сама. Это ориентир: сколько набирается без хитростей"]
   ] : [
     ["You", "the cab: speed, permitted speed, signs ahead, the station", "all the time", "you move the controller yourself", "you"],
-    ["Extella", "the briefing before departure: timetable, weather, track work, profile", "once before departure (if the check refuses, it fixes the plan, up to three tries)", "a short intent in the trip language: 'accelerate to 280', 'sand from km 42 to km 70', 'banker yes'", "the Extella handler: every half second it holds speed near the permitted one and obeys limits itself"],
-    ["Small model without Extella", "the same briefing", "once before departure", "the controller position per kilometre: 'from km 0 power 100 %, from km 22 brake'", "nobody: the plan runs literally"],
-    ["Large model without Extella", "the same briefing", "once before departure", "the same: controller per kilometre, worked out in its head", "nobody: the plan runs literally"],
-    ["Large model with feedback", "the cab, like you", "during the run at every event: 61 times per run on average", "the controller position and how far to hold it", "itself, during the run"],
+    ["Qwen 3.5 9B with Extella", "the briefing before departure: timetable, weather, track work, profile", "once before departure (if the check refuses, it fixes the plan, up to three tries)", "a short intent in the trip language: 'accelerate to 280', 'sand from km 42 to km 70', 'banker yes'", "the Extella handler: every half second it holds speed near the permitted one and obeys limits itself"],
+    ["Qwen 3.5 9B without Extella", "the same briefing", "once before departure", "the controller position per kilometre: 'from km 0 power 100 %, from km 22 brake'", "nobody: the plan runs literally"],
+    ["Claude Opus 5.5 without Extella", "the same briefing", "once before departure", "the same: controller per kilometre, worked out in its head", "nobody: the plan runs literally"],
+    ["Claude Opus 5.5 with feedback", "the cab, like you", "during the run at every event: 61 times per run on average", "the controller position and how far to hold it", "itself, during the run"],
     ["Simple program (not AI)", "the cab", "every half second", "plans nothing: always 3 km/h under the permitted speed, brakes for stations by formula", "itself. It is a yardstick: what you get with no tricks"]
   ];
   h += '<h3>'+(U?"Кто с кем соревнуется":"Who races whom")+'</h3><div class="tbl"><table><thead><tr><th></th><th>'+(U?"что видит":"sees")+'</th><th>'+(U?"когда решает":"decides")+'</th><th>'+(U?"что пишет":"writes")+'</th><th>'+(U?"кто ведёт поезд":"who drives")+'</th></tr></thead><tbody>'+
     who.map(function(r){ return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>'; }).join("")+'</tbody></table></div>';
-  h += '<p class="note">'+(U?"У всех один рейс: та же погода, тот же ремонт пути, та же задержка отправления и тот же поезд впереди. Счёт у всех по одной формуле. Малая модель везде одна: Qwen 9B, она работает на ноутбуке. Большая модель: Claude, работает в облаке.":"Everyone gets the same run: same weather, track work, departure delay and train ahead. One scoring formula for all. The small model is always Qwen 9B, running on a laptop. The large model is Claude, running in the cloud.")+'</p>';
+  h += '<p class="note">'+(U?"У всех один рейс: та же погода, тот же ремонт пути, та же задержка отправления и тот же поезд впереди. Счёт у всех по одной формуле. Qwen 3.5 9B работает на ноутбуке, Claude Opus 5.5 в облаке.":"Everyone gets the same run: same weather, track work, departure delay and train ahead. One scoring formula for all. Qwen 3.5 9B runs on a laptop, Claude Opus 5.5 in the cloud.")+'</p>';
   // 2. результаты
-  var COLS = [["extella","Extella","Extella"],["small","Малая без Extella","Small without Extella"],["big","Большая без Extella","Large without Extella"],["bigfb","Большая с обратной связью","Large with feedback"]];
+  var COLS = [["extella","Qwen 3.5 9B с Extella","Qwen 3.5 9B with Extella"],["small","Qwen 3.5 9B без Extella","Qwen 3.5 9B without Extella"],["big","Claude Opus 5.5 без Extella","Claude Opus 5.5 without Extella"],["bigfb","Claude Opus 5.5 с обратной связью","Claude Opus 5.5 with feedback"]];
   h += '<h3>'+(U?"Средний счёт по участкам":"Average score by line")+'</h3><div class="tbl"><table><thead><tr><th></th>'+COLS.map(function(c){ var r = RIV.filter(function(x){ return x.key===c[0]; })[0]; return '<th style="text-align:right;color:var('+r.col+')">'+(U?c[1]:c[2])+'</th>'; }).join("")+'<th style="text-align:right">'+(U?"простая программа":"simple program")+'</th></tr></thead><tbody>'+
     LIDS.map(function(l){ return '<tr><td>'+LINE_NAME(l)+'</td>'+COLS.map(function(c){ var a = rivalAvg(c[0], l), n = rivalN(c[0], l); return '<td class="n">'+(a===null?"–":nf(a))+(n && n < 10 ? '<div class="note">'+(U?"рейсы 1–":"runs 1–")+n+'</div>' : '')+'</td>'; }).join("")+'<td class="n">'+DATA.ladder[l].full+'</td></tr>'; }).join("")+'</tbody></table></div>';
-  h += '<div class="ok">'+(U?"Главное сравнение: большая модель с обратной связью ведёт поезд, как человек, решая по ходу, в среднем 61 решение за рейс. На тех же 9 рейсах Extella выиграла 6: в среднем 554 очка против 253. Модель у Extella вызывается 1–2 раза до отправления и работает на ноутбуке. Защита у Extella не вмешалась ни разу, у большой модели 18 раз.":"The key comparison: the large model with feedback drives like a person, deciding during the run, 61 decisions per run on average. On the same 9 runs Extella won 6: 554 points on average against 253. Extella calls its model 1 to 2 times before departure, on a laptop. Protection never stepped in for Extella; 18 times for the large model.")+'</div>';
+  h += '<div class="ok">'+(U?"Главное сравнение: Claude Opus 5.5 с обратной связью ведёт поезд, как человек, решая по ходу, в среднем 61 решение за рейс. На тех же 9 рейсах Extella выиграла 6: в среднем 554 очка против 253. Модель у Extella вызывается 1–2 раза до отправления и работает на ноутбуке. Защита у Extella не вмешалась ни разу, у Claude Opus 5.5 18 раз.":"The key comparison: Claude Opus 5.5 with feedback drives like a person, deciding during the run, 61 decisions per run on average. On the same 9 runs Extella won 6: 554 points on average against 253. Extella calls its model 1 to 2 times before departure, on a laptop. Protection never stepped in for Extella; 18 times for Claude Opus 5.5.")+'</div>';
   h += '<p class="note">'+(U?"Почему модели без Extella так плохи: план, написанный заранее, исполняется буквально. Если в нём тормоз чуть раньше станции, поезд встаёт и стоит до конца рейса. Если скорость в плане выше допустимой, защита тормозит снова и снова, каждый раз −150.":"Why the models without Extella do so badly: a plan written in advance runs literally. Brake a little before the station and the train stops there for good. Plan a speed above the permitted one and protection brakes again and again, −150 each time.")+'</p>';
   // 3. пример
   h += '<h3>'+(U?"Как это выглядит у Extella: мокрый Готард, рейс 2":"What it looks like for Extella: the wet Gotthard, run 2")+'</h3>';
@@ -487,8 +500,11 @@ function lesson5(el){
 /* ---------- рейс ---------- */
 var MODE = {kind: "drive"}, VIEW = "cab", DLOG = [];
 function act(dec){ var r = G.decide(dec); if (!r.length) DLOG.push([Math.round(G.t / S.DT), dec]); return r; }  // журнал решений для пересчёта (train/replay.py)
-try { if (localStorage.getItem("mash_view") === "side") VIEW = "side"; } catch (e) {}
-function viewLabel(){ return LANG === "ru" ? (VIEW === "cab" ? "Вид: из кабины → сбоку" : "Вид: сбоку → из кабины") : (VIEW === "cab" ? "View: cab → side" : "View: side → cab"); }
+try { var _vw = localStorage.getItem("mash_view"); if (_vw === "side" || _vw === "3d") VIEW = _vw; } catch (e) {}
+function nextView(v){ return v === "cab" ? "side" : v === "side" ? (window.Train3D && Train3D.available() ? "3d" : "cab") : "cab"; }
+function audioLabels(){ if (!window.TrainAudio) return; var U = LANG === "ru"; $("sndbtn").textContent = (U ? "Звук: " : "Sound: ") + (TrainAudio.on("sound") ? (U ? "вкл" : "on") : (U ? "выкл" : "off")); $("musbtn").textContent = (U ? "Музыка: " : "Music: ") + (TrainAudio.on("music") ? (U ? "вкл" : "on") : (U ? "выкл" : "off")); }
+function tunnelAt(lid, km){ var T = lid === "ch_gotthard" && window.DATA3D && DATA3D.ch_gotthard ? DATA3D.ch_gotthard.tunnels : []; for (var i = 0; i < T.length; i++) if (km >= T[i][0] && km <= T[i][1]) return true; return false; }
+function viewLabel(){ var N = {cab: ["из кабины", "cab"], side: ["сбоку", "side"], "3d": ["3D", "3D"]}, i = LANG === "ru" ? 0 : 1; return (LANG === "ru" ? "Вид: " : "View: ") + N[VIEW][i] + " → " + N[nextView(VIEW)][i]; }
 var pick = {lid: "ch_gotthard", seed: 2, pusher: false}, G = null, GH = null, timer = null, speed = 10, lastTs = null, msgT = 0, elev = null;
 function briefingHTML(){
   var Lp = DATA.lines[pick.lid], W = DATA.worlds[pick.lid][pick.seed], st = Lp.stations.filter(function(s){ return !s.pass; }), tt = Lp.timetable;
@@ -509,7 +525,7 @@ function renderPick(){
   for (var s = 1; s <= 10; s++) h += '<option value="'+s+'"'+(s===pick.seed?' selected':'')+'>'+(LANG==="ru"?"Рейс ":"Run ")+s+' · '+T[LANG].weather[DATA.worlds[pick.lid][s].weather]+' · Extella '+nf(DATA.ghosts[pick.lid][s].score)+'</option>';
   h += '</select></div>'+briefingHTML();
   if (DATA.trains[pick.lid].pusher) h += '<label class="row"><input type="checkbox" id="push"'+(pick.pusher?' checked':'')+'> '+t("pusher")+'</label>';
-  h += '<div class="row"><button type="button" class="primary" id="go">'+t("start")+'</button><span class="note">'+(LANG==="ru"?"Цель: больше ":"Goal: more than ")+'<b>'+nf(DATA.ghosts[pick.lid][pick.seed].score)+'</b>'+(LANG==="ru"?" очков, столько набрала Extella на этом рейсе.":" points, Extella's score on this run.")+'</span></div>'+rivalsTable()+'</div>';
+  h += '<div class="row"><button type="button" class="primary" id="go">'+t("start")+'</button><span class="note">'+(LANG==="ru"?"Цель: больше ":"Goal: more than ")+'<b>'+nf(DATA.ghosts[pick.lid][pick.seed].score)+'</b>'+(LANG==="ru"?" очков, столько набрала Extella на этом рейсе.":" points, Extella's score on this run.")+'</span></div>'+rivalsTable()+rulesBlock()+'</div>';
   $("pick").innerHTML = h; $("pick").hidden = false;
   Array.prototype.forEach.call($("pick").querySelectorAll("[data-lid]"), function(b){ b.onclick = function(){ pick.lid = b.dataset.lid; pick.pusher = false; renderPick(); }; });
   $("seed").onchange = function(){ pick.seed = +this.value; renderPick(); };
@@ -525,6 +541,7 @@ function buildElev(lid){
 function hAt(km){ for (var i = 1; i < elev.length; i++) if (km <= elev[i][0]) { var a = elev[i-1], b = elev[i]; return a[1] + (b[1]-a[1])*(km-a[0])/(b[0]-a[0]); } return elev[elev.length-1][1]; }
 function mountCab(where){ where.appendChild($("cab")); where.appendChild($("result")); }
 function startRun(){
+  if (window.TrainAudio) { TrainAudio.init(); TrainAudio.newRun(); }
   MODE = {kind: "drive"}; mountCab($("scr-drive")); $("goalbar").hidden = true;
   var W = JSON.parse(JSON.stringify(DATA.worlds[pick.lid][pick.seed]));
   G = new S.Game(DATA.lines[pick.lid], DATA.trains[pick.lid], W); GH = DATA.ghosts[pick.lid][pick.seed]; elev = buildElev(pick.lid);
@@ -547,6 +564,7 @@ function loop(ts){
   var stop = false;
   for (var i = 0; i < n && !G.done(); i++) { G.step(); if (MODE.check && MODE.check(G)) { stop = true; break; } }
   draw();
+  if ((G.done() || stop) && window.TrainAudio) TrainAudio.stop();
   if (G.done() || stop) return MODE.finish ? MODE.finish() : finish();
   timer = requestAnimationFrame(loop);
 }
@@ -563,7 +581,11 @@ $("b-coast").onclick = function(){ if (G) setLever(0); };
 $("b-power").onclick = function(){ if (G) setLever(G.lever + 0.25); };
 $("b-sand").onclick = function(){ if (G) { var r = act({sand: !G.sand_on}); if (r.length) say(r[0][LANG], true); } };
 $("b-emerg").onclick = function(){ if (G) act({emergency: true}); };
-$("viewbtn").onclick = function(){ VIEW = VIEW === "cab" ? "side" : "cab"; try { localStorage.setItem("mash_view", VIEW); } catch (e) {} this.textContent = viewLabel(); if (G) draw(); };
+// звук разрешается только после жеста человека: первый клик по странице включает его
+document.addEventListener("pointerdown", function(){ if (window.TrainAudio && $("cab") && !$("cab").hidden) TrainAudio.init(); });
+$("sndbtn").onclick = function(){ if (window.TrainAudio) { TrainAudio.init(); TrainAudio.toggle("sound"); audioLabels(); } };
+$("musbtn").onclick = function(){ if (window.TrainAudio) { TrainAudio.init(); TrainAudio.toggle("music"); audioLabels(); } };
+$("viewbtn").onclick = function(){ VIEW = nextView(VIEW); try { localStorage.setItem("mash_view", VIEW); } catch (e) {} this.textContent = viewLabel(); if (G) draw(); };
 $("quit").onclick = function(){ cancelAnimationFrame(timer); G = null; if (MODE.kind === "drill") { $("cab").hidden = true; renderLesson(); } else renderPick(); };
 $("hints").onchange = function(){ $("hint").hidden = !this.checked; };
 function hintText(o){
@@ -597,18 +619,18 @@ document.addEventListener("keydown", function(e){
   else if (k === "v" || k === "V" || k === "м" || k === "М") $("viewbtn").click();
 });
 var RIV = [
-  {key: "extella", col: "--ghost", ru: "Extella", en: "Extella",
-   d_ru: "малая модель Qwen 9B на ноутбуке плюс Extella: пишет замысел на языке поездки, обработчик проверяет план на прогнозе и ведёт поезд",
-   d_en: "the small Qwen 9B model on a laptop plus Extella: it writes intent in the trip language; the handler checks the plan on the forecast and drives"},
-  {key: "small", col: "--track", ru: "Малая модель без Extella", en: "Small model without Extella",
-   d_ru: "та же Qwen 9B и тот же брифинг, но положение контроллера по километрам пишет сама, без языка и проверки",
-   d_en: "the same Qwen 9B and the same briefing, but it writes the controller position per kilometre itself, with no language or checks"},
-  {key: "big", col: "--signal", ru: "Большая модель без Extella", en: "Large model without Extella",
-   d_ru: "Claude, тот же брифинг, считает в уме и сама пишет контроллер по километрам, без инструментов",
-   d_en: "Claude, the same briefing, reasons in its head and writes the controller per kilometre itself, with no tools"},
-  {key: "bigfb", col: "--limit", ru: "Большая модель с обратной связью", en: "Large model with feedback",
-   d_ru: "Claude ведёт поезд по ходу рейса, как ты: видит кабину и решает снова на каждом событии, в среднем 61 решение за рейс. Прогнана на рейсах 1–3",
-   d_en: "Claude drives during the run, like you: it sees the cab and decides again at every event, 61 decisions per run on average. Run on runs 1 to 3"}
+  {key: "extella", col: "--ghost", ru: "Qwen 3.5 9B с Extella", en: "Qwen 3.5 9B with Extella",
+   d_ru: "Qwen 3.5 9B на ноутбуке плюс Extella: пишет замысел на языке поездки, обработчик проверяет план на прогнозе и ведёт поезд",
+   d_en: "Qwen 3.5 9B on a laptop plus Extella: it writes intent in the trip language; the handler checks the plan on the forecast and drives"},
+  {key: "small", col: "--track", ru: "Qwen 3.5 9B без Extella", en: "Qwen 3.5 9B without Extella",
+   d_ru: "та же Qwen 3.5 9B и тот же брифинг, но положение контроллера по километрам пишет сама, без языка и проверки",
+   d_en: "the same Qwen 3.5 9B and the same briefing, but it writes the controller position per kilometre itself, with no language or checks"},
+  {key: "big", col: "--signal", ru: "Claude Opus 5.5 без Extella", en: "Claude Opus 5.5 without Extella",
+   d_ru: "Claude Opus 5.5, тот же брифинг, считает в уме и сама пишет контроллер по километрам, без инструментов",
+   d_en: "Claude Opus 5.5, the same briefing, reasons in its head and writes the controller per kilometre itself, with no tools"},
+  {key: "bigfb", col: "--limit", ru: "Claude Opus 5.5 с обратной связью", en: "Claude Opus 5.5 with feedback",
+   d_ru: "Claude Opus 5.5 ведёт поезд по ходу рейса, как ты: видит кабину и решает снова на каждом событии, в среднем 61 решение за рейс. Прогнана на рейсах 1–3",
+   d_en: "Claude Opus 5.5 drives during the run, like you: it sees the cab and decides again at every event, 61 decisions per run on average. Run on runs 1 to 3"}
 ];
 var SHOW = {extella: true, small: false, big: false, bigfb: false};
 function rival(key, lid, seed){ if (key === "extella") return DATA.ghosts[lid][seed]; var r = DATA.rivals && DATA.rivals[lid] && DATA.rivals[lid][String(seed)]; return (r && r[key]) || null; }
@@ -623,6 +645,20 @@ function jAt(j, tsec){
 }
 function othersAt(tsec){
   return RIV.filter(function(r){ return r.key !== "extella" && SHOW[r.key]; }).map(function(r){ var d = rival(r.key, pick.lid, pick.seed); var p = d ? jAt(d.j, tsec) : null; return p ? {km: p[1], color: css(r.col), label: rname(r)} : null; }).filter(Boolean);
+}
+function rulesBlock(){
+  var U = LANG === "ru", R = U ? [
+    ["опоздание к станции", "−2 за каждую секунду сверх 30 с запаса"], ["остановка мимо отметки", "−5 за каждый метр дальше 2 м"], ["пропущенная остановка", "−500"],
+    ["затормозила защита", "−150 за раз"], ["экстренное торможение", "−400 за раз"], ["резкий разгон или тормоз, больше 1 м/с²", "−1 за каждую секунду"],
+    ["толкач на Готарде", "−100"], ["не доехал до конца", "−1000"], ["энергия", "±4 за каждый процент к эталону участка: меньше эталона, значит плюс"]
+  ] : [
+    ["late at a station", "−2 for every second beyond a 30 s margin"], ["stopping off the mark", "−5 for every metre beyond 2 m"], ["missed stop", "−500"],
+    ["protection braked", "−150 each time"], ["emergency brake", "−400 each time"], ["harsh acceleration or braking, over 1 m/s²", "−1 for every second"],
+    ["banking engine on the Gotthard", "−100"], ["did not reach the end", "−1000"], ["energy", "±4 for every percent against the line's reference: less than the reference is a bonus"]
+  ];
+  var h = '<details class="rules"><summary><b>'+(U?"Как считаются очки":"How points are scored")+'</b></summary><p class="note">'+(U?"Старт 1000 очков, дальше штрафы и бонус за энергию. Формула одна для всех: для тебя, Extella и моделей без Extella.":"You start with 1000 points, then come penalties and the energy bonus. One formula for everyone: you, Extella and the models without Extella.")+'</p><div class="tbl"><table><tbody>';
+  R.forEach(function(r){ h += '<tr><td>'+r[0]+'</td><td class="n">'+r[1]+'</td></tr>'; });
+  return h + '</tbody></table></div><p class="note">'+(U?"Эталон энергии участка: расход простого водителя «полный ход» на сухом рельсе без происшествий. Если поезд не доехал, плюс за энергию не даётся.":"The energy reference of a line is what a plain full-power driver uses on a dry rail with no incidents. A train that does not reach the end gets no energy bonus.")+'</p></details>';
 }
 function rivalsTable(){
   var U = LANG === "ru", h = '<h3>'+(U?"С кем ты соревнуешься на этом рейсе":"Who you race on this run")+'</h3><div class="tbl"><table><thead><tr><th></th><th style="text-align:right">'+(U?"этот рейс":"this run")+'</th><th style="text-align:right">'+(U?"в среднем":"average")+'</th><th>'+(U?"призрак":"ghost")+'</th></tr></thead><tbody>';
@@ -656,10 +692,24 @@ function draw(){
   var st = o.next_stop; if (st && st.dist_m > 0) plan.push({distM: st.dist_m, speed: 0});
   plan.sort(function(a,b){ return a.distM - b.distM; });
   var target = plan.filter(function(p){ return p.speed < o.v_kmh || p.speed === 0; })[0] || null;
-  if (VIEW === "side") TrainScene.draw($("front"), {L: G.L, T: G.T, km: o.km, v: o.v_kmh, t: o.t, ghostKm: gh ? gh[1] : null, ghosts: oth, zones: sceneZones(), weather: G.W.weather, pusher: G.pusher,
+  // симулятор шагает по 0,5 с, а кадров 60 в секунду: между шагами поезд и призраки ставятся по доле до следующего шага, иначе картинка дёргается
+  var fr = (speed > 0 && !G.done()) ? Math.min(1, acc) : 0, tD = o.t + fr * S.DT, kmD = o.km + o.v_kmh / 3.6 * fr * S.DT / 1000;
+  var ghD = (GH && SHOW.extella) ? ghostAt(tD) : null, othD = MODE.kind === "drive" ? othersAt(tD) : [];
+  if (window.TrainAudio) TrainAudio.update({v: o.v_kmh, lever: o.lever, slip: o.slip, sand: o.sand_on, atp: o.atp, emergency: o.emergency, weather: G.W.weather,
+    tunnel: tunnelAt(G.L.id, o.km), line: G.L.id, departed: o.departed, rate: speed, playing: speed > 0 && !G.done() && !$("cab").hidden && !document.hidden});
+  var v3 = VIEW === "3d" && window.Train3D;
+  $("front").hidden = !!v3; $("front3d").hidden = !v3; $("hint3d").hidden = !v3;
+  if (v3) {
+    var ok3 = Train3D.draw($("front3d"), {L: G.L, T: G.T, km: kmD, v: o.v_kmh, t: tD, weather: G.W.weather, pusher: G.pusher, zones: sceneZones(),
+      ghostKm: ghD ? ghD[1] : null, ghostColor: css("--ghost"), ghosts: othD});
+    if (!ok3) { VIEW = "cab"; $("viewbtn").textContent = viewLabel(); $("front").hidden = false; $("front3d").hidden = true; $("hint3d").hidden = true; }
+    else { var st3 = Train3D.status(G.L.id); $("hint3d").textContent = st3 === "loading" ? (U ? "Загружаю рельеф…" : "Loading terrain…") : nf(o.v_kmh) + (U ? " км/ч · км " : " km/h · km ") + nf(o.km, 1) + (U ? " · тяни мышью, чтобы повернуть камеру, колесо приближает" : " · drag to turn the camera, wheel zooms"); }
+  }
+  if (v3) {}
+  else if (VIEW === "side") TrainScene.draw($("front"), {L: G.L, T: G.T, km: kmD, v: o.v_kmh, t: tD, ghostKm: ghD ? ghD[1] : null, ghosts: othD, zones: sceneZones(), weather: G.W.weather, pusher: G.pusher,
     caption: nf(o.v_kmh) + (U ? " км/ч · км " : " km/h · km ") + nf(o.km, 1)});
-  else TrainCab.front($("front"), {L: G.L, km: o.km, v: o.v_kmh, t: o.t, zones: sceneZones(), stations: G.stations.slice(1), weather: G.W.weather,
-    ghostAheadM: gh ? (gh[1] - o.km)*1000 : null, ghosts: oth.map(function(g){ return {d: (g.km - o.km)*1000, color: g.color, label: g.label}; }), stopM: pred && isFinite(pred.m) && !o.at_station ? pred.m : null, stopLabel: U ? "здесь остановишься" : "you stop here"});
+  else TrainCab.front($("front"), {L: G.L, km: kmD, v: o.v_kmh, t: tD, zones: sceneZones(), stations: G.stations.slice(1), weather: G.W.weather,
+    ghostAheadM: ghD ? (ghD[1] - kmD)*1000 : null, ghosts: othD.map(function(g){ return {d: (g.km - kmD)*1000, color: g.color, label: g.label}; }), stopM: pred && isFinite(pred.m) && !o.at_station ? pred.m : null, stopLabel: U ? "здесь остановишься" : "you stop here"});
   TrainCab.dmi($("dmi"), {v: o.v_kmh, perm: o.permitted_kmh, limit: o.limit_kmh, vmax: Math.ceil((G.T.vmax_kmh + 20)/50)*50, target: target ? {speed: target.speed, distM: target.distM} : null,
     ahead: plan.slice(0, 5), atp: !!o.atp || o.emergency, units: {kmh: U?"км/ч":"km/h", km: U?"км":"km", m: U?"м":"m", ahead: U?"ВПЕРЕДИ":"AHEAD", atp: U?"ЗАЩИТА ТОРМОЗИТ":"PROTECTION BRAKING"}});
   TrainScene.strip($("strip"), G.L, o.km, gh ? gh[1] : null, oth);
@@ -694,6 +744,7 @@ function sceneZones(){
 
 
 function finish(){
+  if (window.TrainAudio) TrainAudio.stop();
   var s = G.score(), gh = GH, U = LANG === "ru", beat = s.score > gh.score;
   $("cab").hidden = true; $("result").hidden = false;
   var RV = RIV.map(function(r){ return {r: r, d: rival(r.key, pick.lid, pick.seed)}; }).filter(function(x){ return x.d; });
@@ -703,7 +754,7 @@ function finish(){
   var rtot = RV.map(function(x){ return '<td class="n"><b>'+nf(x.d.score)+'</b></td>'; }).join("");
   var place = 1 + RV.filter(function(x){ return x.d.score > s.score; }).length;
   var h = '<div style="display:flex;flex-direction:column;gap:14px"><h2>'+t("result")+' · '+esc(LINE_NAME(pick.lid))+'</h2>';
-  h += '<div class="res-big"><div><div class="note">'+t("you")+'</div><div class="big">'+nf(s.score)+'</div></div><div><div class="note">Extella</div><div class="big" style="color:var(--ghost)">'+nf(gh.score)+'</div></div><div class="'+(beat?'ok':'rej')+'">'+(beat?t("beat"):t("lost"))+'</div></div>';
+  h += '<div class="res-big"><div><div class="note">'+t("you")+'</div><div class="big">'+nf(s.score)+'</div></div><div><div class="note">'+(U?"Qwen 3.5 9B с Extella":"Qwen 3.5 9B with Extella")+'</div><div class="big" style="color:var(--ghost)">'+nf(gh.score)+'</div></div><div class="'+(beat?'ok':'rej')+'">'+(beat?t("beat"):t("lost"))+'</div></div>';
   h += '<p class="note">'+(LANG==="ru"?"Место среди тебя и моделей: ":"Your place among you and the models: ")+'<b>'+place+'</b> '+(LANG==="ru"?"из ":"of ")+(RV.length+1)+'. '+RV.map(function(x){ return rname(x.r)+': '+nf(x.d.score); }).join(" · ")+'</p>';
   h += breakdown(s, gh);
   h += '<svg id="rc" class="chart" viewBox="0 0 640 240" role="img" aria-label="'+esc(t("chart"))+'"></svg><p class="note">'+t("chart")+'</p>';
@@ -738,7 +789,7 @@ function breakdown(s, gh){
   why.sort(function(a,b){ return Math.abs(b.d) - Math.abs(a.d); });
   var h = '<h3>'+(U?"Где выиграл и где проиграл":"Where you won and lost")+'</h3>';
   h += why.length ? '<ul style="margin:0;padding-left:20px;display:grid;gap:6px">'+why.slice(0,4).map(function(w){ return '<li><span style="color:'+(w.d>=0?'var(--ok)':'var(--limit)')+'">'+(w.d>=0?"+":"−")+nf(Math.abs(w.d))+'</span> '+esc(w.t)+'</li>'; }).join("")+'</ul>' : '<p class="muted">'+(U?"Почти поровну по всем частям счёта.":"Nearly even on every part of the score.")+'</p>';
-  if (rows) h += '<div class="tbl"><table><thead><tr><th>'+(U?"станция":"station")+'</th><th style="text-align:right">'+(U?"ты к графику":"you vs timetable")+'</th><th style="text-align:right">Extella</th><th style="text-align:right">'+(U?"остановка":"stop")+'</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  if (rows) h += '<div class="tbl"><table><thead><tr><th>'+(U?"станция":"station")+'</th><th style="text-align:right">'+(U?"ты к графику":"you vs timetable")+'</th><th style="text-align:right">Qwen 3.5 9B + Extella</th><th style="text-align:right">'+(U?"остановка":"stop")+'</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
   return h;
 }
 function drawResultChart(g, gh){
@@ -762,7 +813,35 @@ setTimeout(function(){ if (dbState === "loading") { dbState = "off"; if (screen 
   if (!DB) { dbState = "off"; if (screen === "board") renderBoard(); return; }
   try { DB.collection("scores").onSnapshot(function(snap){ dbState = "on"; rows = snap.docs.map(function(d){ return {id: d.id, data: d.data()}; }); if (screen === "board") renderBoard(); }, function(){ dbState = "off"; if (screen === "board") renderBoard(); }); } catch (e) { dbState = "off"; }
 })();
+var SITE_API = window.MASH_SITE ? "/api/blocks/train" : null;
+function siteSid(){ var k = "mash_sid", v = null; try { v = localStorage.getItem(k); if (!v) { v = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem(k, v); } } catch (e) { v = v || "anon"; } return v; }
+function driverName(n){ return (LANG === "ru" ? "Машинист №" : "Driver #") + n; }
+async function siteTop(lid, seed){ var r = await fetch(SITE_API + "/top?line=" + lid + "&seed=" + seed + "&session=" + encodeURIComponent(siteSid())); return r.json(); }
+function siteTable(res, lid, seed){
+  var U = LANG === "ru", ex = DATA.ghosts[lid][seed].score, rows = (res && res.rows) || [];
+  if (!rows.length) return '<p class="muted">'+(U?"На этом рейсе ещё никого. Проедь его и отправь результат.":"Nobody has driven this run yet. Drive it and send your result.")+'</p>';
+  var h = '<div class="tbl"><table><thead><tr><th>#</th><th>'+t("name")+'</th><th style="text-align:right">'+t("score")+'</th><th>'+t("vs")+'</th><th class="note">'+(U?"когда":"when")+'</th></tr></thead><tbody>';
+  rows.forEach(function(r, i){ h += '<tr'+(r.you?' style="background:var(--ghost-soft)"':'')+'><td>'+(i+1)+'</td><td>'+esc(driverName(r.driver))+(r.you?' <b>'+(U?"(ты)":"(you)")+'</b>':'')+'</td><td class="n">'+nf(r.score)+'</td><td>'+(r.score > ex ? '<span style="color:var(--ok)">'+(U?"обыграл":"beat it")+'</span>' : '<span class="muted">'+(U?"нет":"no")+'</span>')+'</td><td class="note">'+esc(r.at || "")+'</td></tr>'; });
+  return h + '</tbody></table></div><p class="note">'+(U?"Extella на этом рейсе: ":"Extella on this run: ")+'<b>'+nf(ex)+'</b>. '+(U?"Каждый счёт пересчитан на Extella из журнала решений: страница отправляет не очки, а решения, эксперт train_score переигрывает рейс тем же симулятором.":"Every score is recomputed on Extella from the decision log: the page sends decisions, not points, and the expert train_score replays the run with the same simulator.")+'</p>';
+}
 async function offerSave(score, beat, ex){
+  if (SITE_API && MODE.kind === "drive") {
+    var b = $("savebtn"); if (!b) return; b.hidden = false; b.textContent = LANG === "ru" ? "Отправить в таблицу рекордов" : "Send to the leaderboard";
+    var lid = pick.lid, seed = pick.seed, log = DLOG.slice(0, 25000);
+    b.onclick = async function(){
+      var U = LANG === "ru"; b.disabled = true; b.textContent = U ? "Extella переигрывает рейс…" : "Extella is replaying the run…"; $("savemsg").textContent = U ? "обычно 10–20 секунд" : "usually 10 to 20 seconds";
+      try {
+        var r = await fetch(SITE_API + "/score", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({line: lid, seed: seed, decisions: log, session: siteSid()})});
+        var o = await r.json();
+        if (o.status !== "success") throw new Error((o.problems && o.problems[0]) || o.reason || ("HTTP " + r.status));
+        var same = Math.abs(o.score - score) < 0.05;
+        $("savemsg").innerHTML = (U ? "Пересчитано на Extella: " : "Recomputed on Extella: ") + '<b>' + nf(o.score) + '</b>' + (same ? (U ? ", совпало с твоим счётом" : ", matches your score") : (U ? ", не совпало с игрой: в таблицу пошёл пересчитанный" : ", differs from the game: the recomputed one went in")) + '. ' + (U ? "Место " : "Place ") + o.rank + (U ? " из " : " of ") + o.of + '.';
+        b.textContent = U ? "Отправлено" : "Sent";
+        var box = document.createElement("div"); box.innerHTML = '<h3>'+(U?"Таблица этого рейса":"This run's leaderboard")+'</h3>' + siteTable(await siteTop(lid, seed), lid, seed); $("savemsg").parentNode.after(box);
+      } catch (e) { b.disabled = false; b.textContent = U ? "Отправить ещё раз" : "Send again"; $("savemsg").textContent = (U ? "Не получилось: " : "Did not work: ") + (e && e.message || "error"); }
+    };
+    return;
+  }
   if (!DB || !USER) return;
   var me; try { me = await USER.id(); } catch (e) { return; } if (!me) return;
   var b = $("savebtn"); if (!b) return; b.hidden = false;
@@ -779,6 +858,15 @@ async function offerSave(score, beat, ex){
 }
 async function renderBoard(){
   var el = $("board"), U = LANG === "ru";
+  if (SITE_API) {
+    var lid = window.BOARD_LID || pick.lid, seed = window.BOARD_SEED || pick.seed, opts = "";
+    LIDS.forEach(function(l){ opts += '<option value="'+l+'"'+(l===lid?' selected':'')+'>'+esc(LINE_NAME(l))+'</option>'; });
+    var so = ""; for (var k = 1; k <= 10; k++) so += '<option value="'+k+'"'+(k===seed?' selected':'')+'>'+(U?"Рейс ":"Run ")+k+' · '+T[LANG].weather[DATA.worlds[lid][k].weather]+'</option>';
+    el.innerHTML = '<div style="display:flex;flex-direction:column;gap:14px"><h2>'+t("board_h")+'</h2><p class="note">'+(U?"Таблица своя у каждого рейса: погода, ремонт и задержка у всех одинаковые.":"Each run has its own table: everyone gets the same weather, track work and delay.")+'</p><div class="row"><select id="b-line">'+opts+'</select><select id="b-seed">'+so+'</select></div><div id="b-tab"><p class="muted">'+(U?"Загружаю…":"Loading…")+'</p></div></div>';
+    $("b-line").onchange = function(){ window.BOARD_LID = this.value; renderBoard(); }; $("b-seed").onchange = function(){ window.BOARD_SEED = +this.value; renderBoard(); };
+    try { $("b-tab").innerHTML = siteTable(await siteTop(lid, seed), lid, seed); } catch (e) { $("b-tab").innerHTML = '<p class="muted">'+(U?"Таблица сейчас не отвечает. Попробуй позже.":"The leaderboard is not answering right now. Try later.")+'</p>'; }
+    return;
+  }
   if (dbState === "loading") { el.innerHTML = '<h2>'+t("board_h")+'</h2><p class="muted">'+(U?"Загружаю результаты…":"Loading results…")+'</p>'; return; }
   if (!DB || dbState === "off" || !rows) { el.innerHTML = '<h2>'+t("board_h")+'</h2><p class="muted">'+t("board_off")+'</p>'; return; }
   var ids = rows.map(function(r){ return r.id; }), prof = {};
@@ -788,7 +876,7 @@ async function renderBoard(){
   LIDS.forEach(function(l){
     var list = rows.filter(function(r){ return r.data.best && r.data.best[l]; }).map(function(r){ return {id: r.id, b: r.data.best[l]}; }).sort(function(a,b){ return b.b.score - a.b.score; });
     if (!list.length) return;
-    h += '<h3>'+esc(LINE_NAME(l))+'</h3><div class="tbl"><table><thead><tr><th>'+t("name")+'</th><th style="text-align:right">'+t("best")+'</th><th style="text-align:right">Extella</th><th>'+t("vs")+'</th></tr></thead><tbody>';
+    h += '<h3>'+esc(LINE_NAME(l))+'</h3><div class="tbl"><table><thead><tr><th>'+t("name")+'</th><th style="text-align:right">'+t("best")+'</th><th style="text-align:right">Qwen 3.5 9B + Extella</th><th>'+t("vs")+'</th></tr></thead><tbody>';
     list.forEach(function(r){ var nm = (prof[r.id] && prof[r.id].name) || t("someone");
       h += '<tr><td>'+esc(nm)+' <span class="note">· '+(U?"рейс ":"run ")+r.b.seed+'</span></td><td class="n">'+nf(r.b.score)+'</td><td class="n">'+nf(r.b.extella)+'</td><td>'+(r.b.beat?'<span style="color:var(--ok)">'+(U?"обыграл":"beat it")+'</span>':'<span class="muted">'+(U?"нет":"no")+'</span>')+'</td></tr>'; });
     h += '</tbody></table></div>';
@@ -798,8 +886,12 @@ async function renderBoard(){
 
 /* ---------- тексты ---------- */
 function renderAll(){
-  document.documentElement.lang = LANG; document.title = LANG === "ru" ? "Кабина машиниста" : "Train Driver's Cab";
-  $("eyebrow").textContent = t("eyebrow"); $("h1").textContent = t("h1"); $("lang").textContent = LANG === "ru" ? "EN" : "RU";
+  document.documentElement.lang = LANG; document.title = window.MASH_SITE ? (LANG === "ru" ? "Почувствуй себя машинистом · Extella" : "Feel like a train driver · Extella") : (LANG === "ru" ? "Кабина машиниста" : "Train Driver's Cab");
+  $("eyebrow").textContent = t("eyebrow"); $("h1").textContent = t("h1");
+  if (window.MASH_SITE) {  // на сайте определение Extella первым; таблица рекордов сайта: /api/blocks/train, счёт пересчитывает эксперт train_score
+    $("sitedef").hidden = false;
+    $("sitedef").textContent = LANG === "ru" ? "Extella — расширяемая программная среда, которая связывает ИИ-модели, программные инструменты и устройства в работающие системы. Её технологическое ядро позволяет настраивать и изменять способ исполнения отдельных модулей — от обработки документов до управления датчиками и роботами." : "Extella is an extensible software environment that connects AI models, software tools and devices into working systems. Its core lets you configure and change how each module runs, from document processing to controlling sensors and robots.";
+  } $("lang").textContent = LANG === "ru" ? "EN" : "RU";
   $("nav-lessons").textContent = LANG === "ru" ? "Тренировки" : "Training"; $("nav-drive").textContent = t("drive"); $("nav-board").textContent = t("board");
   var U = LANG === "ru";
   $("k-stop").textContent = t("stop"); $("k-clock").textContent = t("clock"); $("k-pred").textContent = U ? "остановишься через" : "stops in";
@@ -807,7 +899,7 @@ function renderAll(){
   $("b-brake").textContent = t("b_brake"); $("b-coast").textContent = t("b_coast"); $("b-power").textContent = t("b_power");
   $("hints-l").textContent = U?"Подсказки":"Hints"; $("quit").textContent = U?"Выйти":"Leave";
   $("t-sand").textContent = U ? "ПЕСОК" : "SAND"; $("t-emerg").textContent = U ? "ЭКСТРЕННЫЙ" : "EMERGENCY"; $("t-slip").textContent = t("slip"); $("t-atp").textContent = U ? "защита" : "protection";
-  $("sp-0").textContent = t("pause"); $("keys").innerHTML = t("keys"); $("viewbtn").textContent = viewLabel();
+  $("sp-0").textContent = t("pause"); $("keys").innerHTML = t("keys"); $("viewbtn").textContent = viewLabel(); audioLabels();
   renderLesson();
   if (!G) renderPick(); else if (!$("result").hidden) finish();
   if (screen === "board") renderBoard();
