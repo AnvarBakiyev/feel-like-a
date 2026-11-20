@@ -149,7 +149,8 @@ for opt in ("all_indoor", "vulnerable", "none"):
 
 # оценки эксперта в этот вечер: тот же код, что считает их для Extella
 sys.path.insert(0, os.path.join(Z, "extella"))
-from plan_expert import zoo_game_plan  # noqa: E402
+from expert_json import load  # noqa: E402
+zoo_game_plan = load("zoo_game_plan")
 from public_world import public_world  # noqa: E402
 gE = sim.Game(LS["seed"], LS["place"], LS["team"], LS["scenario"], WORLD)
 for t, dec in base_log[:-1]:

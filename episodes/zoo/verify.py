@@ -4,7 +4,7 @@ python3 verify.py
 
 What is checked, for all 27 months (world ny2, seed 1: 3 scenarios x 3 places x 3 team sizes):
 1. Qwen 3.5 9B with Extella (extella/runs/ny2-page/): every evening prompt is rebuilt from the game and the expert
-   and equals the recorded one; the model's last answer gives the recorded plan; the expert code (extella/plan_expert.py,
+   and equals the recorded one; the model's last answer gives the recorded plan; the expert code (extella/experts/zoo_game_plan.json,
    run here locally) turns that plan into exactly the recorded decision; the month replays to the recorded score.
 2. Qwen 3.5 9B without Extella (bench/runs/ny2small_*): prompts rebuilt and equal; the last raw answer gives the
    recorded decision; the month replays to the recorded score.
@@ -22,7 +22,8 @@ for p in (HERE, os.path.join(HERE, "extella"), os.path.join(HERE, "bench")):
     sys.path.insert(0, p)
 import sim, policies  # noqa: E402
 import player as P  # noqa: E402
-from plan_expert import zoo_game_plan  # noqa: E402
+from expert_json import load  # noqa: E402
+zoo_game_plan = load("zoo_game_plan")
 from public_world import public_world  # noqa: E402
 import common as C  # noqa: E402
 

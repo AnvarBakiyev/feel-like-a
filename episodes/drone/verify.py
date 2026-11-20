@@ -8,14 +8,15 @@ What is checked:
 1. Every recorded shift (Extella stages 1-4, Qwen 3.5 9B without Extella, Claude Opus 5 without Extella) replays
    from its decision log to the recorded score and counts (replay.py, strict: forged logs raise).
 2. The prompt each model saw equals the briefing rebuilt now from the world of that seed.
-3. Extella: the plan the model wrote, run through the exact expert version recorded in the run (by sha), gives the
+3. Extella: the plan the model wrote, run through the exact expert version recorded in the run (by sha, from the
+   JSON records in extella/experts/ and extella/versii/), gives the
    same decisions; at stage 4 (the page) the plan check of every model call gives the same verdict, errors and advice.
 4. Without Extella: the rules each model wrote (raw answer), executed literally by noext.execute, give the same decisions.
 5. Programs without AI (careful, simple, the handler with an empty plan) are re-run here.
 6. web/data.json (what the page shows) holds the same decisions and scores.
 7. The averages table in README.md is recomputed and compared number by number.
 """
-import glob, hashlib, importlib.util, json, os, sys, time
+import glob, hashlib, json, os, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EX = os.path.join(HERE, "extella")
@@ -23,6 +24,7 @@ sys.path.insert(0, HERE); sys.path.insert(0, EX)
 import sim, polet, drivers  # noqa: E402
 from replay import replay  # noqa: E402
 import player, noext  # noqa: E402  (no network at import; only the run commands call models)
+from expert_json import load  # noqa: E402  (experts of this episode are Extella records in extella/experts/)
 
 QUICK = "--quick" in sys.argv
 FULL = "--full" in sys.argv
@@ -59,27 +61,34 @@ def norm(x):
     return json.loads(json.dumps(x))
 
 
-def sha_of(path):
-    return hashlib.sha256(open(path, encoding="utf-8").read().rstrip(chr(10)).encode()).hexdigest()[:12]
+def sha_code(code):
+    return hashlib.sha256(code.rstrip(chr(10)).encode()).hexdigest()[:12]
 
 
-def load_expert(path):
-    spec = importlib.util.spec_from_file_location("expert_" + sha_of(path), path)
-    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-    return m
-
-
-experts = {sha_of(os.path.join(EX, "drone_plan.py")): os.path.join(EX, "drone_plan.py")}
-for p in glob.glob(os.path.join(EX, "experts", "drone_plan_*.py")):
-    s = sha_of(p)
-    ok(os.path.basename(p) == "drone_plan_%s.py" % s, "expert file name matches its sha: " + p)
-    experts[s] = p
+# The experts of this episode are JSON records of Extella (extella/experts/), the same ones the episode's agent
+# "Extella Drone Courier" holds in the Extella market. extella/versii/ keeps the earlier versions of drone_plan
+# that flew stages 1 to 3, as the same records, so every recorded run can be rechecked by the code that made it.
+experts = {}
+for folder, who in ((os.path.join(EX, "experts"), "experts"), (os.path.join(EX, "versii"), "versii")):
+    for path in sorted(glob.glob(os.path.join(folder, "*.json"))):
+        r = json.load(open(path, encoding="utf-8"))
+        name = os.path.basename(path)[:-5]
+        ok(r.get("name") == name, "expert record name matches its file: " + path)
+        if name == "drone_shift":
+            continue
+        s = sha_code(r["code"])
+        if who == "versii":
+            ok(name == "drone_plan_%s" % s, "expert version name matches its sha: " + path)
+        experts[s] = r["code"]
 loaded = {}
 
 
 def expert(sha):
+    """The drone_plan function of that version, executed from its record."""
     if sha not in loaded:
-        loaded[sha] = load_expert(experts[sha])
+        ns = {"__name__": "expert_" + sha}
+        exec(compile(experts[sha], "drone_plan_%s.json" % sha, "exec"), ns)
+        loaded[sha] = ns["drone_plan"]
     return loaded[sha]
 
 
@@ -118,12 +127,12 @@ for who, folder in STAGES:
             shas = {m["sha"] for m in J["expert_calls"]}
             ok(len(shas) == 1 and shas <= set(experts), tag + ": expert version %s is published" % shas)
             E = expert(sorted(shas)[0])
-            res = E.drone_plan(J["plan"], seed, city, "run")
+            res = E(J["plan"], seed, city, "run")
             ok(norm(res["decisions"]) == J["decisions"] and res["score"]["score"] == J["score"]["score"],
                tag + ": the plan through the expert gives the recorded decisions")
             if who == "extella4" or FULL:
                 for i, c in enumerate(J["calls"]):
-                    chk = E.drone_plan(c["plan"], seed, city, "check"); n_calls += 1
+                    chk = E(c["plan"], seed, city, "check"); n_calls += 1
                     ok(chk["ok"] == c["ok"] and norm(chk["errors"]) == c["errors"] and norm(chk["forecast"]) == c["forecast"],
                        tag + ": call %d, the plan check gives the recorded verdict and advice" % (i + 1))
     print("   %-8s 30 shifts, %.0f s" % (folder, time.time() - t), flush=True)
@@ -199,6 +208,26 @@ for city in CITIES:
             ok(R[pw]["score"] == rows[who][(city, seed)][0] and R[pw]["decisions"] == decs[who][(city, seed)], "data.json %s %s" % (key, pw))
         for st in (1, 2, 3):
             ok(D["stage%d" % st][key] == rows["extella%d" % st][(city, seed)][0], "data.json %s stage %d" % (key, st))
+
+print("6a. The agent's whole-game expert (extella/experts/drone_shift.json)", flush=True)
+drone_shift = load("drone_shift")
+plan_code = json.load(open(os.path.join(EX, "experts", "drone_plan.json"), encoding="utf-8"))["code"]
+lang = [l for l in plan_code.splitlines() if l.startswith("LANG_VERSION")]
+ok(bool(lang) and lang == [l for l in json.load(open(os.path.join(EX, "experts", "drone_shift.json"), encoding="utf-8"))["code"].splitlines()
+                           if l.startswith("LANG_VERSION")], "drone_shift carries the same flight language version as drone_plan")
+ns = 0
+for city in CITIES:
+    for seed in range(1, 11):
+        J = json.load(open(os.path.join(EX, "runs4b", "%s_s%d.json" % (city, seed)), encoding="utf-8"))
+        r = drone_shift("replay", city, seed, "", J["decisions"])
+        ok(r["score"] == J["score"]["score"], "drone_shift replay %s s%d: %s, recorded %s" % (city, seed, r["score"], J["score"]["score"]))
+        if seed in (1, 7) and not QUICK:
+            out = drone_shift("run", city, seed, J["plan"])
+            ok(out["score"]["score"] == J["score"]["score"] and norm(out["decisions"]) == J["decisions"],
+               "drone_shift run %s s%d gives the recorded shift" % (city, seed))
+            ok(drone_shift("brief", city, seed)["briefing"] == J["briefing"], "drone_shift brief %s s%d is the briefing the model saw" % (city, seed))
+        ns += 1
+print("   %d recorded shifts rechecked through the agent expert" % ns, flush=True)
 
 print("7. Averages (README.md)", flush=True)
 print("   %-34s %8s %8s %9s  %-10s %6s %4s" % ("", "Almaty", "Dubai", "Rotterdam", "delivered", "forced", "lost"))
