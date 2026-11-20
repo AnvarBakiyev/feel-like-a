@@ -1,8 +1,8 @@
 """Calls the zoo expert zoo_game_plan on Extella. Needed only to get new Extella answers; rechecking does not need it.
 
 Environment: EXTELLA_TOKEN_FILE (file with the API key), EXTELLA_AGENT (agent whose scope holds the expert),
-EXTELLA_DEVICE (device_id of the device that runs the expert; CAFE_DEVICE is read too). The expert source is
-plan_expert.py; save() uploads it, run() executes it on the device. ZOO_LOCAL_EXPERT=1 in player.py runs the same
+EXTELLA_DEVICE (device_id of the device that runs the expert; CAFE_DEVICE is read too). The expert is the JSON
+record experts/zoo_game_plan.json; save() uploads its code, run() executes it on the device. ZOO_LOCAL_EXPERT=1 in player.py runs the same
 code locally instead, with the same result (verify.py checks that for every recorded evening).
 """
 import ast, hashlib, json, os, time, urllib.request
@@ -44,7 +44,8 @@ def unwrap(out):
 
 
 def code():
-    return open(os.path.join(HERE, "plan_expert.py"), encoding="utf-8").read()
+    with open(os.path.join(HERE, "experts", NAME + ".json"), encoding="utf-8") as f:
+        return json.load(f)["code"]
 
 
 def code_sha():
