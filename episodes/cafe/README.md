@@ -20,6 +20,8 @@ Wages, rent, supplier prices, card fees and weather come from public sources; ev
 
 Open `web/play.html` in a browser (English by default, Russian with one click). Three short lessons (an order, a shift, a card), then a month against the rivals below on the same world and seed. After each day you see their score for that day and, for the models, the reason they gave in their own words.
 
+Or play in Extella: install the agent **Extella Cafe Month** from the Extella market as a new agent. Each evening you tell it in words what you want for tomorrow; the expert `cafe_month` (the same game and the same `cafe_game_plan` as in this folder) computes the exact orders and shifts and plays the day. The agent also checks a whole month log and returns its score. The agent itself is not in this repository; its experts are, in `extella/experts/`.
+
 | rival | sees | decides each evening | who writes the orders and shifts |
 |---|---|---|---|
 | Qwen 3.5 9B with Extella | the evening's view, like you, plus the expert's dollar estimates for each investment and card | an intent in a short plan language: stock lean/normal/safe, staff lean/normal/safe, price changes of -10..+10%, evening discount, what to buy, card answers | the expert `cafe_game_plan` on Extella turns the intent into exact orders and shifts; the game's check can reject with a reason and the model corrects |
@@ -72,14 +74,14 @@ python3 web/make_parity.py && node web/parity.mjs   # browser sim.js equals sim.
 python3 verify.py          # every published number recomputed from recorded decisions (~1 min)
 ```
 
-No keys or network needed. `verify.py` replays every recorded month and compares the score and every day's score with the run file and with `web/data.json` (what the page shows). It also checks where each decision came from: for Qwen 3.5 9B with Extella, the published expert `extella/plan_expert.py` turns each recorded intent into exactly the recorded decision (810 of 810 evenings); for Qwen 3.5 9B alone, each recorded prompt is rebuilt from the game and each decision is rebuilt from the recorded raw answer (810 of 810). The simple programs are recomputed from `policies.py`.
+No keys or network needed. `verify.py` replays every recorded month and compares the score and every day's score with the run file and with `web/data.json` (what the page shows). It also checks where each decision came from: for Qwen 3.5 9B with Extella, the published expert `extella/experts/cafe_game_plan.json` turns each recorded intent into exactly the recorded decision (810 of 810 evenings); for Qwen 3.5 9B alone, each recorded prompt is rebuilt from the game and each decision is rebuilt from the recorded raw answer (810 of 810). The simple programs are recomputed from `policies.py`.
 
 ## Files
 
 - `sim.py` simulator (`Game`, `observe`, `decide`, `step`, `score`, `replay`), `city_ny.json` the city with source tags, `cards_ny.json` event card texts, `policies.py` and `drivers.py` simple programs, `replay.py` score from a decision log.
 - `web/` the browser game: `sim.js` port of the simulator, `game_src.html` page, `build_data.py` builds `data.json` from the recorded runs, `build_page.py` joins them into one page, `play.html` the ready page.
 - `extella/runs/g14` Qwen 3.5 9B with Extella: per evening the prompt, the raw model answers, the intent, the expert's estimates and decision. `extella/runs/m_qwen` Qwen 3.5 9B alone: prompt, raw answers, decision. `extella/runs/m_opus` Claude Opus 5: decision and its stated reason per evening (the evening text is what `play_cli.py` prints and can be rebuilt by replay; the task text the agent got is not stored).
-- `extella/plan_expert.py` the expert (sha256 prefix `4a9db5d491b0`, as recorded in every g14 run), `player.py` the player with Extella, `player_bare.py` the player without, `play_cli.py` evening-by-evening play for an agent, `llm.py` model calls (Ollama or OpenRouter; key from `OPENROUTER_API_KEY`), `extella_call.py` the call to Extella (ids and key from `EXTELLA_TOKEN_FILE`, `EXTELLA_AGENT`, `EXTELLA_DEVICE`). Comments in these files are in Russian and sometimes point to our internal measurement log, which is not published.
+- `extella/experts/` the experts as Extella stores them (JSON: name, description, cspl, params, code): `cafe_game_plan.json` (sha256 prefix of the code `4a9db5d491b0`, as recorded in every g14 run) and `cafe_month.json`, the whole game in one expert for the agent; `expert_json.py` loads a record and runs it locally, `player.py` the player with Extella, `player_bare.py` the player without, `play_cli.py` evening-by-evening play for an agent, `llm.py` model calls (Ollama or OpenRouter; key from `OPENROUTER_API_KEY`), `extella_call.py` the call to Extella (key and agent from `EXTELLA_TOKEN_FILE`, `EXTELLA_AGENT`). Comments in these files are in Russian and sometimes point to our internal measurement log, which is not published.
 
 ---
 

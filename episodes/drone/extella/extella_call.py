@@ -1,14 +1,19 @@
-"""Calls the drone_plan expert on Extella: save the code, run it on a device, unwrap the answer.
+"""Calls the drone_plan expert on Extella: save the code, run it, unwrap the answer.
 Only needed to get new answers from Extella; rechecking the published results (verify.py) does not need it.
 
+The expert code comes from its record here, extella/experts/drone_plan.json: the same record the episode's agent
+"Extella Drone Courier" holds in the Extella market, where you can also install the agent and play in chat.
+
 Environment: EXTELLA_TOKEN_FILE (file with your API key), EXTELLA_AGENT (the agent whose scope holds the expert),
-EXTELLA_DEVICE (device_id of the machine that runs the expert), EXTELLA_API (optional, default below).
-The expert is one file, drone_plan.py, built by build_expert.py from sim.py, polet.py and world/.
+EXTELLA_DEVICE (device_id of the machine that runs the expert; leave it empty to run in the cloud), EXTELLA_API
+(optional, default below).
 
 python3 extella_call.py save
 python3 extella_call.py run "speed fast|orders per flight 2" 4 rotterdam check
 """
 import ast, hashlib, json, os, time, urllib.request
+
+from expert_json import record
 
 API = os.environ.get("EXTELLA_API", "https://api.extella.ai/api")
 AGENT = os.environ.get("EXTELLA_AGENT", "")
@@ -48,7 +53,7 @@ def unwrap(out):
 
 
 def code():
-    return open(os.path.join(HERE, "drone_plan.py"), encoding="utf-8").read()
+    return record(NAME)["code"]
 
 
 def code_sha():
@@ -58,7 +63,8 @@ def code_sha():
 def save():
     c = code()
     call("/expert/save", {"name": NAME, "description": "Feel like a drone courier: check a shift plan in the flight language and fly the shift.",
-                          "code": c, "kwargs": {"text": "", "seed": 1, "city": "rotterdam", "mode": "check"}, "global": False}, timeout=120)
+                          "code": c, "kwargs": record(NAME).get("params") or {"text": "", "seed": 1, "city": "rotterdam", "mode": "check"},
+                          "global": False}, timeout=120)
     return {"sha": code_sha(), "bytes": len(c.encode())}
 
 
@@ -67,8 +73,10 @@ def run(text, seed, city, mode="check", tries=3):
     for k in range(tries):
         t0 = time.time()
         try:
-            out = call("/expert/run", {"name": NAME, "params": {"text": text, "seed": seed, "city": city, "mode": mode}, "targets": [DEVICE]},
-                       timeout=120)
+            body = {"name": NAME, "params": {"text": text, "seed": seed, "city": city, "mode": mode}}
+            if DEVICE:
+                body["targets"] = [DEVICE]   # without targets the expert runs in the cloud
+            out = call("/expert/run", body, timeout=120)
             if isinstance(out, dict) and out.get("task_id") and "deferred" in json.dumps(out):
                 out = _wait(out["task_id"])
             res = unwrap(out)
