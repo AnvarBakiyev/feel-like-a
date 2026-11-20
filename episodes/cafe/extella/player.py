@@ -57,7 +57,8 @@ def ask_model(messages):
 
 def expert(obs, plan, city):
     if LOCAL_EXPERT:
-        from plan_expert import cafe_game_plan
+        from expert_json import load
+        cafe_game_plan = load("cafe_game_plan")
         t0 = time.time()
         r = json.loads(json.dumps(cafe_game_plan(obs, plan, city)))
         return r, {"where": "local", "sha": X.code_sha(), "seconds": round(time.time() - t0, 3)}

@@ -1,15 +1,19 @@
 """Вызов эксперта train_plan на Extella. Нужен только чтобы заново получить ответы Extella; для перепроверки не нужен.
 
+Код эксперта лежит рядом JSON-записью: extella/experts/train_plan.json (то же, что держит агент игры
+«Extella Train Driver» в маркете Extella). Этот файл берёт код и его sha оттуда и ничего не собирает сам.
+
 Переменные окружения: EXTELLA_TOKEN_FILE (файл с ключом API), EXTELLA_AGENT (агент, в скоупе которого живёт эксперт),
-EXTELLA_DEVICE (device_id устройства, где исполнять эксперта). Эксперт собирается build_expert.py.
+EXTELLA_DEVICE (device_id устройства, где исполнять эксперта; пусто — эксперт идёт в облаке).
 """
-import ast, hashlib, json, os, time, urllib.request
+import ast, json, os, time, urllib.request
+
+import expert_json
 
 API = os.environ.get("EXTELLA_API", "https://api.extella.ai/api")
 AGENT = os.environ.get("EXTELLA_AGENT", "")
 DEVICE = os.environ.get("EXTELLA_DEVICE", "")
 NAME = "train_plan"
-HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def _token():
@@ -42,16 +46,22 @@ def unwrap(out):
 
 
 def code():
-    return open(os.path.join(HERE, "train_plan.py"), encoding="utf-8").read()
+    return expert_json.record(NAME)["code"]
 
 
 def code_sha():
-    return hashlib.sha256(code().rstrip("\n").encode()).hexdigest()[:12]
+    return expert_json.sha(NAME)
+
+
+def local():
+    """Тот же эксперт прямо здесь, без сети и ключа: для перепроверки этого достаточно."""
+    return expert_json.load(NAME)
 
 
 def save():
-    call("/expert/save", {"name": NAME, "description": "Feel like a train driver: check and run a trip plan.", "code": code(),
-                          "kwargs": {"text": "", "seed": 1, "line_id": "de_krm", "mode": "check"}, "global": False}, timeout=60)
+    r = expert_json.record(NAME)
+    call("/expert/save", {"name": NAME, "description": r["description"], "code": r["code"],
+                          "kwargs": r.get("params", {}), "global": False}, timeout=60)
 
 
 def run(text, seed, line_id, mode="check", tries=3):
@@ -59,7 +69,10 @@ def run(text, seed, line_id, mode="check", tries=3):
     for k in range(tries):
         t0 = time.time()
         try:
-            out = call("/expert/run", {"name": NAME, "params": {"text": text, "seed": seed, "line_id": line_id, "mode": mode}, "targets": [DEVICE]})
+            body = {"name": NAME, "params": {"text": text, "seed": seed, "line_id": line_id, "mode": mode}}
+            if DEVICE:
+                body["targets"] = [DEVICE]
+            out = call("/expert/run", body)
             if isinstance(out, dict) and out.get("task_id") and "deferred" in json.dumps(out):
                 out = _wait(out["task_id"])
             res = unwrap(out)

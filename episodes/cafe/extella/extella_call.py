@@ -1,9 +1,11 @@
-"""Call the cafe_game_plan expert on Extella: save the code, run it on a device, unwrap the answer.
+"""Call the cafe_game_plan expert on Extella and unwrap the answer.
 
 Only needed to get new answers from Extella; rechecking published results does not need it (see verify.py).
 
-Environment: EXTELLA_TOKEN_FILE (file with your API key), EXTELLA_AGENT (the agent whose scope holds the expert),
-EXTELLA_DEVICE (device_id where the expert runs), EXTELLA_API (optional). The expert code is plan_expert.py.
+The expert lives in the agent "Extella Cafe Month": install it from the Extella market as a new agent, then set
+EXTELLA_TOKEN_FILE (file with your API key), EXTELLA_AGENT (the id of that agent in your account),
+EXTELLA_DEVICE (optional device_id; without it the expert runs in the cloud), EXTELLA_API (optional).
+The same expert record is in experts/cafe_game_plan.json; code_sha() is the hash the runs record.
 """
 import ast, hashlib, json, os, time, urllib.request
 
@@ -44,20 +46,12 @@ def unwrap(out):
 
 
 def code():
-    return open(os.path.join(HERE, "plan_expert.py"), encoding="utf-8").read()
+    with open(os.path.join(HERE, "experts", NAME + ".json"), encoding="utf-8") as f:
+        return json.load(f)["code"]
 
 
 def code_sha():
     return hashlib.sha256(code().rstrip("\n").encode()).hexdigest()[:12]
-
-
-def save():
-    c = code()
-    call("/expert/save", {"name": NAME, "description": "A month at the cafe: the model's intent and the evening's view -> orders, shifts, dollar estimates.",
-                          "code": c, "kwargs": {"obs": {}, "plan": {}, "city": {}}, "global": False}, timeout=60)
-    back = call("/expert/get", {"name": NAME}, timeout=60)
-    got = back.get("code") or back.get("expert_code") or (back.get("result") or {}).get("code") if isinstance(back, dict) else None
-    return {"sha": code_sha(), "same": (got or "").rstrip("\n") == c.rstrip("\n")}
 
 
 def run(obs, plan, city, tries=3):
