@@ -1,7 +1,7 @@
 """Вызов эксперта train_plan на Extella. Нужен только чтобы заново получить ответы Extella; для перепроверки не нужен.
 
-Код эксперта лежит рядом JSON-записью: extella/experts/train_plan.json (то же, что держит агент игры
-«Extella Train Driver» в маркете Extella). Этот файл берёт код и его sha оттуда и ничего не собирает сам.
+Кода эксперта в этом репозитории нет: он живёт в агенте игры «Extella Train Driver» в маркете Extella
+(extella/experts.lock.json). Поставьте агента новым агентом и укажите его id в EXTELLA_AGENT.
 
 Переменные окружения: EXTELLA_TOKEN_FILE (файл с ключом API), EXTELLA_AGENT (агент, в скоупе которого живёт эксперт),
 EXTELLA_DEVICE (device_id устройства, где исполнять эксперта; пусто — эксперт идёт в облаке).
@@ -45,23 +45,8 @@ def unwrap(out):
     return res
 
 
-def code():
-    return expert_json.record(NAME)["code"]
-
-
 def code_sha():
     return expert_json.sha(NAME)
-
-
-def local():
-    """Тот же эксперт прямо здесь, без сети и ключа: для перепроверки этого достаточно."""
-    return expert_json.load(NAME)
-
-
-def save():
-    r = expert_json.record(NAME)
-    call("/expert/save", {"name": NAME, "description": r["description"], "code": r["code"],
-                          "kwargs": r.get("params", {}), "global": False}, timeout=60)
 
 
 def run(text, seed, line_id, mode="check", tries=3):

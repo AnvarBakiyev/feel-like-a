@@ -13,7 +13,7 @@ Extella is an extensible software environment that connects AI models, software 
 | [Rush hour](episodes/traffic/) | [extella.dev/traffic](https://extella.dev/traffic/) | write rules for a city's traffic lights in a small language, Extella checks them and plays the rush hour |
 | [Template: water tower operator](episodes/_template/) | | copy it to start your own |
 
-Every episode folder has the simulator, the browser page (`web/play.html`), the Extella side (expert or handler code), and `verify.py`, which recomputes every published number on your machine, without keys or network. The train, café, zoo and drone episodes also have the recorded AI runs with prompts and model answers; Rush hour has no AI players, its published check is browser against Extella on 450 rule sets.
+Every episode folder has the simulator, the browser page (`web/play.html`), the Extella side (handler code, and the agent each episode plays with in the Extella market), and `verify.py`, which recomputes every published number on your machine, without keys or network. The Extella experts themselves are not in this repository: each episode's `extella/experts.lock.json` names its agent in the Extella market and the sha of every expert version the runs used, and `verify.py --extella` checks the expert decisions through that agent. Short results of all games: [RESULTS.md](RESULTS.md). The train, café, zoo and drone episodes also have the recorded AI runs with prompts and model answers; Rush hour has no AI players, its published check is browser against Extella on 450 rule sets.
 
 ## Why
 

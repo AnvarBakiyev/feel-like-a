@@ -1,12 +1,19 @@
-"""Recomputes every published number of this episode from recorded decisions. No keys, no network.
+"""Recomputes every published number of this episode from recorded decisions.
 
-python3 verify.py
+python3 verify.py                  no keys, no network: checks 1, 2, 4, 5 and the expert version against the runs
+python3 verify.py --extella        also check 3 and the agent's whole-month expert, on Extella (about 30 minutes;
+                                   answers are cached, a second run is fast)
+python3 verify.py --extella-quick  check 3 on the first evening of every month, plus the whole-month expert
+
+The Extella experts are not in this repository: they live in the agent "Extella Cafe Month" in the Extella market
+(extella/experts.lock.json). For --extella install that agent as a new agent and set EXTELLA_TOKEN_FILE and
+EXTELLA_AGENT (see extella/expert_json.py).
 
 What it checks:
 1. every recorded month (extella/runs/g14, m_qwen, m_opus) replays to its recorded score and day-by-day scores;
 2. web/data.json (what the page shows) holds exactly those numbers, and every rival on the page has a recorded month;
-3. Qwen 3.5 9B with Extella: each evening, the published expert extella/experts/cafe_game_plan.json turns the recorded intent
-   into exactly the recorded decision (so the decision came from this code, not from an edit);
+3. Qwen 3.5 9B with Extella (--extella): each evening, the expert cafe_game_plan of the agent in the Extella market turns
+   the recorded intent into exactly the recorded decision (so the decision came from that expert, not from an edit);
 4. Qwen 3.5 9B alone: each evening's recorded prompt is the text the player builds from the game, and the decision
    is the recorded raw answer passed through player_bare.to_decision (or nothing, when no answer passed);
 5. the simple programs on the page (careful, plenty, thrifty, bare) are recomputed from policies.py.
@@ -18,8 +25,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE); sys.path.insert(1, os.path.join(HERE, "extella"))
 import sim, policies  # noqa: E402
 from replay import daily  # noqa: E402
-from expert_json import load, sha as expert_sha  # noqa: E402
+from expert_json import load, sha as expert_sha, available, how  # noqa: E402
 cafe_game_plan = load("cafe_game_plan")
+EXT = "--extella" in sys.argv or "--extella-quick" in sys.argv
+QUICK = "--extella-quick" in sys.argv
+if EXT and not available():
+    sys.exit("--extella " + how())
 from public_city import public_city  # noqa: E402
 import player_bare  # noqa: E402
 
@@ -67,7 +78,7 @@ for run, (sect, sub) in RUNS.items():
         city = public_city(s["street"]) if run == "g14" else None
         for e in d["evenings"]:
             obs = g.observe(); evenings += 1
-            if run == "g14":
+            if run == "g14" and EXT and not (QUICK and expert_all >= len(scores[run])):
                 out = canon(cafe_game_plan(canon(obs), e["plan"], city))
                 expert_all += 1; expert_same += out["decision"] == e["decision"]
             if run == "m_qwen":
@@ -78,9 +89,11 @@ for run, (sect, sub) in RUNS.items():
             g.decide(e["decision"]); g.step()
     n = len(scores[run])
     print("%-26s %2d months replayed" % (NAMES[run], n), end="")
-    if run == "g14":
-        print(", expert gave the recorded decision on %d of %d evenings" % (expert_same, expert_all), end="")
+    if run == "g14" and EXT:
+        print(", expert on Extella gave the recorded decision on %d of %d evenings" % (expert_same, expert_all), end="")
         check(expert_same == expert_all, "g14: expert decisions differ")
+    elif run == "g14":
+        print(", expert check skipped (run with --extella)", end="")
     if run == "m_qwen":
         print(", prompt rebuilt %d/%d, decision from raw answer %d/%d" % (prompt_same, evenings, dec_same, evenings), end="")
         check(prompt_same == evenings and dec_same == evenings, "m_qwen: prompts or decisions differ")
@@ -108,20 +121,18 @@ for world in sorted(DATA["careful"]):
         prog.setdefault(name, {})[world] = ds[-1]
 print("simple programs: %d worlds x 4 recomputed" % len(prog["careful"]))
 
-# the agent's whole-game expert (extella/experts/cafe_month.json) carries the same plan expert and the same game
-cafe_month = load("cafe_month")
-plan_code = json.load(open(os.path.join(HERE, "extella", "experts", "cafe_game_plan.json"), encoding="utf-8"))["code"]
-month_code = json.load(open(os.path.join(HERE, "extella", "experts", "cafe_month.json"), encoding="utf-8"))["code"]
-check(plan_code.rstrip("\n") in month_code, "cafe_month: the plan expert inside differs from cafe_game_plan")
+# the expert version in the market is the one the runs record
 check(expert_sha("cafe_game_plan") == "4a9db5d491b0", "cafe_game_plan: sha %s, runs record 4a9db5d491b0" % expert_sha("cafe_game_plan"))
+# the agent's whole-month expert cafe_month (on Extella) gives the recorded score from the recorded decisions
+cafe_month = load("cafe_month")
 nm = 0
-for fn in sorted(os.listdir(os.path.join(HERE, "extella", "runs", "g14"))):
+for fn in sorted(os.listdir(os.path.join(HERE, "extella", "runs", "g14"))) if EXT else []:
     if fn.endswith("_s1.json"):
         d = json.load(open(os.path.join(HERE, "extella", "runs", "g14", fn), encoding="utf-8"))
         c = d["combo"]
         got = cafe_month("check", c["street"], c["money"], c["scenario"], c["seed"], [[e["day"], e["decision"]] for e in d["evenings"]])["score"]["score"]
         check(abs(got - d["score"]["score"]) < EPS, "cafe_month/%s: %.2f, recorded %.2f" % (fn, got, d["score"]["score"])); nm += 1
-print("agent expert cafe_month: %d months checked to the recorded score" % nm)
+print("agent expert cafe_month on Extella: %d months checked to the recorded score" % nm if EXT else "agent expert cafe_month: skipped (run with --extella)")
 
 
 def money(x):

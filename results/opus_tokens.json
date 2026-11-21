@@ -1,0 +1,371 @@
+{
+ "what": "Tokens Claude Opus used to play each month of the cafe and zoo episodes without Extella. Opus played as an agent in Claude Code chat (subagent per month); the numbers are the usage fields Anthropic returned for every request of that subagent, summed, each request counted once. They include the chat agent's own system prompt and tool traffic, so a bare API call with only the game text would cost less. The chat transcripts themselves are not published.",
+ "prices_usd_per_million": {
+  "claude-opus-5": {
+   "input": 5,
+   "output": 25,
+   "cache_write": 6.25,
+   "cache_read": 0.5
+  },
+  "claude-opus-5-5": {
+   "input": 4,
+   "output": 20,
+   "cache_write": 5,
+   "cache_read": 0.2
+  }
+ },
+ "cafe": {
+  "runs": "episodes/cafe/extella/runs/m_opus",
+  "months": {
+   "calm_corridor_mid": {
+    "model": "claude-opus-5",
+    "requests": 34,
+    "input_tokens": 68,
+    "cache_creation_input_tokens": 168420,
+    "cache_read_input_tokens": 4852498,
+    "output_tokens": 90655,
+    "usd": 5.7456
+   },
+   "calm_district_high": {
+    "model": "claude-opus-5",
+    "requests": 35,
+    "input_tokens": 70,
+    "cache_creation_input_tokens": 136526,
+    "cache_read_input_tokens": 4435312,
+    "output_tokens": 58548,
+    "usd": 4.535
+   },
+   "calm_district_low": {
+    "model": "claude-opus-5",
+    "requests": 36,
+    "input_tokens": 72,
+    "cache_creation_input_tokens": 128355,
+    "cache_read_input_tokens": 4467623,
+    "output_tokens": 49936,
+    "usd": 4.2848
+   },
+   "calm_district_mid": {
+    "model": "claude-opus-5",
+    "requests": 31,
+    "input_tokens": 62,
+    "cache_creation_input_tokens": 156939,
+    "cache_read_input_tokens": 3753311,
+    "output_tokens": 46872,
+    "usd": 4.0296
+   },
+   "calm_quiet_mid": {
+    "model": "claude-opus-5",
+    "requests": 33,
+    "input_tokens": 66,
+    "cache_creation_input_tokens": 143866,
+    "cache_read_input_tokens": 4380288,
+    "output_tokens": 66436,
+    "usd": 4.7505
+   },
+   "competitor_corridor_mid": {
+    "model": "claude-opus-5",
+    "requests": 34,
+    "input_tokens": 68,
+    "cache_creation_input_tokens": 138427,
+    "cache_read_input_tokens": 4180801,
+    "output_tokens": 59575,
+    "usd": 4.4453
+   },
+   "competitor_district_mid": {
+    "model": "claude-opus-5",
+    "requests": 34,
+    "input_tokens": 68,
+    "cache_creation_input_tokens": 142257,
+    "cache_read_input_tokens": 4373419,
+    "output_tokens": 63277,
+    "usd": 4.6581
+   },
+   "competitor_quiet_mid": {
+    "model": "claude-opus-5",
+    "requests": 36,
+    "input_tokens": 72,
+    "cache_creation_input_tokens": 142842,
+    "cache_read_input_tokens": 4661764,
+    "output_tokens": 57611,
+    "usd": 4.6643
+   },
+   "winter_corridor_mid": {
+    "model": "claude-opus-5",
+    "requests": 32,
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 120048,
+    "cache_read_input_tokens": 3762440,
+    "output_tokens": 41894,
+    "usd": 3.6792
+   },
+   "winter_district_mid": {
+    "model": "claude-opus-5",
+    "requests": 33,
+    "input_tokens": 66,
+    "cache_creation_input_tokens": 136577,
+    "cache_read_input_tokens": 4175791,
+    "output_tokens": 58524,
+    "usd": 4.4049
+   },
+   "winter_quiet_mid": {
+    "model": "claude-opus-5",
+    "requests": 37,
+    "input_tokens": 74,
+    "cache_creation_input_tokens": 133905,
+    "cache_read_input_tokens": 4651528,
+    "output_tokens": 53369,
+    "usd": 4.4973
+   }
+  },
+  "total_usd": 49.69
+ },
+ "zoo": {
+  "runs": "episodes/zoo/bench/runs/ny2opus_*",
+  "months": {
+   "flu_park_large": {
+    "cache_creation_input_tokens": 92079,
+    "cache_read_input_tokens": 3501918,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15934,
+    "requests": 34,
+    "usd": 1.4797
+   },
+   "flu_park_mid": {
+    "cache_creation_input_tokens": 126249,
+    "cache_read_input_tokens": 3350608,
+    "input_tokens": 66,
+    "model": "claude-opus-5-5",
+    "output_tokens": 16590,
+    "requests": 33,
+    "usd": 1.6334
+   },
+   "flu_park_small": {
+    "cache_creation_input_tokens": 94258,
+    "cache_read_input_tokens": 3643541,
+    "input_tokens": 70,
+    "model": "claude-opus-5-5",
+    "output_tokens": 18024,
+    "requests": 35,
+    "usd": 1.5608
+   },
+   "flu_subway_large": {
+    "cache_creation_input_tokens": 91853,
+    "cache_read_input_tokens": 3368496,
+    "input_tokens": 66,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15817,
+    "requests": 33,
+    "usd": 1.4496
+   },
+   "flu_subway_mid": {
+    "cache_creation_input_tokens": 126431,
+    "cache_read_input_tokens": 3473452,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 16343,
+    "requests": 34,
+    "usd": 1.654
+   },
+   "flu_subway_small": {
+    "cache_creation_input_tokens": 91533,
+    "cache_read_input_tokens": 3703204,
+    "input_tokens": 72,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15328,
+    "requests": 36,
+    "usd": 1.5052
+   },
+   "flu_waterfront_large": {
+    "cache_creation_input_tokens": 91110,
+    "cache_read_input_tokens": 3501324,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15420,
+    "requests": 34,
+    "usd": 1.4645
+   },
+   "flu_waterfront_mid": {
+    "cache_creation_input_tokens": 126384,
+    "cache_read_input_tokens": 3472999,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 16372,
+    "requests": 34,
+    "usd": 1.6542
+   },
+   "flu_waterfront_small": {
+    "cache_creation_input_tokens": 92820,
+    "cache_read_input_tokens": 3510881,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 16457,
+    "requests": 34,
+    "usd": 1.4957
+   },
+   "heat_park_large": {
+    "cache_creation_input_tokens": 92970,
+    "cache_read_input_tokens": 3520920,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 17333,
+    "requests": 34,
+    "usd": 1.516
+   },
+   "heat_park_mid": {
+    "cache_creation_input_tokens": 125513,
+    "cache_read_input_tokens": 3751711,
+    "input_tokens": 74,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15037,
+    "requests": 37,
+    "usd": 1.6789
+   },
+   "heat_park_small": {
+    "cache_creation_input_tokens": 93858,
+    "cache_read_input_tokens": 3639204,
+    "input_tokens": 70,
+    "model": "claude-opus-5-5",
+    "output_tokens": 17209,
+    "requests": 35,
+    "usd": 1.5416
+   },
+   "heat_subway_large": {
+    "cache_creation_input_tokens": 91826,
+    "cache_read_input_tokens": 3496324,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15721,
+    "requests": 34,
+    "usd": 1.4731
+   },
+   "heat_subway_mid": {
+    "cache_creation_input_tokens": 129206,
+    "cache_read_input_tokens": 3916743,
+    "input_tokens": 76,
+    "model": "claude-opus-5-5",
+    "output_tokens": 18778,
+    "requests": 38,
+    "usd": 1.8052
+   },
+   "heat_subway_small": {
+    "cache_creation_input_tokens": 95772,
+    "cache_read_input_tokens": 3772716,
+    "input_tokens": 72,
+    "model": "claude-opus-5-5",
+    "output_tokens": 18919,
+    "requests": 36,
+    "usd": 1.6121
+   },
+   "heat_waterfront_large": {
+    "cache_creation_input_tokens": 90803,
+    "cache_read_input_tokens": 3493190,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 14989,
+    "requests": 34,
+    "usd": 1.4527
+   },
+   "heat_waterfront_mid": {
+    "cache_creation_input_tokens": 126783,
+    "cache_read_input_tokens": 3685462,
+    "input_tokens": 72,
+    "model": "claude-opus-5-5",
+    "output_tokens": 16451,
+    "requests": 36,
+    "usd": 1.7003
+   },
+   "heat_waterfront_small": {
+    "cache_creation_input_tokens": 91601,
+    "cache_read_input_tokens": 3603299,
+    "input_tokens": 70,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15549,
+    "requests": 35,
+    "usd": 1.4899
+   },
+   "spring_park_large": {
+    "cache_creation_input_tokens": 93865,
+    "cache_read_input_tokens": 3537933,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 18254,
+    "requests": 34,
+    "usd": 1.5423
+   },
+   "spring_park_mid": {
+    "cache_creation_input_tokens": 128414,
+    "cache_read_input_tokens": 3511880,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 18839,
+    "requests": 34,
+    "usd": 1.7215
+   },
+   "spring_park_small": {
+    "cache_creation_input_tokens": 94433,
+    "cache_read_input_tokens": 3627069,
+    "input_tokens": 70,
+    "model": "claude-opus-5-5",
+    "output_tokens": 17901,
+    "requests": 35,
+    "usd": 1.5559
+   },
+   "spring_subway_large": {
+    "cache_creation_input_tokens": 91713,
+    "cache_read_input_tokens": 3681108,
+    "input_tokens": 72,
+    "model": "claude-opus-5-5",
+    "output_tokens": 15592,
+    "requests": 36,
+    "usd": 1.5069
+   },
+   "spring_subway_mid": {
+    "cache_creation_input_tokens": 129348,
+    "cache_read_input_tokens": 3618604,
+    "input_tokens": 70,
+    "model": "claude-opus-5-5",
+    "output_tokens": 19111,
+    "requests": 35,
+    "usd": 1.753
+   },
+   "spring_subway_small": {
+    "cache_creation_input_tokens": 97260,
+    "cache_read_input_tokens": 3684571,
+    "input_tokens": 70,
+    "model": "claude-opus-5-5",
+    "output_tokens": 21051,
+    "requests": 35,
+    "usd": 1.6445
+   },
+   "spring_waterfront_large": {
+    "cache_creation_input_tokens": 93235,
+    "cache_read_input_tokens": 3286826,
+    "input_tokens": 64,
+    "model": "claude-opus-5-5",
+    "output_tokens": 17242,
+    "requests": 32,
+    "usd": 1.4686
+   },
+   "spring_waterfront_mid": {
+    "cache_creation_input_tokens": 129941,
+    "cache_read_input_tokens": 3493679,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 20026,
+    "requests": 34,
+    "usd": 1.7492
+   },
+   "spring_waterfront_small": {
+    "cache_creation_input_tokens": 94394,
+    "cache_read_input_tokens": 3513778,
+    "input_tokens": 68,
+    "model": "claude-opus-5-5",
+    "output_tokens": 18479,
+    "requests": 34,
+    "usd": 1.5446
+   }
+  },
+  "total_usd": 42.65
+ }
+}

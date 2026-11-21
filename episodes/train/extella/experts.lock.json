@@ -1,0 +1,49 @@
+{
+ "agent": {
+  "name": "Extella Train Driver",
+  "version": "1.0.0",
+  "where": "Extella market, search by name"
+ },
+ "note": "Expert code is not in this repository. It lives in the agent above in the Extella market; sha = first 12 hex of sha256 of the code. Versions with in_market=false were used by earlier runs only.",
+ "experts": [
+  {
+   "name": "train_plan",
+   "description": "Feel like a train driver: the check of a trip plan written in the trip language (mode=check) and the trip itself by an accepted plan in the world of the seed (mode=run). This is the expert the recorded runs of the benchmark were played with.",
+   "cspl": "fython",
+   "args": [
+    "text",
+    "seed",
+    "line_id",
+    "mode"
+   ],
+   "sha": "7264d4b6b4ad",
+   "in_market": true
+  },
+  {
+   "name": "train_score",
+   "description": "Feel like a train driver: recomputes a trip from a human player's log of decisions with the same simulator the game runs, for the shared leaderboard.",
+   "cspl": "fython",
+   "args": [
+    "line",
+    "seed",
+    "decisions"
+   ],
+   "sha": "a9150e581df4",
+   "in_market": true
+  },
+  {
+   "name": "train_trip",
+   "description": "Feel like a train driver, the whole episode in one expert: mode=brief gives what the driver knows before departure and the trip language; mode=check runs the plan against the forecast and refuses it with the kilometre and the reason; mode=run drives the trip in the world of the seed and returns the score with its parts; mode=score replays a player's log for the leaderboard.",
+   "cspl": "fython",
+   "args": [
+    "mode",
+    "line",
+    "seed",
+    "plan",
+    "decisions"
+   ],
+   "sha": "e3e4b4f66152",
+   "in_market": true
+  }
+ ]
+}

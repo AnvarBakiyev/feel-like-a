@@ -1,9 +1,9 @@
 """Calls the zoo expert zoo_game_plan on Extella. Needed only to get new Extella answers; rechecking does not need it.
 
 Environment: EXTELLA_TOKEN_FILE (file with the API key), EXTELLA_AGENT (agent whose scope holds the expert),
-EXTELLA_DEVICE (device_id of the device that runs the expert; CAFE_DEVICE is read too). The expert is the JSON
-record experts/zoo_game_plan.json; save() uploads its code, run() executes it on the device. ZOO_LOCAL_EXPERT=1 in player.py runs the same
-code locally instead, with the same result (verify.py checks that for every recorded evening).
+EXTELLA_DEVICE (device_id of the device that runs the expert; CAFE_DEVICE is read too). The expert is not in this
+repository: it lives in the agent "Extella Zoo Month" in the Extella market (extella/experts.lock.json); install that
+agent as a new agent and set EXTELLA_AGENT to its id. run() executes the expert on Extella.
 """
 import ast, hashlib, json, os, time, urllib.request
 
@@ -43,19 +43,10 @@ def unwrap(out):
     return res
 
 
-def code():
-    with open(os.path.join(HERE, "experts", NAME + ".json"), encoding="utf-8") as f:
-        return json.load(f)["code"]
-
-
 def code_sha():
-    return hashlib.sha256(code().rstrip("\n").encode()).hexdigest()[:12]
-
-
-def save():
-    call("/expert/save", {"name": NAME, "description": "Zoo: the model's plan and the evening observation -> thaw, orders, shifts, estimates in dollars.",
-                          "code": code(), "kwargs": {"obs": {}, "plan": {}, "world": {}}, "global": False}, timeout=60)
-    return {"sha": code_sha()}
+    """sha of the expert version in the episode's agent, from extella/experts.lock.json."""
+    import expert_json
+    return expert_json.sha(NAME)
 
 
 def run(obs, plan, world, tries=3, net_wait=600):

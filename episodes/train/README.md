@@ -14,7 +14,7 @@ Every number has a source tag in `lines/` and `trains/` (`_tag`, `_sources`): P 
 
 Open `web/play.html` in a browser. Five short drills teach the controls; then pick a line and a run. Your rivals on the same run (same weather, track work, delay and train ahead):
 
-Or play in Extella: install the agent **Extella Train Driver** from the Extella market as a new agent. You say in words how you want to run the trip; the expert `train_trip` (the same simulator, trip language and check as in this folder) refuses a plan with the kilometre and the reason when the train would stall or run late, then drives the whole trip and returns the score. The agent also rechecks a player's log for the leaderboard. The agent itself is not in this repository; its experts are, in `extella/experts/`.
+Or play in Extella: install the agent **Extella Train Driver** from the Extella market as a new agent. You say in words how you want to run the trip; the expert `train_trip` (the same simulator, trip language and check as in this folder) refuses a plan with the kilometre and the reason when the train would stall or run late, then drives the whole trip and returns the score. The agent also rechecks a player's log for the leaderboard. The agent and its experts are not in this repository; `extella/experts.lock.json` names the agent and the sha of every expert version the runs used.
 
 | rival | sees | decides | who drives |
 |---|---|---|---|
@@ -39,7 +39,7 @@ No keys or network needed: model answers are stored in `extella/`, scores are re
 
 ## Files
 
-`sim.py` simulator (0.5 s step, Davis/Strahl resistance, adhesion, ETCS-like braking curves with grade), `drivers.py` simple programs, `poezdka.py` trip language and handler, `replay.py` score from a decision log, `verify.py` full recheck, `web/` browser game (`sim.js`, `scene.js` side view, `cab.js` cab view and display), `extella/` model runs and the code that produced them (`extella_call.py` reads ids and key from environment variables), `extella/experts/` the experts as Extella JSON records: `expert_json.load("train_plan")` runs one right here, with no key and no network.
+`sim.py` simulator (0.5 s step, Davis/Strahl resistance, adhesion, ETCS-like braking curves with grade), `drivers.py` simple programs, `poezdka.py` trip language and handler, `replay.py` score from a decision log, `verify.py` full recheck, `web/` browser game (`sim.js`, `scene.js` side view, `cab.js` cab view and display), `extella/` model runs and the code that produced them (`extella_call.py` reads ids and key from environment variables), `extella/experts.lock.json` the experts of the market agent by sha; `expert_json.load("train_plan")` calls one on Extella through the installed agent.
 
 ---
 

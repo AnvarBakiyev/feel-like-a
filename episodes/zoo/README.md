@@ -29,7 +29,7 @@ Open `web/play.html` in a browser. Three short lessons (a shift the rulebook rej
 
 The three models play under the same rulebook check; a rejected decision goes back with the reason, up to two corrections an evening.
 
-Or play in Extella: install the agent **Extella Zoo Month** from the Extella market as a new agent. Each evening you tell it in words how much feed and staff you want for tomorrow; the expert `zoo_month` (the same simulator, world ny2 and the same `zoo_game_plan` as in this folder) computes the exact thaw, orders, shifts and ticket price and plays the day. The agent also checks a whole month log and returns its score. The agent itself is not in this repository; its experts are, in `extella/experts/`.
+Or play in Extella: install the agent **Extella Zoo Month** from the Extella market as a new agent. Each evening you tell it in words how much feed and staff you want for tomorrow; the expert `zoo_month` (the same simulator, world ny2 and the same `zoo_game_plan` as in this folder) computes the exact thaw, orders, shifts and ticket price and plays the day. The agent also checks a whole month log and returns its score. The agent and its experts are not in this repository; `extella/experts.lock.json` names the agent and the sha of every expert version the runs used.
 
 ## Results
 
@@ -62,15 +62,16 @@ python3 test_sim.py        # one seed, one month to the byte; hidden state stays
 python3 test_replay.py     # decision logs replay to the recorded score; bad logs raise ValueError; Python 3.12+
 python3 web/make_parity.py ny2 && node web/parity.mjs   # browser sim.js equals sim.py to the last digit
 python3 verify.py          # every published number from the recorded runs (a few seconds)
+python3 verify.py --extella   # plus the expert checks, through the episode's agent on Extella
 ```
 
-`verify.py` needs no keys or network. For every evening of every month it rebuilds the prompt each model saw and compares it with the recorded one, turns the recorded answer into the decision again (for Extella: the model's plan goes through the expert record `extella/experts/zoo_game_plan.json`, its code run locally, and gives exactly the decision the expert returned on Extella), replays all four players to their scores, and checks the table above and the data inside `web/play.html`.
+`verify.py` needs no keys or network. For every evening of every month it turns the recorded answer into the plan or decision again, replays all four players to their scores, and checks the table above and the data inside `web/play.html`. The expert code is not in this repository: it lives in the agent **Extella Zoo Month** in the Extella market, and `extella/experts.lock.json` keeps the sha of the version the runs used. With the agent installed as a new agent (`EXTELLA_TOKEN_FILE`, `EXTELLA_AGENT`, see `extella/expert_json.py`), `verify.py --extella` also rebuilds every Extella prompt and checks that the expert turns the model's plan into exactly the recorded decision.
 
 To play new months against real models: `run_ny2_all.py` (Qwen 3.5 9B through OpenRouter, keys from environment variables, see `extella/llm.py` and `extella/extella_call.py`), `bench/opus.sh` (a model in Claude Code plays through `bench/closed.py start|act|result`).
 
 ## Files
 
-`sim.py` simulator (`det.py` shared generator), `replay.py` score from a decision log, `policies.py` and `drivers.py` simple programs, `world_ny2.json` the world of the published runs (`world_ny.json` the earlier balance), `cards_ny.json` event card texts, `verify.py` full recheck, `web/` browser game (`sim.js` port, `scene.js` live map, `audio.js`, `build_data.py` and `build_page.py` rebuild the page data and a one-file page), `extella/` Extella side (`experts/` the experts as Extella JSON records: `zoo_game_plan` the plan expert, `zoo_month` the whole game in one expert for the agent; `expert_json.py` loads them, `player.py` the evening loop, `runs/ny2-page/` the 27 recorded months with prompts and raw answers), `bench/` rivals without Extella (`common.py` the evening text, `closed.py` the Claude Code harness, `noext.py` the small model, `runs/` their 54 recorded months).
+`sim.py` simulator (`det.py` shared generator), `replay.py` score from a decision log, `policies.py` and `drivers.py` simple programs, `world_ny2.json` the world of the published runs (`world_ny.json` the earlier balance), `cards_ny.json` event card texts, `verify.py` full recheck, `web/` browser game (`sim.js` port, `scene.js` live map, `audio.js`, `build_data.py` and `build_page.py` rebuild the page data and a one-file page), `extella/` Extella side (`experts.lock.json` the experts of the market agent by sha: `zoo_game_plan` the plan expert, `zoo_month` the whole game in one expert; `expert_json.py` calls them on Extella, `player.py` the evening loop, `runs/ny2-page/` the 27 recorded months with prompts and raw answers), `bench/` rivals without Extella (`common.py` the evening text, `closed.py` the Claude Code harness, `noext.py` the small model, `runs/` their 54 recorded months).
 
 ---
 
@@ -80,4 +81,4 @@ To play new months against real models: `run_ny2_all.py` (Qwen 3.5 9B through Op
 
 На 27 месяцах Qwen 3.5 9B с Extella первый во всех 27: в среднем $311 671 за месяц, программа на Python $263 043, Claude Opus 5.5 без Extella $232 054, Qwen 3.5 9B без Extella −$45 782. `python3 verify.py` пересчитывает всё это из записанных решений без ключей и сети. Предсказания до прогонов и итоги: `PREDSKAZANIYA.md`, источники цифр: `istochniki.md`.
 
-Сыграть можно и в Extella: поставь из маркета Extella агента **Extella Zoo Month** новым агентом. Каждый вечер говоришь ему словами, сколько корма и людей нужно на завтра; эксперт `zoo_month` (тот же симулятор, мир ny2 и тот же `zoo_game_plan`, что в этой папке) считает точную разморозку, заказы, смены и цену билета и проигрывает день. Ещё агент проверяет журнал целого месяца и возвращает счёт. Самого агента в репозитории нет, его эксперты лежат в `extella/experts/` JSON-записями.
+Сыграть можно и в Extella: поставь из маркета Extella агента **Extella Zoo Month** новым агентом. Каждый вечер говоришь ему словами, сколько корма и людей нужно на завтра; эксперт `zoo_month` (тот же симулятор, мир ny2 и тот же `zoo_game_plan`, что в этой папке) считает точную разморозку, заказы, смены и цену билета и проигрывает день. Ещё агент проверяет журнал целого месяца и возвращает счёт. Ни агента, ни кода его экспертов в репозитории нет: в `extella/experts.lock.json` имя агента и отпечатки (sha) версий экспертов.
