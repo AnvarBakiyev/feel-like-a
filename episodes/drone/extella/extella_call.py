@@ -1,14 +1,13 @@
-"""Calls the drone_plan expert on Extella: save the code, run it, unwrap the answer.
-Only needed to get new answers from Extella; rechecking the published results (verify.py) does not need it.
+"""Calls the drone_plan expert on Extella and unwraps the answer.
+Only needed to get new answers from Extella; verify.py --extella uses extella/expert_json.py instead.
 
-The expert code comes from its record here, extella/experts/drone_plan.json: the same record the episode's agent
-"Extella Drone Courier" holds in the Extella market, where you can also install the agent and play in chat.
+The expert is not in this repository: it lives in the episode's agent "Extella Drone Courier" in the Extella market
+(extella/experts.lock.json). Install that agent as a new agent; you can also play the game with it in chat.
 
 Environment: EXTELLA_TOKEN_FILE (file with your API key), EXTELLA_AGENT (the agent whose scope holds the expert),
 EXTELLA_DEVICE (device_id of the machine that runs the expert; leave it empty to run in the cloud), EXTELLA_API
 (optional, default below).
 
-python3 extella_call.py save
 python3 extella_call.py run "speed fast|orders per flight 2" 4 rotterdam check
 """
 import ast, hashlib, json, os, time, urllib.request
@@ -52,20 +51,10 @@ def unwrap(out):
     return res
 
 
-def code():
-    return record(NAME)["code"]
-
-
 def code_sha():
-    return hashlib.sha256(code().rstrip(chr(10)).encode()).hexdigest()[:12]
-
-
-def save():
-    c = code()
-    call("/expert/save", {"name": NAME, "description": "Feel like a drone courier: check a shift plan in the flight language and fly the shift.",
-                          "code": c, "kwargs": record(NAME).get("params") or {"text": "", "seed": 1, "city": "rotterdam", "mode": "check"},
-                          "global": False}, timeout=120)
-    return {"sha": code_sha(), "bytes": len(c.encode())}
+    """sha of the expert version in the episode's agent, from extella/experts.lock.json."""
+    import expert_json
+    return expert_json.sha(NAME)
 
 
 def run(text, seed, city, mode="check", tries=3):
@@ -102,9 +91,7 @@ def _wait(task_id, limit=240):
 
 if __name__ == "__main__":
     import sys
-    if sys.argv[1] == "save":
-        print(json.dumps(save(), ensure_ascii=False))
-    elif sys.argv[1] == "run":
+    if sys.argv[1] == "run":
         res, meta = run(sys.argv[2].replace("|", chr(10)), int(sys.argv[3]), sys.argv[4], sys.argv[5] if len(sys.argv) > 5 else "check")
         print(json.dumps(meta, ensure_ascii=False))
         print(json.dumps(res, ensure_ascii=False)[:1200])

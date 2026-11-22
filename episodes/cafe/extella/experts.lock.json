@@ -1,0 +1,38 @@
+{
+ "agent": {
+  "name": "Extella Cafe Month",
+  "version": "1.0.0",
+  "where": "Extella market, search by name"
+ },
+ "note": "Expert code is not in this repository. It lives in the agent above in the Extella market; sha = first 12 hex of sha256 of the code. Versions with in_market=false were used by earlier runs only.",
+ "experts": [
+  {
+   "name": "cafe_game_plan",
+   "description": "A Month at the Café: turns the model's short plan for tomorrow (stock and staff lean|normal|safe, purchases, prices, discounts, card choices) and the evening observation into the exact decision: orders, shifts, hires, plus dollar estimates and money warnings.",
+   "cspl": "fython",
+   "args": [
+    "obs",
+    "plan",
+    "city"
+   ],
+   "sha": "4a9db5d491b0",
+   "in_market": true
+  },
+  {
+   "name": "cafe_month",
+   "description": "A Month at the Café, the whole game in one expert: replays the month so far, shows the current evening, applies a plan through cafe_game_plan and plays the next day; mode=check replays a full 30-evening log and returns the score for the leaderboard.",
+   "cspl": "fython",
+   "args": [
+    "mode",
+    "street",
+    "money",
+    "scenario",
+    "seed",
+    "decisions",
+    "plan"
+   ],
+   "sha": "199e631eb8a7",
+   "in_market": true
+  }
+ ]
+}

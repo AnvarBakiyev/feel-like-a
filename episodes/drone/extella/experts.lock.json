@@ -1,0 +1,76 @@
+{
+ "agent": {
+  "name": "Extella Drone Courier",
+  "version": "1.0.0",
+  "where": "Extella market, search by name"
+ },
+ "note": "Expert code is not in this repository. It lives in the agent above in the Extella market; sha = first 12 hex of sha256 of the code. Versions with in_market=false were used by earlier runs only.",
+ "experts": [
+  {
+   "name": "drone_plan",
+   "description": "Feel like a drone courier, the benchmark expert: checks an intent written in the flight language against the wind forecast and its worst edge (mode=check), or flies the whole two-hour shift by that intent in the real world (mode=run). This is the exact version that played the 30 recorded shifts of stage 4 on extella.dev/drone.",
+   "cspl": "fython",
+   "args": [
+    "text",
+    "seed",
+    "city",
+    "mode"
+   ],
+   "sha": "b279a5dc1d60",
+   "in_market": true
+  },
+  {
+   "name": "drone_shift",
+   "description": "Feel like a drone courier, the whole game in one expert: mode=brief gives the world of this city and day as the player sees it plus the flight language reference, mode=check checks an intent and names the one line that would help most, mode=run flies the shift and returns the score and the handler refusals, mode=replay recomputes the score from a shift log for the leaderboard (strictly: a rejected decision raises).",
+   "cspl": "fython",
+   "args": [
+    "mode",
+    "city",
+    "seed",
+    "text",
+    "decisions"
+   ],
+   "sha": "603816dd9b74",
+   "in_market": true
+  },
+  {
+   "name": "drone_plan_0d0d9ba9faa6",
+   "description": "Feel like a drone courier, the expert version that flew the recorded shifts of an earlier stage (sha 0d0d9ba9faa6, commit f2bd121 of the closed repository).",
+   "cspl": "fython",
+   "args": [
+    "text",
+    "seed",
+    "city",
+    "mode"
+   ],
+   "sha": "0d0d9ba9faa6",
+   "in_market": false
+  },
+  {
+   "name": "drone_plan_495732f1cee9",
+   "description": "Feel like a drone courier, the expert version that flew the recorded shifts of an earlier stage (sha 495732f1cee9, commit dfce0dd of the closed repository).",
+   "cspl": "fython",
+   "args": [
+    "text",
+    "seed",
+    "city",
+    "mode"
+   ],
+   "sha": "495732f1cee9",
+   "in_market": false
+  },
+  {
+   "name": "drone_plan_c2e5cb5401d1",
+   "description": "Feel like a drone courier, the expert version that flew the recorded shifts of an earlier stage (sha c2e5cb5401d1, commit 9a4117e of the closed repository).",
+   "cspl": "fython",
+   "args": [
+    "text",
+    "seed",
+    "city",
+    "mode"
+   ],
+   "sha": "c2e5cb5401d1",
+   "in_market": false
+  }
+ ]
+}

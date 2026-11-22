@@ -1,0 +1,38 @@
+{
+ "agent": {
+  "name": "Extella Zoo Month",
+  "version": "1.0.0",
+  "where": "Extella market, search by name"
+ },
+ "note": "Expert code is not in this repository. It lives in the agent above in the Extella market; sha = first 12 hex of sha256 of the code. Versions with in_market=false were used by earlier runs only.",
+ "experts": [
+  {
+   "name": "zoo_game_plan",
+   "description": "A Month at the Zoo: turns the model's short plan for tomorrow (stock and staff lean|normal|safe; shows, ticket price, free Wednesday and card answers, or 'expert' to pick them by money) and the evening observation into the exact decision: thaw, feed orders, keeper shifts, hires, price, plus dollar estimates and warnings.",
+   "cspl": "fython",
+   "args": [
+    "obs",
+    "plan",
+    "world"
+   ],
+   "sha": "a2e85e913b90",
+   "in_market": true
+  },
+  {
+   "name": "zoo_month",
+   "description": "A Month at the Zoo, the whole game in one expert (world ny2 of extella.dev/zoo): replays the month so far, shows the current evening with the cards in words, applies a plan through zoo_game_plan and plays the next day; mode=check replays a full 30-evening log and returns the score for the leaderboard.",
+   "cspl": "fython",
+   "args": [
+    "mode",
+    "place",
+    "team",
+    "scenario",
+    "seed",
+    "decisions",
+    "plan"
+   ],
+   "sha": "cac1514cb7c7",
+   "in_market": true
+  }
+ ]
+}

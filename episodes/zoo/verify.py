@@ -1,11 +1,19 @@
-"""Recomputes every published number of the zoo episode from the recorded decisions. No keys, no network.
+"""Recomputes every published number of the zoo episode from the recorded decisions.
 
-python3 verify.py
+python3 verify.py                  no keys, no network: everything below except the two expert checks in 1
+python3 verify.py --extella        also the expert checks in 1, on Extella (two calls per evening, about an hour;
+                                   answers are cached, a second run is fast)
+python3 verify.py --extella-quick  the expert checks on the first evening of every month
+
+The Extella experts are not in this repository: they live in the agent "Extella Zoo Month" in the Extella market
+(extella/experts.lock.json). For --extella install that agent as a new agent and set EXTELLA_TOKEN_FILE and
+EXTELLA_AGENT (see extella/expert_json.py).
 
 What is checked, for all 27 months (world ny2, seed 1: 3 scenarios x 3 places x 3 team sizes):
 1. Qwen 3.5 9B with Extella (extella/runs/ny2-page/): every evening prompt is rebuilt from the game and the expert
-   and equals the recorded one; the model's last answer gives the recorded plan; the expert code (extella/experts/zoo_game_plan.json,
-   run here locally) turns that plan into exactly the recorded decision; the month replays to the recorded score.
+   and equals the recorded one (--extella); the model's last answer gives the recorded plan; the expert zoo_game_plan of the
+   agent in the market turns that plan into exactly the recorded decision (--extella); the month replays to the recorded score;
+   the expert version the runs record is the one in the market.
 2. Qwen 3.5 9B without Extella (bench/runs/ny2small_*): prompts rebuilt and equal; the last raw answer gives the
    recorded decision; the month replays to the recorded score.
 3. Claude Opus 5.5 without Extella (bench/runs/ny2opus_*, played in Claude Code through bench/closed.py): the system
@@ -22,8 +30,12 @@ for p in (HERE, os.path.join(HERE, "extella"), os.path.join(HERE, "bench")):
     sys.path.insert(0, p)
 import sim, policies  # noqa: E402
 import player as P  # noqa: E402
-from expert_json import load  # noqa: E402
+from expert_json import load, sha as expert_sha, available, how  # noqa: E402
 zoo_game_plan = load("zoo_game_plan")
+EXT = "--extella" in sys.argv or "--extella-quick" in sys.argv
+QUICK = "--extella-quick" in sys.argv
+if EXT and not available():
+    sys.exit("--extella " + how())
 from public_world import public_world  # noqa: E402
 import common as C  # noqa: E402
 
@@ -68,21 +80,25 @@ def check_extella(sc, pl, tm, stats):
     W = public_world(WORLD)
     g = sim.Game(SEED, pl, tm, sc, WORLD)
     plan = {"stock": "normal", "staff": "normal", "shows": "expert", "price": "expert", "free_wed": "expert", "cards": "expert"}
-    for e in J["evenings"]:
+    for i, e in enumerate(J["evenings"]):
         obs = g.observe()
         need(e["day"] == g.t, key + ": evening order")
-        pre = json.loads(json.dumps(zoo_game_plan(obs, {k: v for k, v in plan.items() if k != "choices"}, W)))
-        need(P.evening_text(g, obs, pre, plan) == e["prompt"], "%s day %d: prompt" % (key, g.t))
+        ask = EXT and not (QUICK and i > 0)
+        if ask:
+            pre = json.loads(json.dumps(zoo_game_plan(obs, {k: v for k, v in plan.items() if k != "choices"}, W)))
+            need(P.evening_text(g, obs, pre, plan) == e["prompt"], "%s day %d: prompt" % (key, g.t))
+            stats["expert_checked"] += 1
         if not e.get("fallback"):
             need(same(P.clean_plan(json.loads(e["calls"][-1]["raw"]), plan), e["plan"]), "%s day %d: answer -> plan" % (key, g.t))
         else:
             stats["fallback"] += 1
-        res = json.loads(json.dumps(zoo_game_plan(obs, e["plan"], W)))
-        need(same(res["decision"], e["decision"]), "%s day %d: expert decision" % (key, g.t))
+        if ask:
+            res = json.loads(json.dumps(zoo_game_plan(obs, e["plan"], W)))
+            need(same(res["decision"], e["decision"]), "%s day %d: expert decision" % (key, g.t))
         stats["model_calls"] += len(e["calls"]); stats["evenings"] += 1
         g.decide(e["decision"]); g.step()
         plan = e["plan"]
-    need(J["expert"]["sha"] == P.X.code_sha(), key + ": expert sha")
+    need(J["expert"]["sha"] == expert_sha("zoo_game_plan"), key + ": expert sha")
     return J, g
 
 
@@ -114,7 +130,7 @@ def main():
     need(sum([0.4, 0.25, 0.05, 0.2, 0.1]) == 1.0, "Python 3.12 or newer is needed (compensated sum)")
     data = load("web/data.json")
     S = {k: {} for k in NAMES}
-    ST = {k: {"evenings": 0, "model_calls": 0, "fallback": 0, "no_decision": 0} for k in ("extella", "small", "opus")}
+    ST = {k: {"evenings": 0, "model_calls": 0, "fallback": 0, "no_decision": 0, "expert_checked": 0} for k in ("extella", "small", "opus")}
     PARTS = {k: [] for k in NAMES}
     for sc, pl, tm in COMBOS:
         key = "%s_%s_%s" % (sc, pl, tm)
@@ -169,6 +185,7 @@ def main():
             print("%s: %d evenings, %d model calls, %d evenings without an accepted decision" % (NAMES[w], s["evenings"], s["model_calls"], s["no_decision"]))
         else:
             print("%s: %d evenings, %d model calls, %d evenings fell back to the previous plan" % (NAMES[w], s["evenings"], s["model_calls"], s["fallback"]))
+            print("  expert on Extella checked on %d evenings%s" % (s["expert_checked"], "" if EXT else " (run with --extella)"))
     print()
     if FAIL:
         print("FAILED: %d mismatches" % len(FAIL))

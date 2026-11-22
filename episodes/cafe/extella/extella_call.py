@@ -5,7 +5,7 @@ Only needed to get new answers from Extella; rechecking published results does n
 The expert lives in the agent "Extella Cafe Month": install it from the Extella market as a new agent, then set
 EXTELLA_TOKEN_FILE (file with your API key), EXTELLA_AGENT (the id of that agent in your account),
 EXTELLA_DEVICE (optional device_id; without it the expert runs in the cloud), EXTELLA_API (optional).
-The same expert record is in experts/cafe_game_plan.json; code_sha() is the hash the runs record.
+The expert code is not in this repository; code_sha() is the hash of the market version (extella/experts.lock.json).
 """
 import ast, hashlib, json, os, time, urllib.request
 
@@ -45,13 +45,10 @@ def unwrap(out):
     return res
 
 
-def code():
-    with open(os.path.join(HERE, "experts", NAME + ".json"), encoding="utf-8") as f:
-        return json.load(f)["code"]
-
-
 def code_sha():
-    return hashlib.sha256(code().rstrip("\n").encode()).hexdigest()[:12]
+    """sha of the expert version in the episode's agent, from extella/experts.lock.json."""
+    import expert_json
+    return expert_json.sha(NAME)
 
 
 def run(obs, plan, city, tries=3):
